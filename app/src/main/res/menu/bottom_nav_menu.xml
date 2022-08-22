@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/iHistory"
+        android:title="History"
+        android:icon="@drawable/history"/>
+
+    <item
+        android:id="@+id/iCalendar"
+        android:title="Calendar"
+        android:icon="@drawable/calendar_range"/>
+    <item
+        android:id="@+id/iInfo"
+        android:title="Info"
+        android:icon="@drawable/info"/>
+    <item
+        android:id="@+id/iBell"
+        android:title="Bell"
+        android:icon="@drawable/bell_ring"/>
+
+</menu>
