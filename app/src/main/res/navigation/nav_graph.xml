@@ -15,4 +15,44 @@
         android:name="com.codecoy.bahdjol.ui.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.codecoy.bahdjol.ui.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="com.codecoy.bahdjol.ui.FeedbackFragment"
+        android:label="fragment_feedback"
+        tools:layout="@layout/fragment_feedback" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.codecoy.bahdjol.ui.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.codecoy.bahdjol.ui.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/subscriptionFragment"
+        android:name="com.codecoy.bahdjol.ui.SubscriptionFragment"
+        android:label="fragment_subscription"
+        tools:layout="@layout/fragment_subscription" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.codecoy.bahdjol.ui.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/professionalsFragment"
+        android:name="com.codecoy.bahdjol.ui.ProfessionalsFragment"
+        android:label="fragment_professionals"
+        tools:layout="@layout/fragment_professionals" />
+    <fragment
+        android:id="@+id/userFormFragment"
+        android:name="com.codecoy.bahdjol.ui.UserFormFragment"
+        android:label="UserFormFragment"
+        tools:layout="@layout/fragment_user_form" />
 </navigation>
