@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1011304958332",
+    "project_id": "bahdjol",
+    "storage_bucket": "bahdjol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011304958332:android:fc791ec8450b0585273cf9",
+        "android_client_info": {
+          "package_name": "com.codecoy.bahdjol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011304958332-c9egusip7fpr8gijgvldhlpv9rneatq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASBxH4id4XJE7g-meP_uiAc0qr6NsALzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011304958332-c9egusip7fpr8gijgvldhlpv9rneatq2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

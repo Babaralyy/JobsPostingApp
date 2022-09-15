@@ -2,7 +2,7 @@ package com.codecoy.bahdjol.datamodels
 
 import com.google.gson.annotations.SerializedName
 
-data class SignInData(
+data class UserData(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("profile_img") var profileImg: String? = null,
     @SerializedName("marital_status_name") var maritalStatusName: String? = null,

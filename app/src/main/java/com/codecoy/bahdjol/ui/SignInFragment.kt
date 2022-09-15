@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignInBinding
@@ -41,14 +42,16 @@ class SignInFragment : Fragment() {
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
 
-
         myViewModel =
             ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
         mBinding.btnSignIn.setOnClickListener {
-
             checkCredentials()
+        }
 
+        mBinding.btnSignUp.setOnClickListener {
+            val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
+            findNavController().navigate(action)
         }
 
     }
@@ -77,6 +80,7 @@ class SignInFragment : Fragment() {
         }
 
 
+
     }
 
     private fun signIn(userEmail: String, userPassword: String) {
@@ -92,7 +96,7 @@ class SignInFragment : Fragment() {
             dialog.dismiss()
             if (it.status == true && it.data != null) {
 
-                Log.i(TAG, "signIn: $it.")
+                Log.i(TAG, "response: ${it.data}")
             } else {
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }

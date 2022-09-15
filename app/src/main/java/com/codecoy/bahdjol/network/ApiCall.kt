@@ -1,13 +1,26 @@
 package com.codecoy.bahdjol.network
 
-import com.codecoy.bahdjol.datamodels.SignInResponse
+import com.codecoy.bahdjol.datamodels.AllServiceResponse
+import com.codecoy.bahdjol.datamodels.UserResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiCall {
+
+    @Multipart
+    @POST("api/add_users")
+    suspend fun createUser(
+        @Part profile_img: MultipartBody.Part,
+        @Part("marital_status") marital_status: RequestBody,
+        @Part("name") name: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("password") password: RequestBody
+    ): Response<UserResponse>
 
     @FormUrlEncoded
     @POST("api/login")
@@ -15,6 +28,9 @@ interface ApiCall {
         @Field("email") userEmail: String,
         @Field("password") userPassword: String,
         @Field("device_token") deviceToken: String
-    ): Response<SignInResponse>
+    ): Response<UserResponse>
+
+    @GET("api/category")
+    suspend fun allServices(): Response<AllServiceResponse>
 
 }

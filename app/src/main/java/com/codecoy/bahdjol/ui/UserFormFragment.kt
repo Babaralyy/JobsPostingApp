@@ -1,36 +1,80 @@
 package com.codecoy.bahdjol.ui
 
+
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 
-class UserFormFragment : Fragment() {
+class UserFormFragment : Fragment(), OnMapReadyCallback {
 
+    private lateinit var mMap: GoogleMap
+
+    private lateinit var mBinding: FragmentUserFormBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
+        mBinding = FragmentUserFormBinding.inflate(inflater)
 
-        // get reference to the string array that we just created
-        val types = arrayOf("House/Office Cleaning","Car Washing", "Clothes Washing", "Others")
-        // create an array adapter and pass the required parameter
-        // in our case pass the context, drop down layout , and array.
-        val arrayAdapter = ArrayAdapter(requireActivity(), R.layout.dropdown_item, types)
-        // get reference to the autocomplete text view
-        val autocompleteTV = requireActivity().findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
-        // set adapter to the autocomplete tv to the arrayAdapter
-        autocompleteTV.setAdapter(arrayAdapter)
+        inIt()
 
 
-        return inflater.inflate(R.layout.fragment_user_form, container, false)
+        return mBinding.root
     }
 
+    private fun inIt() {
+
+        setAutoComplete()
+
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+    }
+
+    private fun setAutoComplete() {
+
+        val types = arrayOf("House/Office Cleaning", "Car Washing", "Clothes Washing", "Others")
+        val arrayAdapter = ArrayAdapter(requireActivity(), R.layout.dropdown_item, types)
+
+        mBinding.autoCompleteTextView.setAdapter(arrayAdapter)
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+
+        mMap = googleMap
+
+//        googleMap.isMyLocationEnabled = true
+        googleMap.uiSettings.isMyLocationButtonEnabled = true
+        googleMap.uiSettings.isZoomGesturesEnabled = true
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        googleMap.uiSettings.isScrollGesturesEnabled = true
+
+
+        val sydney = LatLng(-34.0, 151.0)
+        mMap.addMarker(
+            MarkerOptions()
+                .position(sydney)
+                .title("Marker in Sydney")
+        )
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+    }
 
 }
