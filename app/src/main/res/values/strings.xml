@@ -15,4 +15,8 @@
     <string name="address">Address</string>
     <string name="marital_status">Marital Status</string>
     <string name="cleaning">Cleaning</string>
+    <string name="send">Send</string>
+    <string name="date_and_time">Date and time</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
 </resources>

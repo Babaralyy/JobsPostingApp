@@ -1,10 +1,11 @@
 package com.codecoy.bahdjol.network
 
+import com.codecoy.bahdjol.constant.SubServicesResponse
 import com.codecoy.bahdjol.datamodels.AllServiceResponse
+import com.codecoy.bahdjol.datamodels.ImageUploadResponse
 import com.codecoy.bahdjol.datamodels.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -32,5 +33,14 @@ interface ApiCall {
 
     @GET("api/category")
     suspend fun allServices(): Response<AllServiceResponse>
+
+    @GET("api/Subcategory")
+    suspend fun subServices(@Query("cat_id") cat_id: Int): Response<SubServicesResponse>
+
+    @Multipart
+    @POST("api/upload_img?")
+    suspend fun uploadImage(
+        @Part profile_img: MultipartBody.Part
+    ): Response<ImageUploadResponse>
 
 }

@@ -130,7 +130,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Date and time"
+                android:text="@string/date_and_time"
                 android:textColor="@color/primaryVariantColor"
                 android:textSize="20sp" />
 
@@ -140,6 +140,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/dateLay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -159,6 +160,7 @@
                         app:tint="@color/black" />
 
                     <TextView
+                        android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_medium"
@@ -169,6 +171,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/timeLay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -186,6 +189,7 @@
                         app:tint="@color/black" />
 
                     <TextView
+                        android:id="@+id/tvTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/roboto_medium"
@@ -196,39 +200,45 @@
                 </LinearLayout>
 
 
+
+
             </LinearLayout>
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="5dp"
+                android:orientation="horizontal">
 
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/ivAddImage"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    app:civ_border_width="1dp"
+                    android:elevation="5dp"
+                    android:src="@drawable/ic_add"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_70sdp"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:scrollbars="horizontal"/>
+
+            </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Send"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/send"
+                    android:layout_gravity="center"
                     app:backgroundTint="@color/primaryVariantColor"
                     app:cornerRadius="10dp" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatingActionButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="20dp"
-                    android:clickable="true"
-                    android:contentDescription="Upload Image"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_camera"
-                    app:backgroundTint="@color/primaryVariantColor" />
-
-
-            </RelativeLayout>
-
 
         </LinearLayout>
     </ScrollView>

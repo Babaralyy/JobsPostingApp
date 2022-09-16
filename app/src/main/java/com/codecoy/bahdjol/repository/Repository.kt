@@ -34,4 +34,8 @@ class Repository {
     )
 
     suspend fun allServices() = apiCall.allServices()
+
+    suspend fun subServices(cat_id: Int) = apiCall.subServices(cat_id)
+
+    suspend fun uploadImage(itemImg: MultipartBody.Part) = apiCall.uploadImage(itemImg)
 }

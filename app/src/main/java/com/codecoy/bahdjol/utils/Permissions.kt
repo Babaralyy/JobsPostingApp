@@ -1,62 +1,39 @@
 package com.codecoy.bahdjol.utils
 
-import android.Manifest
+
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.IntentSender
 import android.location.LocationManager
-import android.location.LocationRequest
 import android.os.Bundle
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.codecoy.bahdjol.MainActivity
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationServices
-import java.net.URI.create
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.*
+
 
 class Permissions {
     companion object {
+
         var googleApiClient: GoogleApiClient? = null
+        private const val REQUEST_GPS = 23
 
 
-
-        fun isGpsEnabled(): Boolean {
-            return  MyApp.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        }
-
-        fun isNetworkEnabled(): Boolean {
-            return  MyApp.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        }
-
-        fun checkNetworkPermissions(context: Context): Boolean {
-            if (ActivityCompat.checkSelfPermission(context,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return false
-            }
-
-            return true
-        }
-
-        fun requestNetworkPermissions(context: Context){
-            ActivityCompat.requestPermissions(context as MainActivity,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION),
-                MY_PERMISSIONS_REQUEST_LOCATION)
+        fun isGpsEnabled(locationManager: LocationManager): Boolean {
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         }
 
 
-
-        fun hasGPSDevice(): Boolean {
-            val providers = MyApp.locationManager.allProviders
+        fun hasGPSDevice(locationManager: LocationManager): Boolean {
+            val providers = locationManager.allProviders
             return providers.contains(LocationManager.GPS_PROVIDER)
         }
 
         fun enableGPS(context: Context) {
             if (googleApiClient == null) {
                 googleApiClient = GoogleApiClient.Builder(context).addApi(LocationServices.API)
-                    .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks{
+                    .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                         override fun onConnected(bundle: Bundle?) {
                             Log.i("connected", "connected")
                         }
