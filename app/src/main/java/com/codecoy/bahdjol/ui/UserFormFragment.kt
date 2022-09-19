@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -33,9 +34,12 @@ import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
 import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
 import com.codecoy.bahdjol.databinding.TimePickerLayoutBinding
+import com.codecoy.bahdjol.datamodels.BookingDetails
+import com.codecoy.bahdjol.datamodels.BookingPics
 import com.codecoy.bahdjol.datamodels.SubServicesData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
+import com.codecoy.bahdjol.utils.ServiceIds.userId
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -71,19 +75,24 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var imageList: MutableList<String>
     private var updatedImageList = ArrayList<String>()
+    private var bookingImgList = ArrayList<BookingPics>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var file: File
     private lateinit var filePart: MultipartBody.Part
 
     private lateinit var currentDate: String
-
     private lateinit var currentTime: String
 
+    private var mLatitude: Double? = null
+    private var mLongitude: Double? = null
+
+    private var serviceTypeId: Int? = null
+
     private lateinit var mBinding: FragmentUserFormBinding
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         mBinding = FragmentUserFormBinding.inflate(inflater)
@@ -98,6 +107,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         subCategoryList = ArrayList()
         imageList = arrayListOf()
+        updatedImageList = arrayListOf()
+        bookingImgList = arrayListOf()
 
 
         imageAdapter = ImageAdapter(activity, imageList)
@@ -111,14 +122,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
-        myViewModel =
-            ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+        myViewModel = ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+
+        setDateAndTime()
 
         subServices()
 
-
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         mBinding.ivAddImage.setOnClickListener {
@@ -127,7 +137,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         }
 
-
         mBinding.dateLay.setOnClickListener {
             datePickerDialog()
         }
@@ -135,14 +144,30 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             timePickerDialog()
         }
 
+        mBinding.btnSend.setOnClickListener {
+            checkCredentials()
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setDateAndTime() {
+
+        currentDate =
+            mBinding.datePicker.year.toString() + "-" + (mBinding.datePicker.month + 1).toString() + "-" + mBinding.datePicker.dayOfMonth.toString()
+
+        currentTime =
+            mBinding.timePicker.hour.toString() + ":" + mBinding.timePicker.minute.toString()
+
+        mBinding.tvDate.text = currentDate
+        mBinding.tvTime.text = currentTime
     }
 
     private fun chooseImage() {
 
         Log.i(TAG, "chooseImage: chooseImage")
 
-        TedImagePicker.with(requireContext())
-            .start { uri -> showSingleImage(uri) }
+        TedImagePicker.with(requireContext()).start { uri -> showSingleImage(uri) }
     }
 
     private fun showSingleImage(mUri: Uri) {
@@ -181,8 +206,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         filePart = MultipartBody.Part.createFormData(
             "img",
-            file.name,
-            RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
+            file.name, RequestBody.create("image/*".toMediaTypeOrNull(), file)
         )
 
         myViewModel.imageUpload(filePart)
@@ -196,7 +220,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
                 Log.i(TAG, "uploadImage:--> call counter")
 
                 updatedImageList.add(Constant.IMG_URL + it.data.toString())
-                imageAdapter.updateAdapterList(updatedImageList)
+                val distinct = updatedImageList.distinct().toMutableList()
+                imageAdapter.updateAdapterList(distinct as ArrayList<String>)
             } else {
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }
@@ -299,7 +324,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
             if (it.status == true && it.data.isNotEmpty()) {
 
-                Log.i(Constant.TAG, "response: success ${it.data.size}")
+                Log.i(TAG, "response: success ${it.data.size}")
 
                 Toast.makeText(activity, it.data.size.toString(), Toast.LENGTH_SHORT).show()
 
@@ -323,6 +348,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         val arrayAdapter = ArrayAdapter(requireActivity(), R.layout.dropdown_item, subCategoryList)
 
+
+        mBinding.autoCompleteTextView.onItemClickListener = OnItemClickListener { _, _, _, id ->
+
+           serviceTypeId = subServicesList[id.toInt()].id
+
+        }
+
         mBinding.autoCompleteTextView.setAdapter(arrayAdapter)
 
     }
@@ -336,6 +368,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 if (location != null) {
                     showCurrentMarker(location)
+                    mLatitude = location.latitude
+                    mLongitude = location.longitude
                 }
 
             }
@@ -371,18 +405,113 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    location.latitude,
-                    location.longitude
+                    location.latitude, location.longitude
                 ), 12f
             )
         )
 
     }
 
+    private fun checkCredentials() {
+
+        val serviceType: String = mBinding.autoCompleteTextView.text.toString().trim()
+        val serviceDes: String = mBinding.etDes.text.toString().trim()
+        val serviceDate: String = mBinding.tvDate.text.toString().trim()
+        val serviceTime: String = mBinding.tvTime.text.toString().trim()
+
+        if (serviceType.isEmpty()) {
+            Toast.makeText(requireActivity(), "Please enter Service type!", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        if (mLatitude == null || mLongitude == null) {
+            Toast.makeText(
+                requireActivity(), "Please add your location!", Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if (serviceDes.isEmpty()) {
+            Toast.makeText(
+                requireActivity(), "Please enter service description!", Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if (serviceDate.isEmpty()) {
+            Toast.makeText(
+                requireActivity(), "Please set date!", Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if (serviceTime.isEmpty()) {
+            Toast.makeText(
+                requireActivity(), "Please set time!", Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if (updatedImageList.isEmpty()) {
+            Toast.makeText(
+                requireActivity(), "Please add service image!", Toast.LENGTH_SHORT
+            ).show()
+
+        } else {
+
+            addBookingOrder(serviceType, serviceDes, serviceDate, serviceTime)
+
+        }
+    }
+
+    private fun addBookingOrder(
+        serviceType: String, serviceDes: String, serviceDate: String, serviceTime: String
+    ) {
+
+        val dialog = Constant.getDialog(requireActivity())
+        dialog.show()
+
+        bookingImgList.clear()
+
+        for (i in updatedImageList.indices) {
+            bookingImgList.add(BookingPics(updatedImageList[i]))
+            Log.i(TAG, "addBookingOrder: for loop")
+        }
+
+        Log.i(TAG, "addBookingOrder:   $userId $serviceId $serviceTypeId $serviceDes $mLatitude $mLongitude $serviceDate $serviceTime ${bookingImgList.size}")
+
+        val bookingDetails = BookingDetails(
+            userId,
+            serviceId,
+            serviceTypeId,
+            serviceDes,
+            mLatitude,
+            mLongitude,
+            serviceDate,
+            serviceTime,
+            bookingImgList
+        )
+
+        myViewModel.sendBookingDetails(bookingDetails)
+        myViewModel.bookingLiveData.observe(
+            viewLifecycleOwner
+        ) {
+            dialog.dismiss()
+            Log.i(TAG, "addBookingOrder: Outer ${it.nearestAgent}")
+            if (it.status == true && it.nearestAgent != null) {
+
+                Log.i(TAG, "addBookingOrder: ${it.nearestAgent}")
+
+                val nearestAgent = it.nearestAgent
+
+            } else {
+                Log.i(TAG, "addBookingOrder: failed ${it.message}")
+                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
     private fun getRealPathFromURI(contentURI: Uri): String? {
         val result: String?
-        val cursor: Cursor? = activity.contentResolver
-            ?.query(contentURI, null, null, null, null)
+        val cursor: Cursor? = activity.contentResolver?.query(contentURI, null, null, null, null)
         if (cursor == null) {
             result = contentURI.path
         } else {
@@ -393,6 +522,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         }
         return result
     }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

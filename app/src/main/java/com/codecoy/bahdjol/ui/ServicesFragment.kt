@@ -2,23 +2,22 @@ package com.codecoy.bahdjol.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.AllServicesAdapter
 import com.codecoy.bahdjol.callback.ServicesCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentServicesBinding
 import com.codecoy.bahdjol.datamodels.AllServiceData
-import com.codecoy.bahdjol.datamodels.AllServiceResponse
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
 import com.codecoy.bahdjol.viewmodel.MyViewModel
@@ -32,6 +31,8 @@ class ServicesFragment : Fragment(), ServicesCallback {
     private lateinit var allServiceDataList: MutableList<AllServiceData>
     private lateinit var gridManager: GridLayoutManager
     private lateinit var allServicesAdapter: AllServicesAdapter
+
+    private lateinit var drawerLayout: DrawerLayout
 
     private lateinit var mBinding: FragmentServicesBinding
     override fun onCreateView(
@@ -57,6 +58,12 @@ class ServicesFragment : Fragment(), ServicesCallback {
         mBinding.rvServices.setHasFixedSize(true)
 
         allServices()
+
+        drawerLayout = requireActivity().findViewById(R.id.drawerLay)
+
+        mBinding.toolBar.setNavigationOnClickListener {
+                drawerLayout.openDrawer(Gravity.LEFT)
+        }
 
     }
 
@@ -89,11 +96,16 @@ class ServicesFragment : Fragment(), ServicesCallback {
     override fun onServiceClick(position: Int) {
 
         val serviceData = allServiceDataList[position]
-
         serviceId = serviceData.id
+        replaceFragment(UserFormFragment())
 
-        val action = ServicesFragmentDirections.actionServicesFragmentToUserFormFragment()
-        findNavController().navigate(action)
     }
 
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
+
+    }
 }

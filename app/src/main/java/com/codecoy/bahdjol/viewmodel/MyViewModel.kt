@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.codecoy.bahdjol.constant.SubServicesResponse
-import com.codecoy.bahdjol.datamodels.AllServiceResponse
-import com.codecoy.bahdjol.datamodels.ImageUploadResponse
-import com.codecoy.bahdjol.datamodels.UserResponse
+import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.repository.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,12 +19,16 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var allServicesMutableLiveData: MutableLiveData<AllServiceResponse> = MutableLiveData()
     private var subServicesMutableLiveData: MutableLiveData<SubServicesResponse> = MutableLiveData()
     private var imageUploadMutableLiveData: MutableLiveData<ImageUploadResponse> = MutableLiveData()
+    private var sendBookingMutableLiveData: MutableLiveData<BookingResponse> = MutableLiveData()
+    private var bookingHistoryMutableLiveData: MutableLiveData<BookingHistoryResponse> = MutableLiveData()
 
     val signInLiveData: LiveData<UserResponse> = signInMutableLiveData
     val signUpLiveData: LiveData<UserResponse> = signUpMutableLiveData
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
+    val bookingLiveData: LiveData<BookingResponse> = sendBookingMutableLiveData
+    val bookingHistoryLiveData: LiveData<BookingHistoryResponse> = bookingHistoryMutableLiveData
 
     fun signInUser(
         userEmail: String,
@@ -175,4 +177,55 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
+    fun sendBookingDetails(bookingDetails: BookingDetails){
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val response =
+                repository.sendBookingDetails(bookingDetails)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    sendBookingMutableLiveData.postValue(response.body())
+                } else {
+                    val bookingResponse = BookingResponse()
+                    bookingResponse.status = false
+                    bookingResponse.message = response.body().toString()
+                    sendBookingMutableLiveData.postValue(bookingResponse)
+                }
+            } else {
+                val bookingResponse = BookingResponse()
+                bookingResponse.status = false
+                bookingResponse.message = response.errorBody().toString()
+                sendBookingMutableLiveData.postValue(bookingResponse)
+            }
+
+        }
+    }
+
+     fun bookingHistory(user_id: Int){
+
+         CoroutineScope(Dispatchers.IO).launch {
+             val response =
+                 repository.bookingHistory(user_id)
+
+             if (response.isSuccessful) {
+                 if (response.code() == 200) {
+                     bookingHistoryMutableLiveData.postValue(response.body())
+                 } else {
+                     val bookingHistoryResponse = BookingHistoryResponse()
+                     bookingHistoryResponse.status = false
+                     bookingHistoryResponse.message = response.body().toString()
+                     bookingHistoryMutableLiveData.postValue(bookingHistoryResponse)
+                 }
+             } else {
+                 val bookingHistoryResponse = BookingHistoryResponse()
+                 bookingHistoryResponse.status = false
+                 bookingHistoryResponse.message = response.errorBody().toString()
+                 bookingHistoryMutableLiveData.postValue(bookingHistoryResponse)
+             }
+
+         }
+
+     }
 }

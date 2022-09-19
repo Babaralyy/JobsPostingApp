@@ -1,11 +1,13 @@
 package com.codecoy.bahdjol.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.ImageLayBinding
 
 class ImageAdapter(
@@ -21,9 +23,10 @@ class ImageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imagePath = imageList[position]
+        Log.i(TAG, "onBindViewHolder: $imagePath")
 
         Glide.with(context).load( imagePath)
-            .placeholder(R.drawable.ic_image)
+            .placeholder(R.drawable.loading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivAddImage)
     }

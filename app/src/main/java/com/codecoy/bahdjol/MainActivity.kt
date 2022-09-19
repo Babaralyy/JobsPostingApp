@@ -6,9 +6,11 @@ import android.content.Context
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.utils.Permissions
+import com.google.android.material.navigation.NavigationView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -17,7 +19,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import gun0912.tedimagepicker.util.ToastUtil.showToast
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var locationManager: LocationManager
 
@@ -88,6 +90,10 @@ class MainActivity : AppCompatActivity() {
             showToast("Gps not Supported")
             //  finish()
         }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+       return false
     }
 
 }

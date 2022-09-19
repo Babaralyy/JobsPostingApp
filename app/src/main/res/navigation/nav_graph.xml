@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/professionalsFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.codecoy.bahdjol.ui.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -25,8 +28,8 @@
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_signInFragment_to_professionalsFragment"
-            app:destination="@id/professionalsFragment" />
+            android:id="@+id/action_signInFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -34,8 +37,8 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
-            android:id="@+id/action_signUpFragment_to_professionalsFragment"
-            app:destination="@id/professionalsFragment" />
+            android:id="@+id/action_signUpFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/feedbackFragment"
@@ -66,14 +69,15 @@
         android:id="@+id/professionalsFragment"
         android:name="com.codecoy.bahdjol.ui.ServicesFragment"
         android:label="fragment_professionals"
-        tools:layout="@layout/fragment_services" >
-        <action
-            android:id="@+id/action_servicesFragment_to_userFormFragment"
-            app:destination="@id/userFormFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_services" />
     <fragment
         android:id="@+id/userFormFragment"
         android:name="com.codecoy.bahdjol.ui.UserFormFragment"
         android:label="UserFormFragment"
         tools:layout="@layout/fragment_user_form" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.codecoy.bahdjol.ui.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/fragment_history"/>
 </navigation>

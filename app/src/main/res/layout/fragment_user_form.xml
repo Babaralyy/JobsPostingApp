@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -62,13 +62,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:inputType="none"
-                    android:text="Enter Type" />
+                    android:hint="@string/enter_type"
+                    android:inputType="none" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -94,7 +93,8 @@
                     android:id="@+id/map"
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                    android:layout_height="200dp"
+                    tools:layout="@layout/map_layout" />
 
             </androidx.cardview.widget.CardView>
 
@@ -104,12 +104,12 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Description"
+                android:text="@string/description"
                 android:textColor="@color/primaryVariantColor"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/etNote"
+                android:id="@+id/etDes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -163,6 +163,7 @@
                         android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_medium"
                         android:text="07/08/2022"
                         android:textColor="@color/primaryVariantColor"
@@ -192,6 +193,7 @@
                         android:id="@+id/tvTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:fontFamily="@font/roboto_medium"
                         android:text="17:30"
                         android:textColor="@color/primaryVariantColor"
@@ -200,45 +202,59 @@
                 </LinearLayout>
 
 
-
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:padding="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/ivAddImage"
                     android:layout_width="@dimen/_70sdp"
                     android:layout_height="@dimen/_70sdp"
-                    app:civ_border_width="1dp"
                     android:elevation="5dp"
-                    android:src="@drawable/ic_add"/>
+                    android:src="@drawable/ic_add"
+                    app:civ_border_width="1dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvImages"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_70sdp"
                     android:layout_marginStart="@dimen/_20sdp"
-                    android:scrollbars="horizontal"/>
+                    android:scrollbars="horizontal" />
 
             </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/send"
-                    android:layout_gravity="center"
-                    app:backgroundTint="@color/primaryVariantColor"
-                    app:cornerRadius="10dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/send"
+                app:backgroundTint="@color/primaryVariantColor"
+                app:cornerRadius="10dp" />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:visibility="gone"/>
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:timePickerMode="spinner"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>

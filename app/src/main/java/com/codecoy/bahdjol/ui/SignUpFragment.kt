@@ -16,11 +16,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignUpBinding
 import com.codecoy.bahdjol.datamodels.UserResponse
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import gun0912.tedimagepicker.builder.TedImagePicker
@@ -201,8 +203,14 @@ class SignUpFragment : Fragment() {
         ) {
             dialog.dismiss()
             if (it.status == true && it.data != null) {
-
                 Log.i(TAG, "response: ${it.data}")
+
+                val userData = it.data
+
+                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData!!)
+                val action = SignUpFragmentDirections.actionSignUpFragmentToMainFragment()
+                findNavController().navigate(action)
+
             } else {
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }

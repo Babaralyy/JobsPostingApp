@@ -7,4 +7,15 @@
     <string name="date_and_time">Date and time</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="enter_type">Enter Type</string>
+    <string name="description">Description</string>
+    <string name="history">History</string>
+    <string name="calendar">Calendar</string>
+    <string name="info">Info</string>
+    <string name="bell">Bell</string>
+    <string name="booking_history">Booking History</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="pending">Pending</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="completed">Completed</string>
 </resources>

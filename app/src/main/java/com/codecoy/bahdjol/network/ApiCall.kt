@@ -1,9 +1,7 @@
 package com.codecoy.bahdjol.network
 
 import com.codecoy.bahdjol.constant.SubServicesResponse
-import com.codecoy.bahdjol.datamodels.AllServiceResponse
-import com.codecoy.bahdjol.datamodels.ImageUploadResponse
-import com.codecoy.bahdjol.datamodels.UserResponse
+import com.codecoy.bahdjol.datamodels.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -42,5 +40,12 @@ interface ApiCall {
     suspend fun uploadImage(
         @Part profile_img: MultipartBody.Part
     ): Response<ImageUploadResponse>
+
+    @Headers("Accept: application/json")
+    @POST("api/add_booking")
+    suspend fun sendBookingDetails(@Body bookingDetails: BookingDetails): Response<BookingResponse>
+
+    @GET("api/booking_list")
+    suspend fun bookingHistory(@Query("user_id") user_id: Int): Response<BookingHistoryResponse>
 
 }

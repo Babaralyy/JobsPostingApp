@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/iHistory"
-        android:title="History"
-        android:icon="@drawable/history"/>
+        android:id="@+id/iHome"
+        android:title="@string/home"
+        android:icon="@drawable/home_"/>
 
     <item
         android:id="@+id/iCalendar"
-        android:title="Calendar"
+        android:title="@string/calendar"
         android:icon="@drawable/calendar_range"/>
     <item
         android:id="@+id/iInfo"
-        android:title="Info"
-        android:icon="@drawable/info"/>
+        android:title="@string/info"
+        android:icon="@drawable/info_"/>
     <item
         android:id="@+id/iBell"
-        android:title="Bell"
+        android:title="@string/bell"
         android:icon="@drawable/bell_ring"/>
 
 </menu>

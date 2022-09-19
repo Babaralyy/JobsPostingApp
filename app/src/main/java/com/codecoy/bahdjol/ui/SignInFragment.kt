@@ -14,6 +14,7 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignInBinding
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.gms.tasks.OnCompleteListener
@@ -41,9 +42,10 @@ class SignInFragment : Fragment() {
 
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
-
         myViewModel =
             ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+
+        getDeviceToken()
 
         mBinding.btnSignIn.setOnClickListener {
             checkCredentials()
@@ -88,15 +90,22 @@ class SignInFragment : Fragment() {
         val dialog = Constant.getDialog(requireActivity())
         dialog.show()
 
-        myViewModel.signInUser(userEmail, userPassword, "hgjskjfhkjhgh")
+        myViewModel.signInUser(userEmail, userPassword, deviceToken!!)
 
         myViewModel.signInLiveData.observe(
             viewLifecycleOwner
         ) {
             dialog.dismiss()
             if (it.status == true && it.data != null) {
-
                 Log.i(TAG, "response: ${it.data}")
+
+                val userData = it.data
+
+                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData!!)
+
+                val action = SignInFragmentDirections.actionSignInFragmentToMainFragment()
+                findNavController().navigate(action)
+
             } else {
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }
