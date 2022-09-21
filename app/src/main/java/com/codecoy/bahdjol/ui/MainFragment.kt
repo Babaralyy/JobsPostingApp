@@ -5,15 +5,23 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentMainBinding
+import com.codecoy.bahdjol.datamodels.UserData
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.google.android.material.navigation.NavigationView
 
 
 class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
+    private var userData: UserData? = null
 
     private lateinit var mBinding: FragmentMainBinding
     override fun onCreateView(
@@ -29,6 +37,8 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun inIt() {
 
+        getUserData()
+
         setUpNavDrawer()
 
         replaceFragment(ServicesFragment())
@@ -36,12 +46,13 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             when (it.itemId) {
                 R.id.iHome -> {
                     replaceFragment(ServicesFragment())
+                    getUserData()
                 }
                 R.id.iCalendar -> {
                     replaceFragment(CalendarFragment())
                 }
-                R.id.iInfo -> {
-                    replaceFragment(FeedbackFragment())
+                R.id.iHistory -> {
+                    replaceFragment(HistoryFragment())
                 }
                 R.id.iBell -> {
                     replaceFragment(NotificationFragment())
@@ -51,8 +62,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             true
         }
 
+        navViews()
 
     }
+
 
     private fun setUpNavDrawer() {
 
@@ -71,6 +84,52 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return false
+    }
+
+    private fun getUserData() {
+
+        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+
+        if (userData != null) {
+
+            userDataOnViews(userData!!)
+
+        }
+
+    }
+
+    private fun userDataOnViews(userData: UserData) {
+
+        Glide.with(requireActivity()).load(Constant.IMG_URL + userData.profileImg)
+            .placeholder(R.drawable.ic_downloading)
+            .error(R.drawable.ic_error)
+            .into(mBinding.navView.findViewById<ImageView>(R.id.ivProfile))
+
+        mBinding.navView.findViewById<TextView>(R.id.tvName).text = userData.name
+        mBinding.navView.findViewById<TextView>(R.id.tvNumber).text = userData.phone
+        mBinding.navView.findViewById<TextView>(R.id.tvEmail).text = userData.email
+
+    }
+
+    private fun navViews() {
+
+        mBinding.navView.findViewById<ImageView>(R.id.ivClose).setOnClickListener {
+            mBinding.drawerLay.close()
+        }
+        mBinding.navView.findViewById<LinearLayout>(R.id.profileLay).setOnClickListener {
+            replaceFragment(ProfileFragment())
+            mBinding.drawerLay.close()
+        }
+        mBinding.navView.findViewById<LinearLayout>(R.id.paymentLay).setOnClickListener {
+
+        }
+        mBinding.navView.findViewById<LinearLayout>(R.id.subsLay).setOnClickListener {
+
+        }
+        mBinding.navView.findViewById<LinearLayout>(R.id.contactLay).setOnClickListener {
+
+        }
+
     }
 
 }

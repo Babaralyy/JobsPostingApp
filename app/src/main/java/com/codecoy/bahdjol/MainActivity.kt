@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         checkLocationPermissions()
 
-
     }
 
     fun checkLocationPermissions() {

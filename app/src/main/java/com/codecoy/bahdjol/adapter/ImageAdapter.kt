@@ -26,7 +26,7 @@ class ImageAdapter(
         Log.i(TAG, "onBindViewHolder: $imagePath")
 
         Glide.with(context).load( imagePath)
-            .placeholder(R.drawable.loading)
+            .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivAddImage)
     }

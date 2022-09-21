@@ -29,7 +29,7 @@ class AllServicesAdapter(
         val allServiceData = allServiceDataList[position]
 
         Glide.with(context).load(Constant.IMG_URL + allServiceData.img)
-            .placeholder(R.drawable.ic_blur_on)
+            .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivServiceImg)
 

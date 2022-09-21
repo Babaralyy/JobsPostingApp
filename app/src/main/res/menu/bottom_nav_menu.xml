@@ -11,9 +11,9 @@
         android:title="@string/calendar"
         android:icon="@drawable/calendar_range"/>
     <item
-        android:id="@+id/iInfo"
-        android:title="@string/info"
-        android:icon="@drawable/info_"/>
+        android:id="@+id/iHistory"
+        android:title="@string/history"
+        android:icon="@drawable/history"/>
     <item
         android:id="@+id/iBell"
         android:title="@string/bell"

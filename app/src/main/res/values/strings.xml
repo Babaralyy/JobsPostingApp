@@ -3,7 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lorem_ipsum_dolor_sit">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mi pulvinar malesuada donec ultrices et nisl in sit consequat. Pellentesque aenean urna, id vel in. Sit purus pharetra risus volutpat ut tempor.</string>
-    <string name="email_phone_number">Email / Phone Number</string>
+    <string name="email_phone_number">Email</string>
     <string name="password">Password</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="sign_in">Sign In</string>
@@ -31,4 +31,8 @@
     <string name="pending">Pending</string>
     <string name="cancelled">Cancelled</string>
     <string name="completed">Completed</string>
+    <string name="update">Update</string>
+    <string name="profile">Profile</string>
+    <string name="booking_not_found">Booking not found!</string>
+    <string name="all">All</string>
 </resources>

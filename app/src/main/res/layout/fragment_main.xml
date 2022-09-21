@@ -38,10 +38,11 @@
                 android:id="@+id/bottomNav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:itemIconTint="@color/white"
+                android:background="@drawable/bottom_nav_back"
                 android:layout_alignParentBottom="true"
                 app:labelVisibilityMode="unlabeled"
                 app:menu="@menu/bottom_nav_menu" />
-
 
         </RelativeLayout>
     </androidx.drawerlayout.widget.DrawerLayout>

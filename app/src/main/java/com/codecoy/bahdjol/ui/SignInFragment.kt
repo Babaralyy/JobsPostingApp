@@ -8,23 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignInBinding
-import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.datamodels.UserResponse
+import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.utils.ServiceIds
-import com.codecoy.bahdjol.viewmodel.MyViewModel
-import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Response
 
 
 class SignInFragment : Fragment() {
 
     private var deviceToken: String? = null
-    private lateinit var myViewModel: MyViewModel
 
     private lateinit var mBinding: FragmentSignInBinding
     override fun onCreateView(
@@ -39,11 +41,6 @@ class SignInFragment : Fragment() {
     }
 
     private fun inIt() {
-
-        val repository = Repository()
-        val myViewModelFactory = MyViewModelFactory(repository)
-        myViewModel =
-            ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
         getDeviceToken()
 
@@ -90,26 +87,68 @@ class SignInFragment : Fragment() {
         val dialog = Constant.getDialog(requireActivity())
         dialog.show()
 
-        myViewModel.signInUser(userEmail, userPassword, deviceToken!!)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        myViewModel.signInLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            dialog.dismiss()
-            if (it.status == true && it.data != null) {
-                Log.i(TAG, "response: ${it.data}")
+            val signInApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
+            val signInCall = signInApi.signInUser(userEmail, userPassword, deviceToken!!)
 
-                val userData = it.data
+            signInCall.enqueue(object : retrofit2.Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>
+                ) {
 
-                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData!!)
+                    if (response.isSuccessful) {
+                        dialog.dismiss()
 
-                val action = SignInFragmentDirections.actionSignInFragmentToMainFragment()
-                findNavController().navigate(action)
+                        if (response.body() != null && response.body()?.status == true) {
+                            val userData = response.body()!!.data
 
-            } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
-            }
+                            if (userData != null) {
+
+                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData)
+
+                                Toast.makeText(
+                                    requireActivity(),
+                                    response.body()!!.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                val action =
+                                    SignInFragmentDirections.actionSignInFragmentToMainFragment()
+                                findNavController().navigate(action)
+
+                            } else {
+                                Toast.makeText(
+                                    requireActivity(),
+                                    "Something went wrong",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        } else {
+                            Toast.makeText(
+                                requireActivity(),
+                                response.body()?.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    } else {
+                        dialog.dismiss()
+                        Toast.makeText(requireActivity(), response.message(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    dialog.dismiss()
+                    Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
+                }
+
+            })
         }
+
 
     }
 

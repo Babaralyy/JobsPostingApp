@@ -14,92 +14,20 @@ import okhttp3.RequestBody
 
 class MyViewModel(private val repository: Repository) : ViewModel() {
 
-    private var signInMutableLiveData: MutableLiveData<UserResponse> = MutableLiveData()
-    private var signUpMutableLiveData: MutableLiveData<UserResponse> = MutableLiveData()
     private var allServicesMutableLiveData: MutableLiveData<AllServiceResponse> = MutableLiveData()
     private var subServicesMutableLiveData: MutableLiveData<SubServicesResponse> = MutableLiveData()
     private var imageUploadMutableLiveData: MutableLiveData<ImageUploadResponse> = MutableLiveData()
     private var sendBookingMutableLiveData: MutableLiveData<BookingResponse> = MutableLiveData()
-    private var bookingHistoryMutableLiveData: MutableLiveData<BookingHistoryResponse> = MutableLiveData()
+    private var bookingHistoryMutableLiveData: MutableLiveData<BookingHistoryResponse> =
+        MutableLiveData()
 
-    val signInLiveData: LiveData<UserResponse> = signInMutableLiveData
-    val signUpLiveData: LiveData<UserResponse> = signUpMutableLiveData
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
     val bookingLiveData: LiveData<BookingResponse> = sendBookingMutableLiveData
     val bookingHistoryLiveData: LiveData<BookingHistoryResponse> = bookingHistoryMutableLiveData
 
-    fun signInUser(
-        userEmail: String,
-        userPassword: String,
-        deviceToken: String
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response =
-                repository.signInUser(userEmail, userPassword, deviceToken)
 
-            if (response.isSuccessful) {
-                if (response.code() == 200) {
-                    signInMutableLiveData.postValue(response.body())
-
-                } else {
-                    val userResponse = UserResponse()
-                    userResponse.status = false
-                    userResponse.message = response.body().toString()
-                    signInMutableLiveData.postValue(userResponse)
-                }
-            } else {
-                val userResponse = UserResponse()
-                userResponse.status = false
-                userResponse.message = response.errorBody().toString()
-                signInMutableLiveData.postValue(userResponse)
-            }
-        }
-    }
-
-    fun signUpUser(
-        profileImg: MultipartBody.Part,
-        maritalStatus: RequestBody,
-        userName: RequestBody,
-        userAddress: RequestBody,
-        userNumber: RequestBody,
-        userEmail: RequestBody,
-        userPassword: RequestBody
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val response =
-                repository.signUpUser(
-                    profileImg,
-                    maritalStatus,
-                    userName,
-                    userAddress,
-                    userNumber,
-                    userEmail,
-                    userPassword
-                )
-
-            if (response.isSuccessful) {
-                if (response.code() == 200) {
-                    signUpMutableLiveData.postValue(response.body())
-
-                } else {
-                    val userResponse = UserResponse()
-                    userResponse.status = false
-                    userResponse.message = response.body().toString()
-                    signInMutableLiveData.postValue(userResponse)
-                }
-            } else {
-                val userResponse = UserResponse()
-                userResponse.status = false
-                userResponse.message = response.errorBody().toString()
-                signInMutableLiveData.postValue(userResponse)
-            }
-
-        }
-
-    }
 
     fun allServices(){
 
@@ -228,4 +156,5 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
          }
 
      }
+
 }

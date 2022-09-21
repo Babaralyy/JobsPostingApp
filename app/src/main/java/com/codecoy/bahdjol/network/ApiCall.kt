@@ -4,6 +4,7 @@ import com.codecoy.bahdjol.constant.SubServicesResponse
 import com.codecoy.bahdjol.datamodels.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -11,7 +12,7 @@ interface ApiCall {
 
     @Multipart
     @POST("api/add_users")
-    suspend fun createUser(
+    fun createUser(
         @Part profile_img: MultipartBody.Part,
         @Part("marital_status") marital_status: RequestBody,
         @Part("name") name: RequestBody,
@@ -19,15 +20,15 @@ interface ApiCall {
         @Part("phone") phone: RequestBody,
         @Part("email") email: RequestBody,
         @Part("password") password: RequestBody
-    ): Response<UserResponse>
+    ): Call<UserResponse>
 
     @FormUrlEncoded
     @POST("api/login")
-    suspend fun signInUser(
+    fun signInUser(
         @Field("email") userEmail: String,
         @Field("password") userPassword: String,
         @Field("device_token") deviceToken: String
-    ): Response<UserResponse>
+    ): Call<UserResponse>
 
     @GET("api/category")
     suspend fun allServices(): Response<AllServiceResponse>
@@ -47,5 +48,16 @@ interface ApiCall {
 
     @GET("api/booking_list")
     suspend fun bookingHistory(@Query("user_id") user_id: Int): Response<BookingHistoryResponse>
+
+    @Multipart
+    @POST("api/edit_user")
+     fun updateUser(
+        @Part profile_img: MultipartBody.Part?,
+        @Part("user_id") user_id: RequestBody,
+        @Part("marital_status") marital_status: RequestBody,
+        @Part("name") name: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("phone") phone: RequestBody
+    ): Call<UpdateProfileResponse>
 
 }

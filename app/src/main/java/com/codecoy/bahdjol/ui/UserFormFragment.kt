@@ -57,6 +57,10 @@ import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
+import java.text.Format
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class UserFormFragment : Fragment(), OnMapReadyCallback {
@@ -154,10 +158,9 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
     private fun setDateAndTime() {
 
         currentDate =
-            mBinding.datePicker.year.toString() + "-" + (mBinding.datePicker.month + 1).toString() + "-" + mBinding.datePicker.dayOfMonth.toString()
+            (mBinding.datePicker.month + 1).toString() + "/" + mBinding.datePicker.dayOfMonth.toString() + "/" + mBinding.datePicker.year.toString()
 
-        currentTime =
-            mBinding.timePicker.hour.toString() + ":" + mBinding.timePicker.minute.toString()
+        currentTime = getTime(mBinding.timePicker.hour, mBinding.timePicker.minute).toString()
 
         mBinding.tvDate.text = currentDate
         mBinding.tvTime.text = currentTime
@@ -241,7 +244,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
 
         currentDate =
-            dateBinding.datePicker.year.toString() + "-" + (dateBinding.datePicker.month + 1).toString() + "-" + dateBinding.datePicker.dayOfMonth.toString()
+            (dateBinding.datePicker.month + 1).toString() + "/" + dateBinding.datePicker.dayOfMonth.toString() + "/" +dateBinding.datePicker.year.toString()
 
         Log.i("TAG", "datePickerDialog: $currentDate")
 
@@ -249,7 +252,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
             val mMonth: Int = p2 + 1
 
-            currentDate = "$p1-$mMonth-$p3"
+            currentDate = "$mMonth/$p3/$p1"
 
             Log.i("TAG", "changeDate: $currentDate")
         }
@@ -281,12 +284,11 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         dialog.setContentView(timeBinding.root)
         dialog.setCancelable(false)
 
-        currentTime =
-            timeBinding.timePicker.hour.toString() + ":" + timeBinding.timePicker.minute.toString()
+        currentTime = getTime(timeBinding.timePicker.hour, timeBinding.timePicker.minute).toString()
 
         timeBinding.timePicker.setOnTimeChangedListener { _, i, i2 ->
 
-            currentTime = "$i:$i2"
+            currentTime = getTime(i, i2).toString()
 
             Log.i(TAG, "timePickerDialog: $i $i2 ")
 
@@ -523,6 +525,14 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         return result
     }
 
+    private fun getTime(hr: Int, min: Int): String? {
+        val cal = Calendar.getInstance()
+        cal[Calendar.HOUR_OF_DAY] = hr
+        cal[Calendar.MINUTE] = min
+        val formatter: Format
+        formatter = SimpleDateFormat("h:mm a")
+        return formatter.format(cal.time)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

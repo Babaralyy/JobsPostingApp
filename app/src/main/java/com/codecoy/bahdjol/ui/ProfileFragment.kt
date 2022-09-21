@@ -8,18 +8,19 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
-import com.codecoy.bahdjol.databinding.FragmentSignUpBinding
-import com.codecoy.bahdjol.datamodels.UserResponse
+import com.codecoy.bahdjol.databinding.FragmentProfileBinding
+import com.codecoy.bahdjol.datamodels.UpdateProfileResponse
+import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
@@ -34,24 +35,30 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 
 
-class SignUpFragment : Fragment() {
+class ProfileFragment : Fragment() {
+
+    private lateinit var myViewModel: MyViewModel
 
     private var uri: Uri? = null
     private lateinit var bitmap: Bitmap
     private lateinit var encodeImageString: String
 
-    private lateinit var mBinding: FragmentSignUpBinding
+
+    private var userData: UserData? = null
+
+    private lateinit var mBinding: FragmentProfileBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentSignUpBinding.inflate(inflater)
+        mBinding = FragmentProfileBinding.inflate(inflater)
 
         inIt()
 
@@ -60,7 +67,14 @@ class SignUpFragment : Fragment() {
 
     private fun inIt() {
 
-        mBinding.btnSignUp.setOnClickListener {
+        val repository = Repository()
+        val myViewModelFactory = MyViewModelFactory(repository)
+        myViewModel =
+            ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+
+        getUserData()
+
+        mBinding.btnUpdate.setOnClickListener {
 
             checkCredentials()
 
@@ -99,24 +113,43 @@ class SignUpFragment : Fragment() {
         val bytesOfImage: ByteArray = byteArrayOutputStream.toByteArray()
         encodeImageString = Base64.encodeToString(bytesOfImage, Base64.DEFAULT)
 
-        Log.i(TAG, "signUp --> encodeBitmapImage: $encodeImageString")
+        Log.i(Constant.TAG, "signUp --> encodeBitmapImage: $encodeImageString")
+
+    }
+
+    private fun getUserData() {
+
+        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+
+        if (userData != null) {
+
+            userDataOnViews(userData!!)
+
+        }
+
+    }
+
+    private fun userDataOnViews(userData: UserData) {
+
+        Glide.with(requireActivity()).load(Constant.IMG_URL + userData.profileImg)
+            .placeholder(R.drawable.ic_downloading)
+            .error(R.drawable.ic_error)
+            .into(mBinding.ivProfile)
+
+        mBinding.etFirstName.setText(userData.name)
+        mBinding.etMaritalStatus.setText(userData.maritalStatusName)
+        mBinding.etAddress.setText(userData.address)
+        mBinding.etNumber.setText(userData.phone)
+        mBinding.etEmail.setText(userData.email)
 
     }
 
     private fun checkCredentials() {
-
         val maritalStatus: String = mBinding.etMaritalStatus.text.toString().trim()
         val firstName: String = mBinding.etFirstName.text.toString().trim()
         val userAddress: String = mBinding.etAddress.text.toString().trim()
         val userNumber: String = mBinding.etNumber.text.toString().trim()
-        val userEmail: String = mBinding.etEmail.text.toString().trim()
-        val userPassword: String = mBinding.etPassword.text.toString().trim()
 
-        if (this.uri == null) {
-            Toast.makeText(requireContext(), "Please select profile image!", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
         if (firstName.isEmpty()) {
             mBinding.etFirstName.error = "First name is required!"
             mBinding.etFirstName.requestFocus()
@@ -136,89 +169,112 @@ class SignUpFragment : Fragment() {
         if (userNumber.isEmpty()) {
             mBinding.etNumber.error = "Phone Number is required!"
             mBinding.etNumber.requestFocus()
-            return
-        }
-        if (userEmail.isEmpty()) {
-            mBinding.etEmail.error = "Email is required!"
-            mBinding.etEmail.requestFocus()
-            return
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            mBinding.etEmail.error = "Please provide valid email!"
-            mBinding.etEmail.requestFocus()
-            return
-        }
-        if (userPassword.isEmpty()) {
-            mBinding.etPassword.error = "Password can't be empty!"
-            mBinding.etPassword.requestFocus()
-            return
-        }
-        if (userPassword.length < 8) {
-            mBinding.etPassword.error = "Password should be greater than 8 characters!"
-            mBinding.etPassword.requestFocus()
+
         } else {
-            signUp(maritalStatus, firstName, userAddress,userNumber, userEmail, userPassword)
+
+            updateProfile(maritalStatus, firstName, userAddress, userNumber)
+
         }
 
 
     }
 
-    private fun signUp(
+    private fun updateProfile(
         maritalStatus: String,
         firstName: String,
         userAddress: String,
-        userNumber: String,
-        userEmail: String,
-        userPassword: String
+        userNumber: String
     ) {
+
         val dialog = Constant.getDialog(requireActivity())
         dialog.show()
 
-        val file = getRealPathFromURI(this.uri!!)?.let { File(it) }
 
-        val filePart: MultipartBody.Part = MultipartBody.Part.createFormData(
-            "profile_img",
-            file?.name,
-            RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
-        )
 
         val mStatus = maritalStatus.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val fName = firstName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uAddress = userAddress.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uNumber = userNumber.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val uEmail = userEmail.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val uPassword = userPassword.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val uId =
+            ServiceIds.userId.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+        val updateUserApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
 
 
-        val signUpApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
+
+        val updateUserCall: Call<UpdateProfileResponse> = if (this.uri != null) {
+
+            val file = getRealPathFromURI(this.uri!!)?.let { File(it) }!!
+
+            val filePart = MultipartBody.Part.createFormData(
+                "profile_img",
+                file.name,
+                RequestBody.create("image/*".toMediaTypeOrNull(), file)
+            )
+
+            Log.i(TAG, "updateProfile:  $filePart, ${ServiceIds.userId}, $maritalStatus, $firstName, $userAddress, $userNumber")
+
+            updateUserApi.updateUser(filePart, uId, mStatus, fName, uAddress, uNumber)
+
+
+
+        } else {
+
+
+            updateUserApi.updateUser(null, uId, mStatus, fName, uAddress, uNumber)
+        }
+
+
+
         CoroutineScope(Dispatchers.IO).launch {
 
-            val signUpCall =
-                signUpApi.createUser(filePart, mStatus, fName, uAddress, uNumber, uEmail, uPassword)
-            signUpCall.enqueue(object : retrofit2.Callback<UserResponse> {
+            updateUserCall.enqueue(object : Callback<UpdateProfileResponse> {
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UpdateProfileResponse>,
+                    response: Response<UpdateProfileResponse>
                 ) {
+                    Log.i(TAG, "onResponse: outer ${response.body()}")
                     if (response.isSuccessful) {
                         dialog.dismiss()
 
+                        Log.i(TAG, "onResponse: successful ${response.body()}")
+                        
                         if (response.body() != null && response.body()?.status == true) {
-                            val userData = response.body()!!.data
+                            val updateProfileData = response.body()!!.data
 
-                            if (userData != null) {
+                            if (updateProfileData != null) {
 
-                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData)
+                                userData = UserData(
+                                    updateProfileData.id,
+                                    updateProfileData.profileImg,
+                                    updateProfileData.maritalStatusName,
+                                    updateProfileData.name,
+                                    updateProfileData.address,
+                                    updateProfileData.phone,
+                                    updateProfileData.email,
+                                    updateProfileData.emailVerifiedAt,
+                                    updateProfileData.deviceToken,
+                                    updateProfileData.createdAt,
+                                    updateProfileData.updatedAt
+                                )
+
+                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo",
+                                    userData!!
+                                )
+
+                                userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+
+                                if (userData != null) {
+
+                                    userDataOnViews(userData!!)
+
+                                }
 
                                 Toast.makeText(
                                     requireActivity(),
                                     response.body()!!.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
-
-                                val action =
-                                    SignUpFragmentDirections.actionSignUpFragmentToMainFragment()
-                                findNavController().navigate(action)
 
                             } else {
                                 Toast.makeText(
@@ -238,18 +294,19 @@ class SignUpFragment : Fragment() {
 
                     } else {
                         dialog.dismiss()
-                        Toast.makeText(requireActivity(), response.message(), Toast.LENGTH_SHORT)
+                        Toast.makeText(requireActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT)
                             .show()
                     }
+
                 }
 
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
                     dialog.dismiss()
+                    Log.i(TAG, "onResponse: fail ${t.message}")
                     Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
-
         }
 
     }
@@ -268,6 +325,5 @@ class SignUpFragment : Fragment() {
         }
         return result
     }
-
 
 }

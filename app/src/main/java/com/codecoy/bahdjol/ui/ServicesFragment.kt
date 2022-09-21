@@ -1,6 +1,8 @@
 package com.codecoy.bahdjol.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -95,10 +97,15 @@ class ServicesFragment : Fragment(), ServicesCallback {
 
     override fun onServiceClick(position: Int) {
 
-        val serviceData = allServiceDataList[position]
-        serviceId = serviceData.id
-        replaceFragment(UserFormFragment())
+        val dialog = Constant.getDialog(requireActivity())
+        dialog.show()
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            val serviceData = allServiceDataList[position]
+            serviceId = serviceData.id
+            dialog.dismiss()
+            replaceFragment(UserFormFragment())
+        }, 500)
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -106,6 +113,5 @@ class ServicesFragment : Fragment(), ServicesCallback {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()
-
     }
 }

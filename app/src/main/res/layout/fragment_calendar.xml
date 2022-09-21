@@ -27,8 +27,15 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <CalendarView
+<!--    <CalendarView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        app:headerColor="@color/primaryVariantColor"
+        app:todayLabelColor="@color/primaryVariantColor"/>
 
 </LinearLayout>
