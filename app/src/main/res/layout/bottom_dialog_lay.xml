@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_dialog_back"
+    android:id="@+id/bottomLay"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/detailLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -95,11 +98,12 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto_medium"
-            android:text="Details"
+            android:text="@string/details"
             android:textColor="@color/primaryColor"
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/tvDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -117,10 +121,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/detailLay"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -129,7 +134,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="Confirmed"
+            android:drawableLeft="@drawable/ic_person"
+            android:text="@string/agents"
             android:textColor="@color/black"
             app:backgroundTint="#6EBFFF"
             app:cornerRadius="10dp" />
@@ -139,11 +145,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:text="Cancelled"
+            android:text="@string/confirmed"
             android:textColor="@color/black"
             app:backgroundTint="#6EBFFF"
             app:cornerRadius="10dp" />
-
 
     </LinearLayout>
 

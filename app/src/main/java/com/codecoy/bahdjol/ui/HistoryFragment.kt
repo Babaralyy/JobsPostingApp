@@ -84,7 +84,6 @@ class HistoryFragment : Fragment(), HistoryCallback {
             Log.i(TAG, "inIt: ${confirmedHistoryList.size}")
 
 
-
             if(confirmedHistoryList.isNotEmpty()){
                 historyAdapter = HistoryAdapter(requireActivity(), confirmedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
@@ -113,8 +112,6 @@ class HistoryFragment : Fragment(), HistoryCallback {
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
 
-
-
         }
         mBinding.tvCancel.setOnClickListener {
             mBinding.tvAll.isSelected = false
@@ -135,8 +132,6 @@ class HistoryFragment : Fragment(), HistoryCallback {
             } else {
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
-
-
 
         }
         mBinding.tvComplete.setOnClickListener {
@@ -201,7 +196,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
     private fun showBottomDialog(bookingHistoryData: BookingHistoryData) {
 
-        val bottomDialog = BottomSheetDialog(requireContext())
+        val bottomDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomDialog.setContentView(R.layout.bottom_dialog_lay)
         bottomDialog.show()
 

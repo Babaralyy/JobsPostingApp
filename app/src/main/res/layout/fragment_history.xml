@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/primaryVariantColor"
             android:elevation="10dp"
-            app:navigationIcon="@drawable/ic_profile">
+            app:navigationIcon="@drawable/ic__arrow_back">
 
             <TextView
                 android:layout_width="wrap_content"

@@ -35,4 +35,6 @@
     <string name="profile">Profile</string>
     <string name="booking_not_found">Booking not found!</string>
     <string name="all">All</string>
+    <string name="agents">Agents</string>
+    <string name="details">Details</string>
 </resources>
