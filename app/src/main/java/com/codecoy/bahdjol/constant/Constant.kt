@@ -30,7 +30,6 @@ object Constant {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(httpClient.build()).build()
-
     }
 
     fun getDialog(context: Context): Dialog {
@@ -40,6 +39,5 @@ object Constant {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return dialog
     }
-
 
 }
