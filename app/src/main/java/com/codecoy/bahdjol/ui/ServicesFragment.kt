@@ -104,7 +104,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
             val serviceData = allServiceDataList[position]
             serviceId = serviceData.id
             dialog.dismiss()
-            replaceFragment(UserFormFragment())
+            replaceFragment(SubServicesFragment())
         }, 500)
     }
 

@@ -37,4 +37,8 @@
     <string name="all">All</string>
     <string name="agents">Agents</string>
     <string name="details">Details</string>
+    <string name="how_did_we_do">How did we do?</string>
+    <string name="care_to_share_more_about_it">Care to share more about it?</string>
+    <string name="publish_feedback">Publish Feedback</string>
+    <string name="your_review_will_be_posted_to_the_google_play_store">Your review will be posted to the Google Play store.</string>
 </resources>

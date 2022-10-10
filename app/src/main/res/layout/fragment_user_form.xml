@@ -55,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp">
 
-
                 <AutoCompleteTextView
                     android:id="@+id/autoCompleteTextView"
                     android:layout_width="match_parent"

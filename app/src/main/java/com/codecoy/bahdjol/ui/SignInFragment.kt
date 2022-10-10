@@ -78,8 +78,6 @@ class SignInFragment : Fragment() {
             signIn(userEmail, userPassword)
         }
 
-
-
     }
 
     private fun signIn(userEmail: String, userPassword: String) {
@@ -149,13 +147,12 @@ class SignInFragment : Fragment() {
             })
         }
 
-
     }
 
     private fun getDeviceToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.i(Constant.TAG, "Fetching FCM registration token failed", task.exception)
+                Log.i(TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
 
@@ -166,6 +163,5 @@ class SignInFragment : Fragment() {
 
         })
     }
-
 
 }

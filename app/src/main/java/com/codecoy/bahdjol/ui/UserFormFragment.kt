@@ -130,7 +130,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         setDateAndTime()
 
-        subServices()
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
