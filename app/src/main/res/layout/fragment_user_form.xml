@@ -30,46 +30,39 @@
             </androidx.appcompat.widget.Toolbar>
 
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/ic__arrow_back" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="Cleanup"
-                android:textColor="@color/primaryVariantColor"
-                android:textSize="20sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:fontFamily="@font/roboto_medium"-->
+<!--                android:text="Cleanup"-->
+<!--                android:textColor="@color/primaryVariantColor"-->
+<!--                android:textSize="20sp" />-->
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp">
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="20dp">-->
 
-                <AutoCompleteTextView
-                    android:id="@+id/autoCompleteTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="@string/enter_type"
-                    android:inputType="none" />
+<!--                <AutoCompleteTextView-->
+<!--                    android:id="@+id/autoCompleteTextView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:hint="@string/enter_type"-->
+<!--                    android:inputType="none" />-->
 
-            </com.google.android.material.textfield.TextInputLayout>
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Place of residence (Map)"
                 android:textColor="@color/primaryVariantColor"
@@ -142,7 +135,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/field_back"
                     android:gravity="center"
@@ -173,7 +166,7 @@
                     android:id="@+id/timeLay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:background="@drawable/field_back"

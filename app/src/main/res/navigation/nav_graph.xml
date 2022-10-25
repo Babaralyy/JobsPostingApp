@@ -11,15 +11,8 @@
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/action_splashFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_splashFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_splashFragment_to_startingFragment"
+            app:destination="@id/startingFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -91,4 +84,71 @@
         android:name="com.codecoy.bahdjol.ui.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile"/>
+    <fragment
+        android:id="@+id/startingFragment"
+        android:name="com.codecoy.bahdjol.ui.StartingFragment"
+        android:label="fragment_starting"
+        tools:layout="@layout/fragment_starting" >
+        <action
+            android:id="@+id/action_startingFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_agentSignInFragment"
+            app:destination="@id/agentSignInFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_agentRequestsFragment"
+            app:destination="@id/agentRequestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agentSignInFragment"
+        android:name="com.codecoy.bahdjol.agent.AgentSignInFragment"
+        android:label="fragment_agent_sign_in"
+        tools:layout="@layout/fragment_agent_sign_in" >
+        <action
+            android:id="@+id/action_agentSignInFragment_to_agentRequestsFragment"
+            app:destination="@id/agentRequestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agentRequestsFragment"
+        android:name="com.codecoy.bahdjol.agent.AgentRequestsFragment"
+        android:label="fragment_agent_requests"
+        tools:layout="@layout/fragment_agent_requests" >
+        <action
+            android:id="@+id/action_agentRequestsFragment_to_newReqFragment"
+            app:destination="@id/newReqFragment" />
+        <action
+            android:id="@+id/action_agentRequestsFragment_to_reqHistoryFragment"
+            app:destination="@id/reqHistoryFragment" />
+        <action
+            android:id="@+id/action_agentRequestsFragment_to_ongoinReqFragment"
+            app:destination="@id/ongoinReqFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newReqFragment"
+        android:name="com.codecoy.bahdjol.agent.NewReqFragment"
+        android:label="fragment_new_req"
+        tools:layout="@layout/fragment_new_req" />
+    <fragment
+        android:id="@+id/ongoinReqFragment"
+        android:name="com.codecoy.bahdjol.agent.OngoingReqFragment"
+        android:label="fragment_ongoing_req"
+        tools:layout="@layout/fragment_ongoing_req" />
+    <fragment
+        android:id="@+id/reqHistoryFragment"
+        android:name="com.codecoy.bahdjol.agent.ReqHistoryFragment"
+        android:label="fragment_req_history"
+        tools:layout="@layout/fragment_req_history" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.codecoy.bahdjol.ui.PaymentFragment"
+        android:label="fragment_payment"
+        tools:layout="@layout/fragment_payment" />
+    <fragment
+        android:id="@+id/subServicesFragment"
+        android:name="com.codecoy.bahdjol.ui.SubServicesFragment"
+        android:label="fragment_sub_services"
+        tools:layout="@layout/fragment_sub_services" />
 </navigation>

@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.AllServicesAdapter
 import com.codecoy.bahdjol.adapter.SubServiceAdapter
+import com.codecoy.bahdjol.callback.ServicesCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentSubServicesBinding
 import com.codecoy.bahdjol.datamodels.SubServicesData
@@ -22,7 +24,7 @@ import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 
 
-class SubServicesFragment : Fragment() {
+class SubServicesFragment : Fragment(), ServicesCallback {
 
     private lateinit var myViewModel: MyViewModel
     private lateinit var subServicesDataList: MutableList<SubServicesData>
@@ -75,11 +77,9 @@ class SubServicesFragment : Fragment() {
 
                 Log.i(Constant.TAG, "response: success ${it.data.size}")
 
-                Toast.makeText(activity, it.data.size.toString(), Toast.LENGTH_SHORT).show()
-
                 subServicesDataList = it.data
 
-                subServiceAdapter = SubServiceAdapter(requireActivity(), subServicesDataList)
+                subServiceAdapter = SubServiceAdapter(requireActivity(), subServicesDataList, this)
                 mBinding.rvSubServices.adapter = subServiceAdapter
 
             } else {
@@ -87,6 +87,21 @@ class SubServicesFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onServiceClick(position: Int) {
+
+        val subServiceData = subServicesDataList[position]
+        ServiceIds.subServiceId = subServiceData.id
+        replaceFragment(UserFormFragment())
+
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
 }

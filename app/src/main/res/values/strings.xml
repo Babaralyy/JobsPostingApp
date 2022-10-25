@@ -41,4 +41,11 @@
     <string name="care_to_share_more_about_it">Care to share more about it?</string>
     <string name="publish_feedback">Publish Feedback</string>
     <string name="your_review_will_be_posted_to_the_google_play_store">Your review will be posted to the Google Play store.</string>
+    <string name="wallet">Wallet</string>
+    <string name="current_balance">Current Balance</string>
+    <string name="add_new_payment">Add New Payment</string>
+    <string name="help_section">Help Section</string>
+    <string name="submit">Submit</string>
+    <string name="membership_for_1_month_plan">MEMBERSHIP FOR 1 MONTH PLAN</string>
+    <string name="subscriptions">Subscriptions</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".ui.StartingFragment">
+
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginTop="-80dp"
+            android:src="@drawable/logo"
+            app:tint="@color/primaryVariantColor" />
+
+        <ImageView
+            android:id="@+id/ivUser"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:src="@drawable/user_svg" />
+
+        <ImageView
+            android:id="@+id/ivAgent"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/agent_svg" />
+    </LinearLayout>
+</layout>

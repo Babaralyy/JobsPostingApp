@@ -9,6 +9,7 @@ import com.google.gson.Gson
 object ServiceIds {
 
     var serviceId: Int? = null
+    var subServiceId: Int? = null
     private var userData: UserData? = null
     var userId: Int? = null
 

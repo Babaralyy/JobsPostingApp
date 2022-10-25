@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".agent.AgentRequestsFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryVariantColor"
+            android:elevation="10dp">
+
+            <ImageView
+                android:layout_width="@dimen/_96sdp"
+                android:layout_height="@dimen/_48sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo_text"/>
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNewReq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:elevation="5dp"
+                android:paddingTop="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_20sdp"
+                android:text="New Requests"
+                app:backgroundTint="@color/primaryVariantColor"
+                app:cornerRadius="10dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOngoingReq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:elevation="5dp"
+                android:paddingTop="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_20sdp"
+                android:text="Ongoing Requests"
+                app:backgroundTint="@color/primaryVariantColor"
+                app:cornerRadius="10dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReqHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:elevation="5dp"
+                android:paddingTop="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_20sdp"
+                android:text="Requests History"
+                app:backgroundTint="@color/primaryVariantColor"
+                app:cornerRadius="10dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

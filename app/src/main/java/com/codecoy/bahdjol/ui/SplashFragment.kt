@@ -14,7 +14,7 @@ import com.codecoy.bahdjol.utils.ServiceIds
 
 class SplashFragment : Fragment() {
 
-    private var userData: UserData? = null
+
 
     private lateinit var mBinding: FragmentSplashBinding
     override fun onCreateView(
@@ -30,17 +30,10 @@ class SplashFragment : Fragment() {
 
     private fun inIt() {
 
-        userData = ServiceIds.fetchUserFromPref(requireContext(), "userInfo")
-
         Handler(Looper.getMainLooper()).postDelayed({
 
-            if (userData != null) {
-                val action = SplashFragmentDirections.actionSplashFragmentToMainFragment()
+                val action = SplashFragmentDirections.actionSplashFragmentToStartingFragment()
                 findNavController().navigate(action)
-            } else {
-                val action = SplashFragmentDirections.actionSplashFragmentToSignInFragment()
-                findNavController().navigate(action)
-            }
 
         }, 1000)
 

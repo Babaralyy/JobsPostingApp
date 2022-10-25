@@ -121,13 +121,16 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             mBinding.drawerLay.close()
         }
         mBinding.navView.findViewById<LinearLayout>(R.id.paymentLay).setOnClickListener {
-
+            replaceFragment(PaymentFragment())
+            mBinding.drawerLay.close()
         }
         mBinding.navView.findViewById<LinearLayout>(R.id.subsLay).setOnClickListener {
-
+            replaceFragment(SubscriptionFragment())
+            mBinding.drawerLay.close()
         }
         mBinding.navView.findViewById<LinearLayout>(R.id.contactLay).setOnClickListener {
-
+            replaceFragment(ContactUsFragment())
+            mBinding.drawerLay.close()
         }
 
     }

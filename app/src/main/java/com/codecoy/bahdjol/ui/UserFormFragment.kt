@@ -49,6 +49,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import gun0912.tedimagepicker.builder.TedImagePicker
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -331,8 +332,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 subServicesDataList = it.data
 
-                setAutoComplete(subServicesDataList as ArrayList<SubServicesData>)
-
 
             } else {
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
@@ -350,13 +349,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val arrayAdapter = ArrayAdapter(requireActivity(), R.layout.dropdown_item, subCategoryList)
 
 
-        mBinding.autoCompleteTextView.onItemClickListener = OnItemClickListener { _, _, _, id ->
-
-           serviceTypeId = subServicesList[id.toInt()].id
-
-        }
-
-        mBinding.autoCompleteTextView.setAdapter(arrayAdapter)
+//        mBinding.autoCompleteTextView.onItemClickListener = OnItemClickListener { _, _, _, id ->
+//
+//           serviceTypeId = subServicesList[id.toInt()].id
+//
+//        }
+//
+//        mBinding.autoCompleteTextView.setAdapter(arrayAdapter)
 
     }
 
@@ -392,7 +391,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         googleMap.uiSettings.isZoomGesturesEnabled = true
         googleMap.uiSettings.isZoomControlsEnabled = true
         googleMap.uiSettings.isScrollGesturesEnabled = true
-
+        googleMap.uiSettings.isRotateGesturesEnabled = true
 
     }
 
@@ -401,7 +400,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val currentLocation = LatLng(location.latitude, location.longitude)
         mMap.addMarker(
             MarkerOptions()
-                .position(currentLocation)
+                .position(currentLocation).draggable(true)
         )
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
@@ -411,20 +410,34 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             )
         )
 
+        mMap.setOnMarkerDragListener(object :GoogleMap.OnMarkerDragListener{
+
+            override fun onMarkerDrag(p0: Marker) {
+
+            }
+
+            override fun onMarkerDragEnd(p0: Marker) {
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(p0.position))
+
+                Log.i(TAG, "onMarkerDragEnd: latitude ${p0.position.latitude}")
+                Log.i(TAG, "onMarkerDragEnd: longitude ${p0.position.longitude}")
+            }
+
+            override fun onMarkerDragStart(p0: Marker) {
+
+            }
+
+        })
+
     }
 
     private fun checkCredentials() {
 
-        val serviceType: String = mBinding.autoCompleteTextView.text.toString().trim()
         val serviceDes: String = mBinding.etDes.text.toString().trim()
         val serviceDate: String = mBinding.tvDate.text.toString().trim()
         val serviceTime: String = mBinding.tvTime.text.toString().trim()
 
-        if (serviceType.isEmpty()) {
-            Toast.makeText(requireActivity(), "Please enter Service type!", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
 
         if (mLatitude == null || mLongitude == null) {
             Toast.makeText(
@@ -457,13 +470,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         } else {
 
-            addBookingOrder(serviceType, serviceDes, serviceDate, serviceTime)
+            addBookingOrder(serviceDes, serviceDate, serviceTime)
 
         }
     }
 
     private fun addBookingOrder(
-        serviceType: String, serviceDes: String, serviceDate: String, serviceTime: String
+        serviceDes: String, serviceDate: String, serviceTime: String
     ) {
 
         val dialog = Constant.getDialog(requireActivity())

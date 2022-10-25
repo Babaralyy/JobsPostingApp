@@ -14,121 +14,254 @@
         android:layout_height="wrap_content"
         android:background="@color/primaryVariantColor"
         android:elevation="10dp"
-        app:navigationIcon="@drawable/ic_profile">
+        app:navigationIcon="@drawable/ic__arrow_back">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/logo_text" />
-
-
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/subscriptions"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/lay_back">
+        android:layout_height="match_parent">
 
-
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="20dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="15dp"
-            app:cardElevation="10dp"
-            app:cardMaxElevation="12dp"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="false">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:background="@drawable/subscription_back"
+                android:elevation="5dp">
 
-                <LinearLayout
+
+                <ImageView
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_alignTop="@+id/tvPrice"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="-15dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/pay_card" />
+
+                <TextView
+                    android:id="@+id/tvMember"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="@string/membership_for_1_month_plan"
+                    android:textColor="@color/black" />
 
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/roboto"
-                        android:text="Paid in April"
-                        android:textColor="@color/primaryVariantColor"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/roboto_medium"
-                        android:text="$ 53.49"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tvPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_below="@+id/tvMember"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="20 $"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvPrice"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/subs_back"
+                    android:fontFamily="@font/inter_semibold"
+                    android:padding="5dp"
+                    android:text="10 ORDERS"
+                    android:textColor="@color/black" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:background="@drawable/subscription_back"
+                android:elevation="5dp">
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/roboto"
-                        android:text="Paid in April"
-                        android:textColor="@color/primaryVariantColor"
-                        android:textSize="15sp" />
+                <ImageView
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_alignTop="@+id/tvPrice1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="-15dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/pay_card" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/roboto_medium"
-                        android:text="$ 53.49"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvMember1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="@string/membership_for_1_month_plan"
+                    android:textColor="@color/black" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tvPrice1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMember1"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="50 $"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20ssp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvPrice1"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/subs_back"
+                    android:fontFamily="@font/inter_semibold"
+                    android:padding="5dp"
+                    android:text="25 ORDERS"
+                    android:textColor="@color/black" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:background="@drawable/subscription_back"
+                android:elevation="5dp">
 
 
-        </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_alignTop="@+id/tvPrice2"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="-15dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/pay_card" />
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/tvMember2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="@string/membership_for_1_month_plan"
+                    android:textColor="@color/black" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="-150dp"
-        android:background="@drawable/subs_back">
+                <TextView
+                    android:id="@+id/tvPrice2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMember2"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="100 $"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_20ssp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvPrice2"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/subs_back"
+                    android:fontFamily="@font/inter_semibold"
+                    android:padding="5dp"
+                    android:text="50 ORDERS"
+                    android:textColor="@color/black" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!--        <androidx.cardview.widget.CardView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="20dp"-->
+    <!--            android:layout_marginTop="50dp"-->
+    <!--            android:layout_marginEnd="20dp"-->
+    <!--            app:cardCornerRadius="15dp"-->
+    <!--            app:cardElevation="10dp"-->
+    <!--            app:cardMaxElevation="12dp"-->
+    <!--            app:cardPreventCornerOverlap="true"-->
+    <!--            app:cardUseCompatPadding="false">-->
 
 
-    </LinearLayout>
+    <!--            <LinearLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:orientation="horizontal">-->
 
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:orientation="vertical">-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginTop="10dp"-->
+    <!--                        android:fontFamily="@font/roboto"-->
+    <!--                        android:text="Paid in April"-->
+    <!--                        android:textColor="@color/primaryVariantColor"-->
+    <!--                        android:textSize="15sp" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/textView"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginTop="5dp"-->
+    <!--                        android:layout_marginBottom="10dp"-->
+    <!--                        android:fontFamily="@font/roboto_medium"-->
+    <!--                        android:text="$ 53.49"-->
+    <!--                        android:textColor="@color/black"-->
+    <!--                        android:textSize="20sp" />-->
+    <!--                </LinearLayout>-->
+
+    <!--                <ImageView-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:src="@drawable/pay_card"/>-->
+
+
+    <!--            </LinearLayout>-->
+
+
+    <!--        </androidx.cardview.widget.CardView>-->
 
 </LinearLayout>
