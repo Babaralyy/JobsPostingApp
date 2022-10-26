@@ -93,6 +93,7 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
         val subServiceData = subServicesDataList[position]
         ServiceIds.subServiceId = subServiceData.id
+        ServiceIds.subServicePrice = subServiceData.price
         replaceFragment(UserFormFragment())
 
     }

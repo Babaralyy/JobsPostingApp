@@ -21,11 +21,23 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var bookingHistoryMutableLiveData: MutableLiveData<BookingHistoryResponse> =
         MutableLiveData()
 
+    private var userBalanceMutableLiveData: MutableLiveData<WalletResponse> =
+        MutableLiveData()
+
+    private var addBalanceMutableLiveData: MutableLiveData<WalletResponse> =
+        MutableLiveData()
+
+    private var updateBalanceMutableLiveData: MutableLiveData<WalletResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
     val bookingLiveData: LiveData<BookingResponse> = sendBookingMutableLiveData
     val bookingHistoryLiveData: LiveData<BookingHistoryResponse> = bookingHistoryMutableLiveData
+    val userBalanceLiveData: LiveData<WalletResponse> = userBalanceMutableLiveData
+    val addBalanceLiveData: LiveData<WalletResponse> = addBalanceMutableLiveData
+    val updateBalanceLiveData: LiveData<WalletResponse> = updateBalanceMutableLiveData
 
 
 
@@ -156,5 +168,81 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
          }
 
      }
+
+    fun userBalance(user_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.userBalance(user_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    userBalanceMutableLiveData.postValue(response.body())
+                } else {
+                    val walletResponse = WalletResponse()
+                    walletResponse.status = false
+                    walletResponse.message = response.body().toString()
+                    userBalanceMutableLiveData.postValue(walletResponse)
+                }
+            } else {
+                val walletResponse = WalletResponse()
+                walletResponse.status = false
+                walletResponse.message = response.errorBody().toString()
+                userBalanceMutableLiveData.postValue(walletResponse)
+            }
+
+        }
+    }
+
+    fun addBalance(user_id: Int, new_code: String){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.addBalance(user_id, new_code)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    addBalanceMutableLiveData.postValue(response.body())
+                } else {
+                    val walletResponse = WalletResponse()
+                    walletResponse.status = false
+                    walletResponse.message = response.body().toString()
+                    addBalanceMutableLiveData.postValue(walletResponse)
+                }
+            } else {
+                val walletResponse = WalletResponse()
+                walletResponse.status = false
+                walletResponse.message = response.errorBody().toString()
+                addBalanceMutableLiveData.postValue(walletResponse)
+            }
+
+        }
+    }
+
+    fun updateBalance(user_id: Int, new_price: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val response =
+                repository.updateBalance(user_id, new_price)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    updateBalanceMutableLiveData.postValue(response.body())
+                } else {
+                    val walletResponse = WalletResponse()
+                    walletResponse.status = false
+                    walletResponse.message = response.body().toString()
+                    updateBalanceMutableLiveData.postValue(walletResponse)
+                }
+            } else {
+                val walletResponse = WalletResponse()
+                walletResponse.status = false
+                walletResponse.message = response.errorBody().toString()
+                updateBalanceMutableLiveData.postValue(walletResponse)
+            }
+
+        }
+    }
 
 }

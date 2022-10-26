@@ -1,158 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.PaymentFragment">
+<layout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryVariantColor"
-        android:elevation="10dp"
-        app:navigationIcon="@drawable/ic__arrow_back">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/wallet"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-    </androidx.appcompat.widget.Toolbar>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/balance_back"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="5dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_profile_"
-                app:civ_border_width="1dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Mr. John" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:text="John Smith"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins"
-            android:textColor="#80000000"
-            android:text="@string/current_balance" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="$"
-                android:textSize="40sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="00.00"
-                android:textColor="@color/black"
-                android:textSize="40sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:background="#34000000"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:paddingStart="10dp"
-            android:drawableStart="@drawable/ic_add"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:background="@drawable/new_payment_back"
-            android:minHeight="48dp"
-            android:hint="@string/add_new_payment"
-            android:textColorHint="@color/black"/>
-
-
-        <View
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="4dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginBottom="15dp"
-            android:layout_gravity="center"
-            android:background="#801C75BC"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Recent Transactions"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"/>
+        android:orientation="vertical"
+        tools:context=".ui.PaymentFragment">
 
-</LinearLayout>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryVariantColor"
+            android:elevation="10dp"
+            app:navigationIcon="@drawable/ic__arrow_back">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/wallet"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/balance_back"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_profile_"
+                    app:civ_border_width="1dp" />
+
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/current_balance"
+                android:textColor="#80000000" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="$"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:id="@+id/tvBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:textColor="@color/black"
+                    android:textSize="40sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:background="#34000000" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnNewPayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/add_new_payment"
+                android:background="@drawable/new_payment_back"/>
+
+
+            <View
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="4dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="15dp"
+                android:background="#801C75BC" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Recent Transactions"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+</layout>

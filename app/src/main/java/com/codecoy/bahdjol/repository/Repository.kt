@@ -25,4 +25,10 @@ class Repository {
 
     suspend fun bookingHistory(user_id: Int) = apiCall.bookingHistory(user_id)
 
+    suspend fun userBalance(user_id: Int) = apiCall.userBalance(user_id)
+
+    suspend fun addBalance(user_id: Int, new_code: String) = apiCall.addBalance(user_id, new_code)
+
+    suspend fun updateBalance(user_id: Int, new_price: String) = apiCall.updateBalance(user_id, new_price)
+
 }

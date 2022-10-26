@@ -10,6 +10,7 @@ object ServiceIds {
 
     var serviceId: Int? = null
     var subServiceId: Int? = null
+    var subServicePrice: String? = null
     private var userData: UserData? = null
     var userId: Int? = null
 
@@ -28,9 +29,23 @@ object ServiceIds {
 
         editor.putString("userData", json)
 
-        Log.i("TAG", "saveInfoIntoPref: $json")
+        Log.i("TAG", "saveInfoIntoPref: user $json")
 
         editor.apply()
+    }
+
+    fun saveBalanceIntoPref(context: Context, balanceInfo: String, currentBalance: String){
+
+        sharedPreferences = context.getSharedPreferences(balanceInfo, Context.MODE_PRIVATE)
+
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+        editor.putString("balance", currentBalance)
+
+        Log.i("TAG", "saveInfoIntoPref: balance $currentBalance")
+
+        editor.apply()
+
     }
 
     fun fetchUserFromPref(context: Context, userInfo: String): UserData? {
@@ -53,6 +68,14 @@ object ServiceIds {
             null
         }
 
+    }
+
+    fun fetchBalanceFromPref(context: Context, balanceInfo: String): String? {
+        sharedPreferences = context.getSharedPreferences(balanceInfo, Context.MODE_PRIVATE)
+
+        Log.i("TAG", "saveInfoIntoPref: get balance ${sharedPreferences.getString("balance", null)}")
+
+        return sharedPreferences.getString("balance", null)
     }
 
 }

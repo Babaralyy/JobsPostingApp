@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/subs_dialog_back"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_20sdp"
+        android:background="@drawable/field_back"
+        android:hint="@string/enter_code"
+        android:inputType="text"
+        android:minHeight="@dimen/_40sdp"
+        android:paddingStart="@dimen/_5sdp"
+        android:textColorHint="#616161" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNewPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="30dp"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingEnd="@dimen/_10sdp"
+        android:layout_gravity="center"
+        android:text="@string/add_payment"
+        android:textColor="@color/white"
+        app:cornerRadius="@dimen/_15sdp"
+        android:backgroundTint="@color/primaryVariantColor"/>
+
+</LinearLayout>

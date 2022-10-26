@@ -60,4 +60,22 @@ interface ApiCall {
         @Part("phone") phone: RequestBody
     ): Call<UpdateProfileResponse>
 
+
+    @GET("api/wallet_user")
+    suspend fun userBalance(@Query("user_id") user_id: Int): Response<WalletResponse>
+
+    @FormUrlEncoded
+    @POST("api/payment")
+    suspend fun updateBalance(
+        @Field("user_id") user_id: Int,
+        @Field("new_balance") new_balance: String
+    ): Response<WalletResponse>
+
+    @FormUrlEncoded
+    @POST("api/wallet")
+    suspend fun addBalance(
+        @Field("user_id") user_id: Int,
+        @Field("code") new_code: String
+    ): Response<WalletResponse>
+
 }

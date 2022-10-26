@@ -30,6 +30,8 @@ class StartingFragment : Fragment() {
 
     private fun inIt() {
 
+        ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo")
+
         userData = ServiceIds.fetchUserFromPref(requireContext(), "userInfo")
 
         mBinding.ivUser.setOnClickListener {

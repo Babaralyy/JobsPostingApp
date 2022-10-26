@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Build
@@ -18,8 +20,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -33,11 +33,13 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
 import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
+import com.codecoy.bahdjol.databinding.OrderDialogLayBinding
 import com.codecoy.bahdjol.databinding.TimePickerLayoutBinding
 import com.codecoy.bahdjol.datamodels.BookingDetails
 import com.codecoy.bahdjol.datamodels.BookingPics
 import com.codecoy.bahdjol.datamodels.SubServicesData
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
 import com.codecoy.bahdjol.utils.ServiceIds.userId
 import com.codecoy.bahdjol.viewmodel.MyViewModel
@@ -88,6 +90,11 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
     private lateinit var currentDate: String
     private lateinit var currentTime: String
 
+    private var totalBalance: Double = 0.0
+    private  var orderBalance : Double = 0.0
+
+    private lateinit var currentBalance: String
+
     private var mLatitude: Double? = null
     private var mLongitude: Double? = null
 
@@ -109,6 +116,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun inIt() {
+
+        currentBalance = ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo").toString()
 
         subCategoryList = ArrayList()
         imageList = arrayListOf()
@@ -149,6 +158,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         }
 
         mBinding.btnSend.setOnClickListener {
+
             checkCredentials()
         }
 
@@ -311,53 +321,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-    private fun subServices() {
-        val dialog = Constant.getDialog(requireActivity())
-        dialog.show()
-
-        myViewModel.subServices(serviceId!!)
-
-        myViewModel.subServicesLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            dialog.dismiss()
-
-            Log.i(TAG, "response: outer ${it.data.size}")
-
-            if (it.status == true && it.data.isNotEmpty()) {
-
-                Log.i(TAG, "response: success ${it.data.size}")
-
-                Toast.makeText(activity, it.data.size.toString(), Toast.LENGTH_SHORT).show()
-
-                subServicesDataList = it.data
-
-
-            } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    }
-
-    private fun setAutoComplete(subServicesList: ArrayList<SubServicesData>) {
-
-        for (i in subServicesList) {
-            subCategoryList.add(i.subcategoryName.toString())
-        }
-
-        val arrayAdapter = ArrayAdapter(requireActivity(), R.layout.dropdown_item, subCategoryList)
-
-
-//        mBinding.autoCompleteTextView.onItemClickListener = OnItemClickListener { _, _, _, id ->
-//
-//           serviceTypeId = subServicesList[id.toInt()].id
-//
-//        }
-//
-//        mBinding.autoCompleteTextView.setAdapter(arrayAdapter)
-
-    }
 
     override fun onMapReady(googleMap: GoogleMap) {
 
@@ -470,9 +433,44 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         } else {
 
-            addBookingOrder(serviceDes, serviceDate, serviceTime)
+            showDialog(serviceDes, serviceDate, serviceTime)
+
 
         }
+    }
+
+    private fun showDialog(serviceDes: String, serviceDate: String, serviceTime: String) {
+
+        val orderDialogBinding: OrderDialogLayBinding =
+            OrderDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialog = Dialog(requireActivity())
+        dialog.setContentView(orderDialogBinding.root)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        orderDialogBinding.tvPrice.text = ServiceIds.subServicePrice + " $"
+
+        orderDialogBinding.btnContinue.setOnClickListener {
+
+             totalBalance = currentBalance.toDouble()
+             orderBalance = ServiceIds.subServicePrice!!.toDouble()
+
+            if (orderBalance > totalBalance){
+                Toast.makeText(requireActivity(), "You don't have enough balance. Please recharge your account!", Toast.LENGTH_SHORT).show()
+            } else {
+                addBookingOrder(serviceDes, serviceDate, serviceTime)
+            }
+
+
+        }
+
+        orderDialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
     }
 
     private fun addBookingOrder(
@@ -515,11 +513,21 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 val nearestAgent = it.nearestAgent
 
+                totalBalance -= orderBalance
+
+                updateBalance(totalBalance)
+
+
             } else {
                 Log.i(TAG, "addBookingOrder: failed ${it.message}")
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+    }
+
+    private fun updateBalance(totalBalance: Double) {
+
 
     }
 
