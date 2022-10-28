@@ -52,7 +52,7 @@ dependencies {
 
     //Maps
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.0'
 
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
@@ -84,7 +84,7 @@ dependencies {
     implementation 'io.github.ParkSangGwon:tedimagepicker:1.2.8'
 
     //Messaging Service
-    implementation 'com.google.firebase:firebase-messaging:23.0.8'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
 
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")

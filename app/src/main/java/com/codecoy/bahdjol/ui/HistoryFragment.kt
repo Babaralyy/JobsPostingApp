@@ -54,6 +54,14 @@ class HistoryFragment : Fragment(), HistoryCallback {
         val myViewModelFactory = MyViewModelFactory(repository)
         myViewModel = ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
+
+        bookingHistoryList  = arrayListOf()
+        pendingHistoryList = arrayListOf()
+        confirmedHistoryList = arrayListOf()
+        cancelledHistoryList = arrayListOf()
+        completedHistoryList = arrayListOf()
+
+
         mBinding.rvHistory.setHasFixedSize(true)
         mBinding.rvHistory.layoutManager = LinearLayoutManager(requireActivity())
 

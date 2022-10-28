@@ -35,9 +35,7 @@ import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
 import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
 import com.codecoy.bahdjol.databinding.OrderDialogLayBinding
 import com.codecoy.bahdjol.databinding.TimePickerLayoutBinding
-import com.codecoy.bahdjol.datamodels.BookingDetails
-import com.codecoy.bahdjol.datamodels.BookingPics
-import com.codecoy.bahdjol.datamodels.SubServicesData
+import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
@@ -100,6 +98,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     private var serviceTypeId: Int? = null
 
+    private var userData: UserData? = null
+
     private lateinit var mBinding: FragmentUserFormBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -161,6 +161,16 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
             checkCredentials()
         }
+
+
+
+        getUserData()
+
+    }
+
+    private fun getUserData() {
+
+        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
 
     }
 
@@ -458,8 +468,10 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
             if (orderBalance > totalBalance){
                 Toast.makeText(requireActivity(), "You don't have enough balance. Please recharge your account!", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
             } else {
                 addBookingOrder(serviceDes, serviceDate, serviceTime)
+                dialog.dismiss()
             }
 
 
@@ -487,6 +499,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             Log.i(TAG, "addBookingOrder: for loop")
         }
 
+        serviceTypeId = ServiceIds.subServiceId
+
         Log.i(TAG, "addBookingOrder:   $userId $serviceId $serviceTypeId $serviceDes $mLatitude $mLongitude $serviceDate $serviceTime ${bookingImgList.size}")
 
         val bookingDetails = BookingDetails(
@@ -506,16 +520,16 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             viewLifecycleOwner
         ) {
             dialog.dismiss()
-            Log.i(TAG, "addBookingOrder: Outer ${it.nearestAgent}")
-            if (it.status == true && it.nearestAgent != null) {
+            Log.i(TAG, "addBookingOrder: Outer ${it.nearestAgentList.size}")
+            if (it.status == true) {
 
-                Log.i(TAG, "addBookingOrder: ${it.nearestAgent}")
-
-                val nearestAgent = it.nearestAgent
+                Log.i(TAG, "addBookingOrder: ${it.nearestAgentList.size}")
 
                 totalBalance -= orderBalance
 
                 updateBalance(totalBalance)
+
+                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
 
 
             } else {
@@ -528,6 +542,26 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     private fun updateBalance(totalBalance: Double) {
 
+        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
+
+        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
+        ) {
+
+            if (it.status == true && it.data != null) {
+
+                Log.i(TAG, "updateBalance: success ${it.message}")
+
+                val walletData = it.data
+
+                ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo",
+                    walletData!!.balance!!
+                )
+
+            } else {
+                Log.i(TAG, "updateBalance: failure ${it.message}")
+                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
