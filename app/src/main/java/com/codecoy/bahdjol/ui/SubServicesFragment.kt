@@ -1,18 +1,18 @@
 package com.codecoy.bahdjol.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
-import com.codecoy.bahdjol.adapter.AllServicesAdapter
 import com.codecoy.bahdjol.adapter.SubServiceAdapter
 import com.codecoy.bahdjol.callback.ServicesCallback
 import com.codecoy.bahdjol.constant.Constant
@@ -91,11 +91,17 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
     override fun onServiceClick(position: Int) {
 
-        val subServiceData = subServicesDataList[position]
-        ServiceIds.subServiceId = subServiceData.id
-        ServiceIds.subServicePrice = subServiceData.price
-        replaceFragment(UserFormFragment())
+        val dialog = Constant.getDialog(requireActivity())
+        dialog.show()
+        Handler(Looper.getMainLooper()).postDelayed({
 
+            val subServiceData = subServicesDataList[position]
+            ServiceIds.subServiceId = subServiceData.id
+            ServiceIds.subServicePrice = subServiceData.price
+            dialog.dismiss()
+            replaceFragment(UserFormFragment())
+
+        }, 500)
     }
 
     private fun replaceFragment(fragment: Fragment) {

@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
 class MyViewModel(private val repository: Repository) : ViewModel() {
 
@@ -30,6 +29,15 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var updateBalanceMutableLiveData: MutableLiveData<WalletResponse> =
         MutableLiveData()
 
+    private var allSubsMutableLiveData: MutableLiveData<SubsResponse> =
+        MutableLiveData()
+
+    private var getSubsMutableLiveData: MutableLiveData<GetSubsResponse> =
+        MutableLiveData()
+
+    private var checkSubsMutableLiveData: MutableLiveData<CheckSubsResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
@@ -38,6 +46,9 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val userBalanceLiveData: LiveData<WalletResponse> = userBalanceMutableLiveData
     val addBalanceLiveData: LiveData<WalletResponse> = addBalanceMutableLiveData
     val updateBalanceLiveData: LiveData<WalletResponse> = updateBalanceMutableLiveData
+    val allSubsLiveData: LiveData<SubsResponse> = allSubsMutableLiveData
+    val getSubsLiveData: LiveData<GetSubsResponse> = getSubsMutableLiveData
+    val checkSubsLiveData: LiveData<CheckSubsResponse> = checkSubsMutableLiveData
 
 
 
@@ -245,4 +256,86 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    fun allSubscriptions() {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.allSubscriptions()
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    allSubsMutableLiveData.postValue(response.body())
+                } else {
+                    val subsResponse = SubsResponse()
+                    subsResponse.status = false
+                    subsResponse.message = response.body().toString()
+                    allSubsMutableLiveData.postValue(subsResponse)
+                }
+            } else {
+                val subsResponse = SubsResponse()
+                subsResponse.status = false
+                subsResponse.message = response.errorBody().toString()
+                allSubsMutableLiveData.postValue(subsResponse)
+            }
+
+        }
+    }
+
+    fun getSubscription(
+        user_id: Int,
+        subs_id: Int,
+        pkg_name: String,
+        pkg_price: Double,
+        orders: String
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response =
+                repository.getSubscription(user_id, subs_id, pkg_name, pkg_price, orders)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    getSubsMutableLiveData.postValue(response.body())
+                } else {
+                    val getSubsResponse = GetSubsResponse()
+                    getSubsResponse.status = false
+                    getSubsResponse.message = response.body().toString()
+                    getSubsMutableLiveData.postValue(getSubsResponse)
+                }
+            } else {
+                val getSubsResponse = GetSubsResponse()
+                getSubsResponse.status = false
+                getSubsResponse.message = response.errorBody().toString()
+                getSubsMutableLiveData.postValue(getSubsResponse)
+            }
+
+        }
+
+    }
+
+     fun checkSubscription(user_id: Int){
+
+         CoroutineScope(Dispatchers.IO).launch {
+
+             val response =
+                 repository.checkSubscription(user_id)
+
+             if (response.isSuccessful) {
+                 if (response.code() == 200) {
+                     checkSubsMutableLiveData.postValue(response.body())
+                 } else {
+                     val checkSubsResponse = CheckSubsResponse()
+                     checkSubsResponse.status = false
+                     checkSubsResponse.message = response.body().toString()
+                     checkSubsMutableLiveData.postValue(checkSubsResponse)
+                 }
+             } else {
+                 val checkSubsResponse = CheckSubsResponse()
+                 checkSubsResponse.status = false
+                 checkSubsResponse.message = response.errorBody().toString()
+                 checkSubsMutableLiveData.postValue(checkSubsResponse)
+             }
+
+         }
+
+    }
 }

@@ -4,7 +4,6 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.datamodels.BookingDetails
 import com.codecoy.bahdjol.network.ApiCall
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
 
 class Repository {
@@ -29,6 +28,19 @@ class Repository {
 
     suspend fun addBalance(user_id: Int, new_code: String) = apiCall.addBalance(user_id, new_code)
 
-    suspend fun updateBalance(user_id: Int, new_price: String) = apiCall.updateBalance(user_id, new_price)
+    suspend fun updateBalance(user_id: Int, new_price: String) =
+        apiCall.updateBalance(user_id, new_price)
+
+    suspend fun allSubscriptions() = apiCall.allSubscriptions()
+
+    suspend fun getSubscription(
+        user_id: Int,
+        subs_id: Int,
+        pkg_name: String,
+        pkg_price: Double,
+        orders: String
+    ) = apiCall.getSubscription(user_id, subs_id, pkg_name, pkg_price, orders)
+
+    suspend  fun checkSubscription(user_id: Int) = apiCall.checkSubscriptions(user_id)
 
 }

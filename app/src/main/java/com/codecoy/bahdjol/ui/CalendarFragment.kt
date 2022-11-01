@@ -43,6 +43,7 @@ class CalendarFragment : Fragment(), HistoryCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         mBinding = FragmentCalendarBinding.inflate(inflater)
 
         inIt()
@@ -96,7 +97,7 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
             dialog.dismiss()
 
-            Log.i(Constant.TAG, "response: outer ${it.data.size}")
+            Log.i(TAG, "response: outer ${it.data.size}")
 
             if (it.status == true && it.data.isNotEmpty()) {
 
@@ -166,9 +167,15 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
         if (this.filteredHistoryList.isEmpty()){
             Toast.makeText(requireActivity(), "Booking does not exist!", Toast.LENGTH_SHORT).show()
+            filteredHistoryList.clear()
+
+            historyAdapter = HistoryAdapter(requireActivity(), filteredHistoryList, this)
+            mBinding.rvBooking.adapter = historyAdapter
+
+
         } else {
 
-            historyAdapter = HistoryAdapter(requireActivity(), bookingHistoryList, this)
+            historyAdapter = HistoryAdapter(requireActivity(), filteredHistoryList, this)
             mBinding.rvBooking.adapter = historyAdapter
 
         }

@@ -70,7 +70,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var myViewModel: MyViewModel
 
-    private lateinit var subServicesDataList: MutableList<SubServicesData>
     private lateinit var subCategoryList: ArrayList<String>
     private lateinit var activity: MainActivity
 

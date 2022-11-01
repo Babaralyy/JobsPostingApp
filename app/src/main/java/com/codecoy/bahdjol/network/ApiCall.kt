@@ -78,4 +78,20 @@ interface ApiCall {
         @Field("code") new_code: String
     ): Response<WalletResponse>
 
+    @GET("api/subscription")
+    suspend fun allSubscriptions(): Response<SubsResponse>
+
+    @FormUrlEncoded
+    @POST("api/user_subscription")
+    suspend fun getSubscription(
+        @Field("user_id") user_id: Int,
+        @Field("subs_id") subs_id: Int,
+        @Field("pkg_name") pkg_name: String,
+        @Field("pkg_price") pkg_price: Double,
+        @Field("orders") orders: String
+    ): Response<GetSubsResponse>
+
+    @GET("api/chk_subscription")
+    suspend fun checkSubscriptions(@Query("user_id") user_id: Int): Response<CheckSubsResponse>
+
 }

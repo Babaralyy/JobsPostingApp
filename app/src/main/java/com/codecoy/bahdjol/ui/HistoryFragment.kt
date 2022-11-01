@@ -1,6 +1,8 @@
 package com.codecoy.bahdjol.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -79,6 +81,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
         }
 
         mBinding.tvConfirm.setOnClickListener {
+
             mBinding.tvAll.isSelected = false
             mBinding.tvConfirm.isSelected = true
             mBinding.tvPending.isSelected = false
@@ -92,10 +95,19 @@ class HistoryFragment : Fragment(), HistoryCallback {
             Log.i(TAG, "inIt: ${confirmedHistoryList.size}")
 
 
-            if(confirmedHistoryList.isNotEmpty()){
+            if (confirmedHistoryList.isNotEmpty()) {
+
+                mBinding.tvNotFound.visibility = View.GONE
                 historyAdapter = HistoryAdapter(requireActivity(), confirmedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
+
             } else {
+
+                confirmedHistoryList.clear()
+
+                historyAdapter = HistoryAdapter(requireActivity(), confirmedHistoryList, this)
+                mBinding.rvHistory.adapter = historyAdapter
+
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
 
@@ -113,10 +125,19 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
             Log.i(TAG, "inIt: ${pendingHistoryList.size}")
 
-            if(pendingHistoryList.isNotEmpty()){
+            if (pendingHistoryList.isNotEmpty()) {
+
+                mBinding.tvNotFound.visibility = View.GONE
                 historyAdapter = HistoryAdapter(requireActivity(), pendingHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
+
             } else {
+
+                pendingHistoryList.clear()
+
+                historyAdapter = HistoryAdapter(requireActivity(), pendingHistoryList, this)
+                mBinding.rvHistory.adapter = historyAdapter
+
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
 
@@ -134,10 +155,19 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
             Log.i(TAG, "inIt: ${cancelledHistoryList.size}")
 
-            if(cancelledHistoryList.isNotEmpty()){
+            if (cancelledHistoryList.isNotEmpty()) {
+
+                mBinding.tvNotFound.visibility = View.GONE
                 historyAdapter = HistoryAdapter(requireActivity(), cancelledHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
+
             } else {
+
+                cancelledHistoryList.clear()
+
+                historyAdapter = HistoryAdapter(requireActivity(), cancelledHistoryList, this)
+                mBinding.rvHistory.adapter = historyAdapter
+
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
 
@@ -155,16 +185,25 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
             Log.i(TAG, "inIt: ${completedHistoryList.size}")
 
-            if(completedHistoryList.isNotEmpty()){
+            if (completedHistoryList.isNotEmpty()) {
+
+                mBinding.tvNotFound.visibility = View.GONE
                 historyAdapter = HistoryAdapter(requireActivity(), completedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
+
             } else {
+
+                completedHistoryList.clear()
+                historyAdapter = HistoryAdapter(requireActivity(), completedHistoryList, this)
+                mBinding.rvHistory.adapter = historyAdapter
+
                 mBinding.tvNotFound.visibility = View.VISIBLE
             }
 
         }
 
     }
+
 
     private fun getBookingHistory() {
 
@@ -184,12 +223,14 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
                 Log.i(TAG, "response: success ${it.data.size}")
 
+                mBinding.tvNotFound.visibility = View.GONE
                 bookingHistoryList = it.data
 
                 historyAdapter = HistoryAdapter(requireActivity(), bookingHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
+                mBinding.tvNotFound.visibility = View.VISIBLE
                 Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
             }
         }
@@ -198,7 +239,15 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
     override fun onHistoryClick(position: Int, bookingHistoryData: BookingHistoryData) {
 
-        showBottomDialog(bookingHistoryData)
+        val dialog = Constant.getDialog(requireActivity())
+        dialog.show()
+        Handler(Looper.getMainLooper()).postDelayed({
+
+            showBottomDialog(bookingHistoryData)
+            dialog.dismiss()
+
+        }, 500)
+
 
     }
 
