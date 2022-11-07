@@ -12,14 +12,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.adapter.TransactionAdapter
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.AddPaymentDialogBinding
 import com.codecoy.bahdjol.databinding.FragmentPaymentBinding
-import com.codecoy.bahdjol.datamodels.UserData
-import com.codecoy.bahdjol.datamodels.WalletData
-import com.codecoy.bahdjol.datamodels.WalletResponse
+import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
@@ -30,6 +30,11 @@ class PaymentFragment : Fragment() {
 
     private lateinit var myViewModel: MyViewModel
     private var userData: UserData? = null
+
+    private lateinit var transactionAdapter: TransactionAdapter
+    private lateinit var manager: LinearLayoutManager
+
+    private lateinit var transactionsList: MutableList<TransactionData>
 
     private lateinit var mBinding: FragmentPaymentBinding
     override fun onCreateView(
@@ -50,7 +55,15 @@ class PaymentFragment : Fragment() {
         myViewModel =
             ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
+        transactionsList = arrayListOf()
+
+        mBinding.rvTransaction.setHasFixedSize(true)
+        manager = LinearLayoutManager(requireActivity())
+        mBinding.rvTransaction.layoutManager = manager
+
         getUserData()
+
+        getTransactions()
 
 
         mBinding.btnNewPayment.setOnClickListener {
@@ -60,6 +73,7 @@ class PaymentFragment : Fragment() {
         }
 
     }
+
 
     private fun showDialog() {
 
@@ -129,6 +143,42 @@ class PaymentFragment : Fragment() {
 
     }
 
+    private fun getTransactions() {
+
+        mBinding.progressBar.visibility = View.VISIBLE
+
+        if (userData != null){
+
+            myViewModel.userTransaction(userData!!.id!!)
+
+            myViewModel.transactionLiveData.observe(viewLifecycleOwner
+            ) {
+                if (it.status == true && it.data.isNotEmpty()) {
+
+
+                    Log.i(Constant.TAG, "response: add success ${it.data}")
+
+                    transactionsList = it.data
+
+                    transactionsList.reverse()
+
+                    transactionAdapter = TransactionAdapter(requireActivity(), transactionsList)
+                    mBinding.rvTransaction.adapter = transactionAdapter
+
+                    mBinding.progressBar.visibility = View.GONE
+
+                } else{
+                    mBinding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        } else {
+            mBinding.progressBar.visibility = View.GONE
+        }
+
+    }
+
     private fun getUserData() {
 
         userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
@@ -140,6 +190,7 @@ class PaymentFragment : Fragment() {
         }
 
     }
+
 
     private fun userBalance(userData: UserData) {
         val dialog = Constant.getDialog(requireActivity())

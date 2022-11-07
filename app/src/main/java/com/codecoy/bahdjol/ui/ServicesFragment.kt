@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.AllServicesAdapter
 import com.codecoy.bahdjol.callback.ServicesCallback
@@ -35,6 +37,8 @@ class ServicesFragment : Fragment(), ServicesCallback {
     private lateinit var allServicesAdapter: AllServicesAdapter
 
     private lateinit var drawerLayout: DrawerLayout
+
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentServicesBinding
     override fun onCreateView(
@@ -83,13 +87,13 @@ class ServicesFragment : Fragment(), ServicesCallback {
                 Log.i(Constant.TAG, "response: success ${it.data.size}")
 
                 allServiceDataList = it.data
-                allServicesAdapter = AllServicesAdapter(requireActivity(), allServiceDataList, this)
+                allServicesAdapter = AllServicesAdapter(activity, allServiceDataList, this)
                 mBinding.rvServices.adapter = allServicesAdapter
                 allServicesAdapter.notifyDataSetChanged()
 
 
             } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -109,9 +113,14 @@ class ServicesFragment : Fragment(), ServicesCallback {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 }

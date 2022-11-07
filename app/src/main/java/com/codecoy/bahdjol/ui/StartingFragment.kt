@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.databinding.FragmentStartingBinding
+import com.codecoy.bahdjol.datamodels.AgentLoginData
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.utils.ServiceIds
 
@@ -15,6 +16,7 @@ import com.codecoy.bahdjol.utils.ServiceIds
 class StartingFragment : Fragment() {
 
     private var userData: UserData? = null
+    private var agentLoginData: AgentLoginData? = null
 
     private lateinit var mBinding: FragmentStartingBinding
     override fun onCreateView(
@@ -33,6 +35,7 @@ class StartingFragment : Fragment() {
         ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo")
 
         userData = ServiceIds.fetchUserFromPref(requireContext(), "userInfo")
+        agentLoginData = ServiceIds.fetchAgentFromPref(requireContext(), "agentInfo")
 
         mBinding.ivUser.setOnClickListener {
 
@@ -48,8 +51,14 @@ class StartingFragment : Fragment() {
 
         mBinding.ivAgent.setOnClickListener {
 
-            val action = StartingFragmentDirections.actionStartingFragmentToAgentSignInFragment()
-            findNavController().navigate(action)
+            if (agentLoginData != null) {
+                val action =
+                    StartingFragmentDirections.actionStartingFragmentToAgentRequestsFragment()
+                findNavController().navigate(action)
+            } else {
+                val action = StartingFragmentDirections.actionStartingFragmentToAgentSignInFragment()
+                findNavController().navigate(action)
+            }
 
         }
 

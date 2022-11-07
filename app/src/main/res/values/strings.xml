@@ -50,4 +50,8 @@
     <string name="subscriptions">Subscriptions</string>
     <string name="enter_code">Enter Code</string>
     <string name="add_payment">Add Payment</string>
+    <string name="ongoing_requests">Ongoing Requests</string>
+    <string name="requests_history">Requests History</string>
+    <string name="channel_name">service</string>
+    <string name="channel_description">This is about service.</string>
 </resources>

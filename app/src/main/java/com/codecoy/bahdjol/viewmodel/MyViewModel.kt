@@ -38,6 +38,9 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var checkSubsMutableLiveData: MutableLiveData<CheckSubsResponse> =
         MutableLiveData()
 
+    private var transactionMutableLiveData: MutableLiveData<TransactionResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
@@ -49,6 +52,7 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val allSubsLiveData: LiveData<SubsResponse> = allSubsMutableLiveData
     val getSubsLiveData: LiveData<GetSubsResponse> = getSubsMutableLiveData
     val checkSubsLiveData: LiveData<CheckSubsResponse> = checkSubsMutableLiveData
+    val transactionLiveData: LiveData<TransactionResponse> = transactionMutableLiveData
 
 
 
@@ -338,4 +342,32 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
          }
 
     }
+
+    fun userTransaction(user_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.userTransaction(user_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    transactionMutableLiveData.postValue(response.body())
+                } else {
+                    val transactionResponse = TransactionResponse()
+                    transactionResponse.status = false
+                    transactionResponse.message = response.body().toString()
+                    transactionMutableLiveData.postValue(transactionResponse)
+                }
+            } else {
+                val transactionResponse = TransactionResponse()
+                transactionResponse.status = false
+                transactionResponse.message = response.errorBody().toString()
+                transactionMutableLiveData.postValue(transactionResponse)
+            }
+
+        }
+
+    }
+
 }

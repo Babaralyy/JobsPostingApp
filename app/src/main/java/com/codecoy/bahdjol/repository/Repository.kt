@@ -43,4 +43,6 @@ class Repository {
 
     suspend  fun checkSubscription(user_id: Int) = apiCall.checkSubscriptions(user_id)
 
+    suspend  fun userTransaction(user_id: Int) = apiCall.userTransaction(user_id)
+
 }

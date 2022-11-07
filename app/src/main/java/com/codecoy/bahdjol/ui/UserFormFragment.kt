@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
@@ -143,6 +144,10 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(SubServicesFragment())
+        }
+
         mBinding.ivAddImage.setOnClickListener {
 
             chooseImage()
@@ -180,6 +185,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             (mBinding.datePicker.month + 1).toString() + "/" + mBinding.datePicker.dayOfMonth.toString() + "/" + mBinding.datePicker.year.toString()
 
         currentTime = getTime(mBinding.timePicker.hour, mBinding.timePicker.minute).toString()
+
+        currentDate = customDateFormat(currentDate)
 
         mBinding.tvDate.text = currentDate
         mBinding.tvTime.text = currentTime
@@ -265,6 +272,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         currentDate =
             (dateBinding.datePicker.month + 1).toString() + "/" + dateBinding.datePicker.dayOfMonth.toString() + "/" +dateBinding.datePicker.year.toString()
 
+        currentDate = customDateFormat(currentDate)
+
         Log.i("TAG", "datePickerDialog: $currentDate")
 
         dateBinding.datePicker.setOnDateChangedListener { _, p1, p2, p3 ->
@@ -272,6 +281,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             val mMonth: Int = p2 + 1
 
             currentDate = "$mMonth/$p3/$p1"
+
+            currentDate = customDateFormat(currentDate)
 
             Log.i("TAG", "changeDate: $currentDate")
         }
@@ -587,9 +598,30 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         return formatter.format(cal.time)
     }
 
+    private fun customDateFormat(dateSchedule: String): String {
+
+        val originalFormat = SimpleDateFormat("MM/dd/yyyy")
+        val targetFormat = SimpleDateFormat("MM/dd/yyyy")
+
+        val date: Date = originalFormat.parse(dateSchedule)
+
+        Log.i("TAG", "datePickerDialog: originalFormat ${originalFormat.format(date)}")
+        Log.i("TAG", "datePickerDialog: targetFormat ${targetFormat.format(date)}")
+
+        return targetFormat.format(date)
+
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         activity = context as MainActivity
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
 }

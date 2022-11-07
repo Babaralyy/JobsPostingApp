@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,7 +12,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.SubServiceAdapter
 import com.codecoy.bahdjol.callback.ServicesCallback
@@ -31,6 +34,8 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
     private lateinit var gridManager: GridLayoutManager
     private lateinit var subServiceAdapter: SubServiceAdapter
+
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentSubServicesBinding
     override fun onCreateView(
@@ -52,9 +57,13 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
         subServicesDataList = arrayListOf()
 
-        gridManager = GridLayoutManager(requireActivity(), 2)
+        gridManager = GridLayoutManager(activity, 2)
         mBinding.rvSubServices.layoutManager = gridManager
         mBinding.rvSubServices.setHasFixedSize(true)
+
+        mBinding.toolBar.setNavigationOnClickListener {
+           replaceFragment(ServicesFragment())
+        }
 
         subServices()
 
@@ -79,11 +88,11 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
                 subServicesDataList = it.data
 
-                subServiceAdapter = SubServiceAdapter(requireActivity(), subServicesDataList, this)
+                subServiceAdapter = SubServiceAdapter(activity, subServicesDataList, this)
                 mBinding.rvSubServices.adapter = subServiceAdapter
 
             } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -105,10 +114,15 @@ class SubServicesFragment : Fragment(), ServicesCallback {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

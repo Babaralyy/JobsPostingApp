@@ -6,9 +6,12 @@ import android.content.Context
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.codecoy.bahdjol.constant.Constant.TAG
+import com.codecoy.bahdjol.ui.ServicesFragment
+import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.Permissions
 import com.google.android.material.navigation.NavigationView
 import com.karumi.dexter.Dexter
@@ -93,6 +96,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
        return false
+    }
+
+    override fun onBackPressed() {
+        val fManager = supportFragmentManager.findFragmentById(R.id.frameLay)
+
+        if (GlobalClass.drawer != null) {
+            if (GlobalClass.drawer!!.isDrawerOpen(Gravity.LEFT)) {
+                GlobalClass.drawer!!.close()
+            } else if (fManager !is ServicesFragment) {
+                GlobalClass.bottomNavigation.selectedItemId = R.id.iHome
+            } else {
+                finish()
+            }
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

@@ -22,6 +22,7 @@ import com.codecoy.bahdjol.databinding.FragmentMainBinding
 import com.codecoy.bahdjol.datamodels.GetSubsResponse
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
@@ -78,6 +79,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         }
 
         navViews()
+
+        GlobalClass.drawer = mBinding.drawerLay
+        GlobalClass.bottomNavigation = mBinding.bottomNav
+        GlobalClass.frag = this
 
     }
 

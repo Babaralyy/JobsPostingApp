@@ -18,9 +18,9 @@ object Constant {
     private const val BASE_URL = "https://wh717090.ispot.cc/bahdjol/"
     const val IMG_URL = "https://wh717090.ispot.cc/bahdjol/public/storage/"
 
-    var httpClient = OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS) // connect timeout
-        .writeTimeout(10, TimeUnit.SECONDS) // write timeout
-        .readTimeout(10, TimeUnit.SECONDS) // read timeout
+    var httpClient = OkHttpClient.Builder().connectTimeout(100, TimeUnit.SECONDS) // connect timeout
+        .writeTimeout(100, TimeUnit.SECONDS) // write timeout
+        .readTimeout(100, TimeUnit.SECONDS) // read timeout
 
     val gson: Gson = GsonBuilder()
         .setLenient()

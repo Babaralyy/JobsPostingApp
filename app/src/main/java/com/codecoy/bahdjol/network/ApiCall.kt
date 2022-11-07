@@ -94,4 +94,25 @@ interface ApiCall {
     @GET("api/chk_subscription")
     suspend fun checkSubscriptions(@Query("user_id") user_id: Int): Response<CheckSubsResponse>
 
+    @FormUrlEncoded
+    @POST("api/agent_login")
+    fun signInAgent(
+        @Field("email") userEmail: String,
+        @Field("password") userPassword: String,
+        @Field("device_token") deviceToken: String
+    ): Call<AgentLoginResponse>
+
+    @GET("api/user_trans")
+    suspend fun userTransaction(@Query("user_id") user_id: Int): Response<TransactionResponse>
+
+    @FormUrlEncoded
+    @POST("api/help")
+    fun contactUs(
+        @Field("f_name") f_name: String,
+        @Field("l_name") l_name: String,
+        @Field("phone") phone: String,
+        @Field("email") email: String,
+        @Field("desc") desc: String
+    ): Call<HelpResponse>
+
 }
