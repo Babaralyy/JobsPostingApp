@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentContactUsBinding
 import com.codecoy.bahdjol.datamodels.HelpResponse
@@ -21,6 +23,7 @@ import retrofit2.Response
 
 class ContactUsFragment : Fragment() {
 
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentContactUsBinding
     override fun onCreateView(
@@ -120,7 +123,7 @@ class ContactUsFragment : Fragment() {
                             if (helpData != null) {
 
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     "Your query has been sent!",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -130,7 +133,7 @@ class ContactUsFragment : Fragment() {
 
                             } else {
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     "Something went wrong",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -138,7 +141,7 @@ class ContactUsFragment : Fragment() {
 
                         } else {
                             Toast.makeText(
-                                requireActivity(),
+                                activity,
                                 response.body()?.message,
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -150,7 +153,7 @@ class ContactUsFragment : Fragment() {
 
                 override fun onFailure(call: Call<HelpResponse>, t: Throwable) {
                     dialog.dismiss()
-                    Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
 
                 }
 
@@ -168,6 +171,11 @@ class ContactUsFragment : Fragment() {
         mBinding.etEmail.setText("")
         mBinding.etDes.setText("")
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 

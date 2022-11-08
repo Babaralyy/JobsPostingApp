@@ -117,7 +117,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun inIt() {
 
-        currentBalance = ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo").toString()
+        currentBalance = ServiceIds.fetchBalanceFromPref(activity, "balanceInfo").toString()
 
         subCategoryList = ArrayList()
         imageList = arrayListOf()
@@ -131,7 +131,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         mBinding.rvImages.setHasFixedSize(true)
         mBinding.rvImages.adapter = imageAdapter
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
 
         val repository = Repository()
@@ -174,7 +174,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     private fun getUserData() {
 
-        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
     }
 
@@ -201,13 +201,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
     private fun showSingleImage(mUri: Uri) {
         Log.i(TAG, "chooseImage: showSingleImage")
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         this.uri = mUri
 
         val inputStream: InputStream =
-            requireActivity().contentResolver.openInputStream(this.uri!!)!!
+            activity.contentResolver.openInputStream(this.uri!!)!!
         bitmap = BitmapFactory.decodeStream(inputStream)
 
         encodeBitmapImage(bitmap, dialog)
@@ -252,7 +252,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
                 val distinct = updatedImageList.distinct().toMutableList()
                 imageAdapter.updateAdapterList(distinct as ArrayList<String>)
             } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -358,10 +358,10 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
             }
 
         if (ActivityCompat.checkSelfPermission(
-                requireActivity(),
+                activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireActivity(),
+                activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -424,31 +424,31 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
         if (mLatitude == null || mLongitude == null) {
             Toast.makeText(
-                requireActivity(), "Please add your location!", Toast.LENGTH_SHORT
+                activity, "Please add your location!", Toast.LENGTH_SHORT
             ).show()
             return
         }
         if (serviceDes.isEmpty()) {
             Toast.makeText(
-                requireActivity(), "Please enter service description!", Toast.LENGTH_SHORT
+                activity, "Please enter service description!", Toast.LENGTH_SHORT
             ).show()
             return
         }
         if (serviceDate.isEmpty()) {
             Toast.makeText(
-                requireActivity(), "Please set date!", Toast.LENGTH_SHORT
+                activity, "Please set date!", Toast.LENGTH_SHORT
             ).show()
             return
         }
         if (serviceTime.isEmpty()) {
             Toast.makeText(
-                requireActivity(), "Please set time!", Toast.LENGTH_SHORT
+                activity, "Please set time!", Toast.LENGTH_SHORT
             ).show()
             return
         }
         if (updatedImageList.isEmpty()) {
             Toast.makeText(
-                requireActivity(), "Please add service image!", Toast.LENGTH_SHORT
+                activity, "Please add service image!", Toast.LENGTH_SHORT
             ).show()
 
         } else {
@@ -464,7 +464,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val orderDialogBinding: OrderDialogLayBinding =
             OrderDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
 
-        val dialog = Dialog(requireActivity())
+        val dialog = Dialog(activity)
         dialog.setContentView(orderDialogBinding.root)
         dialog.setCancelable(false)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -477,7 +477,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
              orderBalance = ServiceIds.subServicePrice!!.toDouble()
 
             if (orderBalance > totalBalance){
-                Toast.makeText(requireActivity(), "You don't have enough balance. Please recharge your account!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "You don't have enough balance. Please recharge your account!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             } else {
                 addBookingOrder(serviceDes, serviceDate, serviceTime)
@@ -499,7 +499,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         serviceDes: String, serviceDate: String, serviceTime: String
     ) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         bookingImgList.clear()
@@ -539,12 +539,12 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 updateBalance(totalBalance)
 
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
 
 
             } else {
                 Log.i(TAG, "addBookingOrder: failed ${it.message}")
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -563,13 +563,13 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 val walletData = it.data
 
-                ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo",
+                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
                     walletData!!.balance!!
                 )
 
             } else {
                 Log.i(TAG, "updateBalance: failure ${it.message}")
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -603,7 +603,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val originalFormat = SimpleDateFormat("MM/dd/yyyy")
         val targetFormat = SimpleDateFormat("MM/dd/yyyy")
 
-        val date: Date = originalFormat.parse(dateSchedule)
+        val date: Date = originalFormat.parse(dateSchedule) as Date
 
         Log.i("TAG", "datePickerDialog: originalFormat ${originalFormat.format(date)}")
         Log.i("TAG", "datePickerDialog: targetFormat ${targetFormat.format(date)}")
@@ -618,7 +618,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()

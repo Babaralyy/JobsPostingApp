@@ -70,7 +70,7 @@ class SubServicesFragment : Fragment(), ServicesCallback {
     }
 
     private fun subServices() {
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         myViewModel.subServices(ServiceIds.serviceId!!)
@@ -100,7 +100,7 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
     override fun onServiceClick(position: Int) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
         Handler(Looper.getMainLooper()).postDelayed({
 

@@ -1,6 +1,7 @@
 package com.codecoy.bahdjol.ui
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.adapter.SubsAdapter
 import com.codecoy.bahdjol.callback.SubsCallback
 import com.codecoy.bahdjol.constant.Constant
@@ -35,6 +37,8 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
     private lateinit var manager: LinearLayoutManager
     private lateinit var subscriptionAdapter: SubsAdapter
+
+    private lateinit var activity: MainActivity
 
     private var totalBalance: Double = 0.0
     private var subsBalance: Double = 0.0
@@ -64,7 +68,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
         subsDataList = arrayListOf()
 
-        manager = LinearLayoutManager(requireActivity())
+        manager = LinearLayoutManager(activity)
         mBinding.rvSubs.layoutManager = manager
         mBinding.rvSubs.setHasFixedSize(true)
 
@@ -80,21 +84,21 @@ class SubscriptionFragment : Fragment(), SubsCallback {
     private fun getBalance() {
 
         currentBalance =
-            ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo").toString()
+            ServiceIds.fetchBalanceFromPref(activity, "balanceInfo").toString()
         totalBalance = currentBalance.toDouble()
 
     }
 
     private fun getUserData() {
 
-        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
 
     }
 
     private fun allSubs() {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         myViewModel.allSubscriptions()
@@ -112,11 +116,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                 subsDataList = it.data
 
-                subscriptionAdapter = SubsAdapter(requireActivity(), subsDataList, this)
+                subscriptionAdapter = SubsAdapter(activity, subsDataList, this)
                 mBinding.rvSubs.adapter = subscriptionAdapter
 
             } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -126,7 +130,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
         val subsBinding: SubsDialogLayBinding =
             SubsDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
 
-        val dialog = Dialog(requireActivity())
+        val dialog = Dialog(activity)
         dialog.setContentView(subsBinding.root)
         dialog.setCancelable(true)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -140,7 +144,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
 
             if (subsBalance > totalBalance){
-                Toast.makeText(requireActivity(), "You don't have enough balance!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "You don't have enough balance!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             } else {
                 buySubs(userData, subsData)
@@ -154,7 +158,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
     private fun buySubs(userData: UserData?, subsData: SubsData) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         if (userData != null){
@@ -178,11 +182,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                     updateBalance(totalBalance)
 
-                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
 
                 } else {
                     Log.i(TAG, "response: failure ${it.data!!.id}")
-                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -205,11 +209,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                 val checkSubsData = it.data
 
-                ServiceIds.saveSubsIntoPref(requireActivity(), "subsInfo", checkSubsData!!)
+                ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
 
             } else {
                 Log.i(TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -228,13 +232,13 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                 val walletData = it.data
 
-                ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo",
+                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
                     walletData!!.balance!!
                 )
 
             } else {
                 Log.i(TAG, "updateBalance: failure ${it.message}")
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -243,6 +247,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
     override fun onSubsClick(position: Int, subsData: SubsData) {
         showDialog(subsData)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

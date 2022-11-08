@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignInBinding
@@ -27,6 +29,8 @@ import retrofit2.Response
 class SignInFragment : Fragment() {
 
     private var deviceToken: String? = null
+
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentSignInBinding
     override fun onCreateView(
@@ -82,7 +86,7 @@ class SignInFragment : Fragment() {
 
     private fun signIn(userEmail: String, userPassword: String) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -104,10 +108,10 @@ class SignInFragment : Fragment() {
 
                             if (userData != null) {
 
-                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData)
+                                ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
 
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     response.body()!!.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -118,7 +122,7 @@ class SignInFragment : Fragment() {
 
                             } else {
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     "Something went wrong",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -126,7 +130,7 @@ class SignInFragment : Fragment() {
 
                         } else {
                             Toast.makeText(
-                                requireActivity(),
+                                activity,
                                 response.body()?.message,
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -134,14 +138,14 @@ class SignInFragment : Fragment() {
 
                     } else {
                         dialog.dismiss()
-                        Toast.makeText(requireActivity(), response.message(), Toast.LENGTH_SHORT)
+                        Toast.makeText(activity, response.message(), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
 
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                     dialog.dismiss()
-                    Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -162,6 +166,11 @@ class SignInFragment : Fragment() {
             Log.i(TAG, " token:----> : $deviceToken")
 
         })
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

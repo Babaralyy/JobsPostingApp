@@ -1,6 +1,7 @@
 package com.codecoy.bahdjol.ui
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.TransactionAdapter
 import com.codecoy.bahdjol.constant.Constant
@@ -24,12 +26,15 @@ import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
+import kotlin.math.roundToInt
 
 
 class PaymentFragment : Fragment() {
 
     private lateinit var myViewModel: MyViewModel
     private var userData: UserData? = null
+
+    private lateinit var activity: MainActivity
 
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var manager: LinearLayoutManager
@@ -58,7 +63,7 @@ class PaymentFragment : Fragment() {
         transactionsList = arrayListOf()
 
         mBinding.rvTransaction.setHasFixedSize(true)
-        manager = LinearLayoutManager(requireActivity())
+        manager = LinearLayoutManager(activity)
         mBinding.rvTransaction.layoutManager = manager
 
         getUserData()
@@ -80,7 +85,7 @@ class PaymentFragment : Fragment() {
         val addBalanceBinding: AddPaymentDialogBinding =
             AddPaymentDialogBinding.inflate(LayoutInflater.from(requireContext()))
 
-        val dialog = Dialog(requireActivity())
+        val dialog = Dialog(activity)
         dialog.setContentView(addBalanceBinding.root)
         dialog.setCancelable(true)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -110,7 +115,7 @@ class PaymentFragment : Fragment() {
 
     private fun addBalance(balanceCode: String) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         if (userData != null){
@@ -131,10 +136,10 @@ class PaymentFragment : Fragment() {
 
                     mBinding.tvBalance.text = currentBalance.toString()
 
-                    ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo", currentBalance.toString())
+                    ServiceIds.saveBalanceIntoPref(activity, "balanceInfo", currentBalance.toString())
 
                 }else {
-                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -162,14 +167,14 @@ class PaymentFragment : Fragment() {
 
                     transactionsList.reverse()
 
-                    transactionAdapter = TransactionAdapter(requireActivity(), transactionsList)
+                    transactionAdapter = TransactionAdapter(activity, transactionsList)
                     mBinding.rvTransaction.adapter = transactionAdapter
 
                     mBinding.progressBar.visibility = View.GONE
 
                 } else{
                     mBinding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -181,7 +186,7 @@ class PaymentFragment : Fragment() {
 
     private fun getUserData() {
 
-        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
         if (userData != null) {
 
@@ -193,7 +198,7 @@ class PaymentFragment : Fragment() {
 
 
     private fun userBalance(userData: UserData) {
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         myViewModel.userBalance(userData.id!!)
@@ -206,24 +211,33 @@ class PaymentFragment : Fragment() {
 
                 val walletData = it.data
 
-                Glide.with(requireActivity()).load(Constant.IMG_URL + walletData!!.profileImg)
+                Glide.with(activity).load(Constant.IMG_URL + walletData!!.profileImg)
                     .placeholder(R.drawable.ic_downloading)
                     .error(R.drawable.ic_error)
                     .into(mBinding.ivProfile)
 
                 mBinding.tvName.text = walletData.name
 
-                val currentBalance: Double = walletData.balance!!.toDouble()
+                var mBalance = walletData.balance!!.toDouble()
+
+                mBalance = ((mBalance * 100.0).roundToInt() / 100.0)
+
+                val currentBalance: Double = mBalance
 
                 mBinding.tvBalance.text = currentBalance.toString()
 
-                ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo", currentBalance.toString())
+                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo", currentBalance.toString())
 
             }else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

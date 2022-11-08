@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignUpBinding
@@ -45,6 +47,8 @@ class SignUpFragment : Fragment() {
     private var uri: Uri? = null
     private lateinit var bitmap: Bitmap
     private lateinit var encodeImageString: String
+
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentSignUpBinding
     override fun onCreateView(
@@ -83,7 +87,7 @@ class SignUpFragment : Fragment() {
         this.uri = uri
 
         val inputStream: InputStream =
-            requireActivity().contentResolver.openInputStream(this.uri!!)!!
+            activity.contentResolver.openInputStream(this.uri!!)!!
         bitmap = BitmapFactory.decodeStream(inputStream)
 
         mBinding.ivProfile.setImageBitmap(bitmap)
@@ -171,7 +175,7 @@ class SignUpFragment : Fragment() {
         userEmail: String,
         userPassword: String
     ) {
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         val file = getRealPathFromURI(this.uri!!)?.let { File(it) }
@@ -208,10 +212,10 @@ class SignUpFragment : Fragment() {
 
                             if (userData != null) {
 
-                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo", userData)
+                                ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
 
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     response.body()!!.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -222,7 +226,7 @@ class SignUpFragment : Fragment() {
 
                             } else {
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     "Something went wrong",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -230,7 +234,7 @@ class SignUpFragment : Fragment() {
 
                         } else {
                             Toast.makeText(
-                                requireActivity(),
+                                activity,
                                 response.body()?.message,
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -238,14 +242,14 @@ class SignUpFragment : Fragment() {
 
                     } else {
                         dialog.dismiss()
-                        Toast.makeText(requireActivity(), response.message(), Toast.LENGTH_SHORT)
+                        Toast.makeText(activity, response.message(), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
 
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                     dialog.dismiss()
-                    Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -269,5 +273,9 @@ class SignUpFragment : Fragment() {
         return result
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
+    }
 
 }

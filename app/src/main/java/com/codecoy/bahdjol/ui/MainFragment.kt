@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.SubsAdapter
 import com.codecoy.bahdjol.constant.Constant
@@ -32,6 +34,8 @@ import com.google.android.material.navigation.NavigationView
 class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private var userData: UserData? = null
+
+    private lateinit var activity: MainActivity
 
     private lateinit var myViewModel: MyViewModel
 
@@ -91,12 +95,12 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         mBinding.navView.bringToFront()
 
-        mBinding.navView.setNavigationItemSelectedListener(requireActivity() as NavigationView.OnNavigationItemSelectedListener)
+        mBinding.navView.setNavigationItemSelectedListener(activity as NavigationView.OnNavigationItemSelectedListener)
 
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()
@@ -108,7 +112,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun getUserData() {
 
-        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
         if (userData != null) {
 
@@ -135,10 +139,10 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
                 val currentBalance: Double = walletData!!.balance!!.toDouble()
 
-                ServiceIds.saveBalanceIntoPref(requireActivity(), "balanceInfo", currentBalance.toString())
+                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo", currentBalance.toString())
 
             }else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -159,11 +163,11 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
                 val checkSubsData = it.data
 
-                ServiceIds.saveSubsIntoPref(requireActivity(), "subsInfo", checkSubsData!!)
+                ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
 
             } else {
                 Log.i(Constant.TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -171,7 +175,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun userDataOnViews(userData: UserData) {
 
-        Glide.with(requireActivity()).load(Constant.IMG_URL + userData.profileImg)
+        Glide.with(activity).load(Constant.IMG_URL + userData.profileImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(mBinding.navView.findViewById<ImageView>(R.id.ivProfile))
@@ -204,6 +208,11 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             mBinding.drawerLay.close()
         }
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

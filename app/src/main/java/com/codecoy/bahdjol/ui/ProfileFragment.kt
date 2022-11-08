@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
@@ -50,6 +52,7 @@ class ProfileFragment : Fragment() {
     private lateinit var bitmap: Bitmap
     private lateinit var encodeImageString: String
 
+    private lateinit var activity: MainActivity
 
     private var userData: UserData? = null
 
@@ -97,7 +100,7 @@ class ProfileFragment : Fragment() {
         this.uri = uri
 
         val inputStream: InputStream =
-            requireActivity().contentResolver.openInputStream(this.uri!!)!!
+            activity.contentResolver.openInputStream(this.uri!!)!!
         bitmap = BitmapFactory.decodeStream(inputStream)
 
         mBinding.ivProfile.setImageBitmap(bitmap)
@@ -119,7 +122,7 @@ class ProfileFragment : Fragment() {
 
     private fun getUserData() {
 
-        userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
         if (userData != null) {
 
@@ -131,7 +134,7 @@ class ProfileFragment : Fragment() {
 
     private fun userDataOnViews(userData: UserData) {
 
-        Glide.with(requireActivity()).load(Constant.IMG_URL + userData.profileImg)
+        Glide.with(activity).load(Constant.IMG_URL + userData.profileImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(mBinding.ivProfile)
@@ -186,7 +189,7 @@ class ProfileFragment : Fragment() {
         userNumber: String
     ) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
 
@@ -258,11 +261,11 @@ class ProfileFragment : Fragment() {
                                     updateProfileData.updatedAt
                                 )
 
-                                ServiceIds.saveUserIntoPref(requireActivity(), "userInfo",
+                                ServiceIds.saveUserIntoPref(activity, "userInfo",
                                     userData!!
                                 )
 
-                                userData = ServiceIds.fetchUserFromPref(requireActivity(), "userInfo")
+                                userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
                                 if (userData != null) {
 
@@ -271,14 +274,14 @@ class ProfileFragment : Fragment() {
                                 }
 
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     response.body()!!.message,
                                     Toast.LENGTH_SHORT
                                 ).show()
 
                             } else {
                                 Toast.makeText(
-                                    requireActivity(),
+                                    activity,
                                     "Something went wrong",
                                     Toast.LENGTH_SHORT
                                 ).show()
@@ -286,7 +289,7 @@ class ProfileFragment : Fragment() {
 
                         } else {
                             Toast.makeText(
-                                requireActivity(),
+                                activity,
                                 response.body()?.message,
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -294,7 +297,7 @@ class ProfileFragment : Fragment() {
 
                     } else {
                         dialog.dismiss()
-                        Toast.makeText(requireActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT)
+                        Toast.makeText(activity, response.errorBody().toString(), Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -303,7 +306,7 @@ class ProfileFragment : Fragment() {
                 override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
                     dialog.dismiss()
                     Log.i(TAG, "onResponse: fail ${t.message}")
-                    Toast.makeText(requireActivity(), t.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 }
 
             })
@@ -324,6 +327,11 @@ class ProfileFragment : Fragment() {
             cursor.close()
         }
         return result
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

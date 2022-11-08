@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.codecoy.bahdjol.MainActivity
@@ -23,8 +24,6 @@ class MessagingService: FirebaseMessagingService() {
 
     private lateinit var sharedPreferences: SharedPreferences
 
-
-
     override fun onNewToken(deviceToken: String) {
         super.onNewToken(deviceToken)
 
@@ -34,6 +33,7 @@ class MessagingService: FirebaseMessagingService() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
 
@@ -43,6 +43,7 @@ class MessagingService: FirebaseMessagingService() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun showNotification(data: MutableMap<String, String>) {
 
 //         Create an explicit intent for an Activity in your app
@@ -72,7 +73,7 @@ class MessagingService: FirebaseMessagingService() {
             .setSmallIcon(R.drawable.logo)
             .setContentTitle(data["title"])
             .setContentText(data["body"])
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 

@@ -59,13 +59,13 @@ class ServicesFragment : Fragment(), ServicesCallback {
         myViewModel =
             ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
-        gridManager = GridLayoutManager(requireActivity(), 2)
+        gridManager = GridLayoutManager(activity, 2)
         mBinding.rvServices.layoutManager = gridManager
         mBinding.rvServices.setHasFixedSize(true)
 
         allServices()
 
-        drawerLayout = requireActivity().findViewById(R.id.drawerLay)
+        drawerLayout = activity.findViewById(R.id.drawerLay)
 
         mBinding.toolBar.setNavigationOnClickListener {
                 drawerLayout.openDrawer(Gravity.LEFT)
@@ -74,7 +74,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
     }
 
     private fun allServices() {
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         myViewModel.allServices()
@@ -101,7 +101,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
 
     override fun onServiceClick(position: Int) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         Handler(Looper.getMainLooper()).postDelayed({

@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.EventDay
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.HistoryAdapter
 import com.codecoy.bahdjol.callback.HistoryCallback
@@ -31,12 +33,12 @@ class CalendarFragment : Fragment(), HistoryCallback {
     private lateinit var myViewModel: MyViewModel
 
     private lateinit var bookingHistoryList: MutableList<BookingHistoryData>
-
     private lateinit var filteredHistoryList: MutableList<BookingHistoryData>
-
     private lateinit var historyAdapter: HistoryAdapter
 
     private lateinit var date: String
+
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentCalendarBinding
     override fun onCreateView(
@@ -108,7 +110,7 @@ class CalendarFragment : Fragment(), HistoryCallback {
                 setBookingsOnCalendar(bookingHistoryList as ArrayList<BookingHistoryData>)
 
             } else {
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -166,16 +168,17 @@ class CalendarFragment : Fragment(), HistoryCallback {
         } as MutableList<BookingHistoryData>
 
         if (this.filteredHistoryList.isEmpty()){
-            Toast.makeText(requireActivity(), "Booking does not exist!", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(activity, "Booking does not exist!", Toast.LENGTH_SHORT).show()
             filteredHistoryList.clear()
 
-            historyAdapter = HistoryAdapter(requireActivity(), filteredHistoryList, this)
+            historyAdapter = HistoryAdapter(activity, filteredHistoryList, this)
             mBinding.rvBooking.adapter = historyAdapter
 
 
         } else {
 
-            historyAdapter = HistoryAdapter(requireActivity(), filteredHistoryList, this)
+            historyAdapter = HistoryAdapter(activity, filteredHistoryList, this)
             mBinding.rvBooking.adapter = historyAdapter
 
         }
@@ -184,6 +187,11 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
     override fun onHistoryClick(position: Int, bookingHistoryData: BookingHistoryData) {
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 

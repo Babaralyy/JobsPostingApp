@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.HistoryAdapter
 import com.codecoy.bahdjol.callback.HistoryCallback
@@ -26,6 +28,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class HistoryFragment : Fragment(), HistoryCallback {
+
+    private lateinit var activity: MainActivity
 
     private lateinit var myViewModel: MyViewModel
 
@@ -65,7 +69,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
 
         mBinding.rvHistory.setHasFixedSize(true)
-        mBinding.rvHistory.layoutManager = LinearLayoutManager(requireActivity())
+        mBinding.rvHistory.layoutManager = LinearLayoutManager(activity)
 
         mBinding.tvAll.isSelected = true
         getBookingHistory()
@@ -98,14 +102,14 @@ class HistoryFragment : Fragment(), HistoryCallback {
             if (confirmedHistoryList.isNotEmpty()) {
 
                 mBinding.tvNotFound.visibility = View.GONE
-                historyAdapter = HistoryAdapter(requireActivity(), confirmedHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, confirmedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
 
                 confirmedHistoryList.clear()
 
-                historyAdapter = HistoryAdapter(requireActivity(), confirmedHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, confirmedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
                 mBinding.tvNotFound.visibility = View.VISIBLE
@@ -128,14 +132,14 @@ class HistoryFragment : Fragment(), HistoryCallback {
             if (pendingHistoryList.isNotEmpty()) {
 
                 mBinding.tvNotFound.visibility = View.GONE
-                historyAdapter = HistoryAdapter(requireActivity(), pendingHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, pendingHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
 
                 pendingHistoryList.clear()
 
-                historyAdapter = HistoryAdapter(requireActivity(), pendingHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, pendingHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
                 mBinding.tvNotFound.visibility = View.VISIBLE
@@ -158,14 +162,14 @@ class HistoryFragment : Fragment(), HistoryCallback {
             if (cancelledHistoryList.isNotEmpty()) {
 
                 mBinding.tvNotFound.visibility = View.GONE
-                historyAdapter = HistoryAdapter(requireActivity(), cancelledHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, cancelledHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
 
                 cancelledHistoryList.clear()
 
-                historyAdapter = HistoryAdapter(requireActivity(), cancelledHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, cancelledHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
                 mBinding.tvNotFound.visibility = View.VISIBLE
@@ -188,13 +192,13 @@ class HistoryFragment : Fragment(), HistoryCallback {
             if (completedHistoryList.isNotEmpty()) {
 
                 mBinding.tvNotFound.visibility = View.GONE
-                historyAdapter = HistoryAdapter(requireActivity(), completedHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, completedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
 
                 completedHistoryList.clear()
-                historyAdapter = HistoryAdapter(requireActivity(), completedHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, completedHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
                 mBinding.tvNotFound.visibility = View.VISIBLE
@@ -207,7 +211,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
     private fun getBookingHistory() {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
 
         myViewModel.bookingHistory(ServiceIds.userId!!)
@@ -226,12 +230,12 @@ class HistoryFragment : Fragment(), HistoryCallback {
                 mBinding.tvNotFound.visibility = View.GONE
                 bookingHistoryList = it.data
 
-                historyAdapter = HistoryAdapter(requireActivity(), bookingHistoryList, this)
+                historyAdapter = HistoryAdapter(activity, bookingHistoryList, this)
                 mBinding.rvHistory.adapter = historyAdapter
 
             } else {
                 mBinding.tvNotFound.visibility = View.VISIBLE
-                Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -239,7 +243,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
     override fun onHistoryClick(position: Int, bookingHistoryData: BookingHistoryData) {
 
-        val dialog = Constant.getDialog(requireActivity())
+        val dialog = Constant.getDialog(activity)
         dialog.show()
         Handler(Looper.getMainLooper()).postDelayed({
 
@@ -257,8 +261,13 @@ class HistoryFragment : Fragment(), HistoryCallback {
         bottomDialog.setContentView(R.layout.bottom_dialog_lay)
         bottomDialog.show()
 
-        Toast.makeText(requireActivity(), bookingHistoryData.bookingDesc, Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity, bookingHistoryData.bookingDesc, Toast.LENGTH_SHORT).show()
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 
