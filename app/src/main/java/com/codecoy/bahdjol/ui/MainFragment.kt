@@ -13,15 +13,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
-import com.codecoy.bahdjol.adapter.SubsAdapter
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentMainBinding
-import com.codecoy.bahdjol.datamodels.GetSubsResponse
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.GlobalClass
@@ -167,7 +164,6 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
             } else {
                 Log.i(Constant.TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -178,7 +174,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         Glide.with(activity).load(Constant.IMG_URL + userData.profileImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
-            .into(mBinding.navView.findViewById<ImageView>(R.id.ivProfile))
+            .into(mBinding.navView.findViewById(R.id.ivProfile))
 
         mBinding.navView.findViewById<TextView>(R.id.tvName).text = userData.name
         mBinding.navView.findViewById<TextView>(R.id.tvNumber).text = userData.phone

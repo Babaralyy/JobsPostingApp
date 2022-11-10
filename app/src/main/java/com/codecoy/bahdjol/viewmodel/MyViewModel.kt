@@ -41,6 +41,9 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var transactionMutableLiveData: MutableLiveData<TransactionResponse> =
         MutableLiveData()
 
+    private var newReqMutableLiveData: MutableLiveData<NewReqResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
@@ -53,6 +56,7 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val getSubsLiveData: LiveData<GetSubsResponse> = getSubsMutableLiveData
     val checkSubsLiveData: LiveData<CheckSubsResponse> = checkSubsMutableLiveData
     val transactionLiveData: LiveData<TransactionResponse> = transactionMutableLiveData
+    val newReqLiveData: LiveData<NewReqResponse> = newReqMutableLiveData
 
 
 
@@ -369,5 +373,33 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
+    fun newRequests(agent_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.newRequests(agent_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    newReqMutableLiveData.postValue(response.body())
+                } else {
+                    val newReqResponse = NewReqResponse()
+                    newReqResponse.status = false
+                    newReqResponse.message = response.body().toString()
+                    newReqMutableLiveData.postValue(newReqResponse)
+                }
+            } else {
+                val newReqResponse = NewReqResponse()
+                newReqResponse.status = false
+                newReqResponse.message = response.errorBody().toString()
+                newReqMutableLiveData.postValue(newReqResponse)
+            }
+
+        }
+
+    }
+
 
 }

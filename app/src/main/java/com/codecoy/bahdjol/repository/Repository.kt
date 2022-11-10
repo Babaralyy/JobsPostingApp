@@ -45,4 +45,5 @@ class Repository {
 
     suspend  fun userTransaction(user_id: Int) = apiCall.userTransaction(user_id)
 
+    suspend  fun newRequests(agent_id: Int) = apiCall.newRequests(agent_id)
 }

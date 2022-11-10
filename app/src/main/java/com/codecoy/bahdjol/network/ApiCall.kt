@@ -115,4 +115,7 @@ interface ApiCall {
         @Field("desc") desc: String
     ): Call<HelpResponse>
 
+    @GET("api/new_request")
+    suspend fun newRequests(@Query("agent_id") agent_id: Int): Response<NewReqResponse>
+
 }
