@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
@@ -22,6 +21,7 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentSubServicesBinding
 import com.codecoy.bahdjol.datamodels.SubServicesData
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.roomdb.*
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
@@ -30,6 +30,8 @@ import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 class SubServicesFragment : Fragment(), ServicesCallback {
 
     private lateinit var myViewModel: MyViewModel
+    private lateinit var roomServicesViewModel: RoomServicesViewModel
+    
     private lateinit var subServicesDataList: MutableList<SubServicesData>
 
     private lateinit var gridManager: GridLayoutManager
@@ -54,6 +56,11 @@ class SubServicesFragment : Fragment(), ServicesCallback {
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
         myViewModel = ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+
+        val roomServicesRepo = RoomServicesRepo(AppDatabase(activity))
+        val roomServicesFactory = RoomServicesFactory(roomServicesRepo)
+        roomServicesViewModel =
+            ViewModelProvider(this, roomServicesFactory)[RoomServicesViewModel::class.java]
 
         subServicesDataList = arrayListOf()
 
@@ -88,6 +95,8 @@ class SubServicesFragment : Fragment(), ServicesCallback {
 
                 subServicesDataList = it.data
 
+                insertSubServicesIntoRoom(subServicesDataList as ArrayList<SubServicesData>, ServiceIds.serviceId!!)
+
                 subServiceAdapter = SubServiceAdapter(activity, subServicesDataList, this)
                 mBinding.rvSubServices.adapter = subServiceAdapter
 
@@ -96,6 +105,10 @@ class SubServicesFragment : Fragment(), ServicesCallback {
             }
         }
 
+    }
+
+    private fun insertSubServicesIntoRoom(subServicesDataList: ArrayList<SubServicesData>, serviceId: Int) {
+        roomServicesViewModel.insertSubService(SubService(serviceId, subServicesDataList))
     }
 
     override fun onServiceClick(position: Int) {

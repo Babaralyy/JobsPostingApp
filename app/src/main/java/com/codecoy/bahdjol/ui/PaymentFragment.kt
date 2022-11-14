@@ -222,11 +222,10 @@ class PaymentFragment : Fragment() {
 
                 mBalance = ((mBalance * 100.0).roundToInt() / 100.0)
 
-                val currentBalance: Double = mBalance
 
-                mBinding.tvBalance.text = currentBalance.toString()
+                mBinding.tvBalance.text = mBalance.toString()
 
-                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo", currentBalance.toString())
+                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo", mBalance.toString())
 
             }else {
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()

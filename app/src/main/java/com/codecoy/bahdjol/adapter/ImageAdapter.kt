@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.callback.CancelCallback
+import com.codecoy.bahdjol.callback.SubsCallback
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.ImageLayBinding
 
 class ImageAdapter(
     private val context: Context,
-    private val imageList: MutableList<String>
+    private val imageList: MutableList<String>,
+    private val cancelCallback: CancelCallback
 ) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
 

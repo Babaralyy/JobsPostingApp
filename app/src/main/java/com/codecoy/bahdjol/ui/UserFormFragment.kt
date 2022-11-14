@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.ImageAdapter
+import com.codecoy.bahdjol.callback.CancelCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
@@ -63,9 +64,10 @@ import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
-class UserFormFragment : Fragment(), OnMapReadyCallback {
+class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -125,7 +127,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         bookingImgList = arrayListOf()
 
 
-        imageAdapter = ImageAdapter(activity, imageList)
+        imageAdapter = ImageAdapter(activity, imageList, this)
         mBinding.rvImages.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         mBinding.rvImages.setHasFixedSize(true)
@@ -537,6 +539,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
 
                 totalBalance -= orderBalance
 
+                totalBalance = ((totalBalance * 100.0).roundToInt() / 100.0)
+
                 updateBalance(totalBalance)
 
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
@@ -622,6 +626,10 @@ class UserFormFragment : Fragment(), OnMapReadyCallback {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLay, fragment)
         fragmentTransaction.commit()
+    }
+
+    override fun onImageCancelClick(position: Int) {
+
     }
 
 }

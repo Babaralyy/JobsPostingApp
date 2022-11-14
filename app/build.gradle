@@ -104,5 +104,10 @@ dependencies {
 
     implementation 'com.karumi:dexter:6.2.3'
 
+    //Room db
+    implementation("androidx.room:room-runtime:2.4.3")
+    annotationProcessor("androidx.room:room-compiler:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
+
 
 }

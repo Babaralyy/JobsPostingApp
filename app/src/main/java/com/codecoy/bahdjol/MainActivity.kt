@@ -98,7 +98,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
        return false
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+
         val fManager = supportFragmentManager.findFragmentById(R.id.frameLay)
 
         if (GlobalClass.drawer != null) {

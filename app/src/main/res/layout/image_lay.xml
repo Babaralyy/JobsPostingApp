@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="7dp"
+            android:layout_alignEnd="@+id/ivAddImage"
+            app:srcCompat="@drawable/ic_cancel"
+            app:tint="@color/primaryVariantColor" />
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/ivAddImage"
@@ -15,5 +24,5 @@
             android:src="@drawable/ic_add"
             app:civ_border_width="1dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

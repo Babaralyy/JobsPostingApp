@@ -23,14 +23,19 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentServicesBinding
 import com.codecoy.bahdjol.datamodels.AllServiceData
 import com.codecoy.bahdjol.repository.Repository
+import com.codecoy.bahdjol.roomdb.*
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ServicesFragment : Fragment(), ServicesCallback {
 
     private lateinit var myViewModel: MyViewModel
+    private lateinit var roomServicesViewModel: RoomServicesViewModel
 
     private lateinit var allServiceDataList: MutableList<AllServiceData>
     private lateinit var gridManager: GridLayoutManager
@@ -58,6 +63,13 @@ class ServicesFragment : Fragment(), ServicesCallback {
         val myViewModelFactory = MyViewModelFactory(repository)
         myViewModel =
             ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
+
+        val roomServicesRepo = RoomServicesRepo(AppDatabase(activity))
+        val roomServicesFactory = RoomServicesFactory(roomServicesRepo)
+
+        roomServicesViewModel =
+            ViewModelProvider(this, roomServicesFactory)[RoomServicesViewModel::class.java]
+
 
         gridManager = GridLayoutManager(activity, 2)
         mBinding.rvServices.layoutManager = gridManager
@@ -87,6 +99,9 @@ class ServicesFragment : Fragment(), ServicesCallback {
                 Log.i(Constant.TAG, "response: success ${it.data.size}")
 
                 allServiceDataList = it.data
+
+                insertServicesIntoRoom(allServiceDataList as ArrayList<AllServiceData>)
+
                 allServicesAdapter = AllServicesAdapter(activity, allServiceDataList, this)
                 mBinding.rvServices.adapter = allServicesAdapter
                 allServicesAdapter.notifyDataSetChanged()
@@ -97,6 +112,17 @@ class ServicesFragment : Fragment(), ServicesCallback {
             }
 
         }
+    }
+
+    private fun insertServicesIntoRoom(allServiceDataList: ArrayList<AllServiceData>) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            for(item in allServiceDataList){
+                roomServicesViewModel.insertService(Service(item.id, item.categoryName, item.img, item.createdAt, item.updatedAt))
+            }
+
+        }
+
     }
 
     override fun onServiceClick(position: Int) {
