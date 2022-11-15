@@ -18,6 +18,10 @@ interface ServicesDao {
     @Query("SELECT * FROM Service")
     fun getAllServices(): LiveData<MutableList<Service>>
 
+    @Query("SELECT * FROM SubService WHERE id = :sId")
+    fun getSubService(sId: Int): LiveData<SubService>
+
     @Query("SELECT * FROM SubService")
     fun getAllSubServices(): LiveData<MutableList<SubService>>
+
 }

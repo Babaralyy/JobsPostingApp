@@ -18,20 +18,25 @@ import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.SubServiceAdapter
 import com.codecoy.bahdjol.callback.ServicesCallback
 import com.codecoy.bahdjol.constant.Constant
+import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSubServicesBinding
 import com.codecoy.bahdjol.datamodels.SubServicesData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.roomdb.*
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class SubServicesFragment : Fragment(), ServicesCallback {
 
     private lateinit var myViewModel: MyViewModel
     private lateinit var roomServicesViewModel: RoomServicesViewModel
-    
+
     private lateinit var subServicesDataList: MutableList<SubServicesData>
 
     private lateinit var gridManager: GridLayoutManager
@@ -69,36 +74,62 @@ class SubServicesFragment : Fragment(), ServicesCallback {
         mBinding.rvSubServices.setHasFixedSize(true)
 
         mBinding.toolBar.setNavigationOnClickListener {
-           replaceFragment(ServicesFragment())
+            replaceFragment(ServicesFragment())
         }
 
-        subServices()
+        subServicesFromRoom()
 
     }
 
+    private fun subServicesFromRoom() {
+
+        CoroutineScope(Dispatchers.Main).launch {
+            roomServicesViewModel.getSubService(1).observe(
+                activity
+            ) { subService ->
+                Log.i(TAG, "subServicesFromRoom: $subService")
+                Log.i(TAG, "subServicesFromRoom: ${subService?.data}")
+
+                if(subService != null && subService.data.isNotEmpty()){
+                    setRecyclerView(subService.data)
+
+                    if (activity.isNetworkConnected()){
+                        subServices()
+                    }
+
+                } else {
+                    if (activity.isNetworkConnected()){
+                        subServices()
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun setRecyclerView(data: ArrayList<SubServicesData>) {
+        subServiceAdapter = SubServiceAdapter(activity, data, this)
+        mBinding.rvSubServices.adapter = subServiceAdapter
+        subServiceAdapter.notifyDataSetChanged()
+    }
+
     private fun subServices() {
-        val dialog = Constant.getDialog(activity)
-        dialog.show()
 
         myViewModel.subServices(ServiceIds.serviceId!!)
 
         myViewModel.subServicesLiveData.observe(
-            viewLifecycleOwner
+            activity
         ) {
-            dialog.dismiss()
 
-            Log.i(Constant.TAG, "response: outer ${it.data.size}")
+            Log.i(TAG, "response: outer ${it.data.size}")
 
             if (it.status == true && it.data.isNotEmpty()) {
 
-                Log.i(Constant.TAG, "response: success ${it.data.size}")
+                Log.i(TAG, "response: success ${it.data.size}")
 
                 subServicesDataList = it.data
 
                 insertSubServicesIntoRoom(subServicesDataList as ArrayList<SubServicesData>, ServiceIds.serviceId!!)
-
-                subServiceAdapter = SubServiceAdapter(activity, subServicesDataList, this)
-                mBinding.rvSubServices.adapter = subServiceAdapter
 
             } else {
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()

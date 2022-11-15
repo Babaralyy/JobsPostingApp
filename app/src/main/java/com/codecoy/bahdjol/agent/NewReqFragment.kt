@@ -20,6 +20,7 @@ import com.codecoy.bahdjol.databinding.FragmentNewReqBinding
 import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 
@@ -67,6 +68,9 @@ class NewReqFragment : Fragment() {
         mBinding.toolBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+        mBinding.tvRetry.setOnClickListener {
+            checkConnectivity()
+        }
 
         getAgent()
 
@@ -77,16 +81,28 @@ class NewReqFragment : Fragment() {
         agentLoginData = ServiceIds.fetchAgentFromPref(requireContext(), "agentInfo")
 
         if (agentLoginData != null){
-            getNewRequests(agentLoginData!!)
+            checkConnectivity()
         }
     }
 
-    private fun getNewRequests(agentLoginData: AgentLoginData) {
+
+    private fun checkConnectivity() {
+
+        if (activity.isNetworkConnected()){
+            getNewRequests()
+            mBinding.layNotConnected.visibility = View.GONE
+        } else{
+            mBinding.layNotConnected.visibility = View.VISIBLE
+        }
+
+    }
+
+    private fun getNewRequests() {
 
         val dialog = Constant.getDialog(activity)
         dialog.show()
 
-        myViewModel.newRequests(agentLoginData.id!!)
+        myViewModel.newRequests(agentLoginData?.id!!)
 
         myViewModel.newReqLiveData.observe(viewLifecycleOwner
         ) {
@@ -106,6 +122,7 @@ class NewReqFragment : Fragment() {
 
 
             } else{
+                mBinding.tvNotFound.visibility = View.VISIBLE
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }

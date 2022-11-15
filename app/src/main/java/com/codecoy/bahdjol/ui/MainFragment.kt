@@ -23,6 +23,7 @@ import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.material.navigation.NavigationView
@@ -115,10 +116,17 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
             userDataOnViews(userData!!)
 
+            checkConnectivity()
+
+        }
+
+    }
+
+    private fun checkConnectivity() {
+        if(activity.isNetworkConnected()){
             checkSubs(userData!!)
             userBalance(userData!!)
         }
-
     }
 
     private fun userBalance(userData: UserData) {

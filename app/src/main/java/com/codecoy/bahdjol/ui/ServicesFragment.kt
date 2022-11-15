@@ -25,6 +25,7 @@ import com.codecoy.bahdjol.datamodels.AllServiceData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.roomdb.*
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +39,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
     private lateinit var roomServicesViewModel: RoomServicesViewModel
 
     private lateinit var allServiceDataList: MutableList<AllServiceData>
+    private lateinit var roomServicesList: MutableList<Service>
     private lateinit var gridManager: GridLayoutManager
     private lateinit var allServicesAdapter: AllServicesAdapter
 
@@ -70,30 +72,66 @@ class ServicesFragment : Fragment(), ServicesCallback {
         roomServicesViewModel =
             ViewModelProvider(this, roomServicesFactory)[RoomServicesViewModel::class.java]
 
+        roomServicesList = arrayListOf()
+        allServiceDataList = arrayListOf()
+
 
         gridManager = GridLayoutManager(activity, 2)
         mBinding.rvServices.layoutManager = gridManager
         mBinding.rvServices.setHasFixedSize(true)
 
-        allServices()
+        servicesFromRoomDb()
 
         drawerLayout = activity.findViewById(R.id.drawerLay)
 
         mBinding.toolBar.setNavigationOnClickListener {
-                drawerLayout.openDrawer(Gravity.LEFT)
+            drawerLayout.openDrawer(Gravity.LEFT)
         }
 
     }
 
-    private fun allServices() {
+    private fun servicesFromRoomDb() {
+
         val dialog = Constant.getDialog(activity)
         dialog.show()
 
+        CoroutineScope(Dispatchers.Main).launch {
+            dialog.dismiss()
+            roomServicesViewModel.getAllServices().observe(
+                activity
+            ) {
+                if (it.isEmpty()) {
+                    if (activity.isNetworkConnected()){
+                        allServices()
+                    }
+
+                } else {
+
+                    roomServicesList = it
+                    setRecyclerView(roomServicesList)
+
+                    if (activity.isNetworkConnected()){
+                        allServices()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun setRecyclerView(roomServicesList: MutableList<Service>) {
+        allServicesAdapter = AllServicesAdapter(activity, roomServicesList, this)
+        mBinding.rvServices.adapter = allServicesAdapter
+        allServicesAdapter.notifyDataSetChanged()
+    }
+
+    private fun allServices() {
+
         myViewModel.allServices()
 
-        myViewModel.allServicesLiveData.observe(viewLifecycleOwner
+        myViewModel.allServicesLiveData.observe(
+            viewLifecycleOwner
         ) {
-            dialog.dismiss()
             if (it.status == true && it.data.isNotEmpty()) {
 
                 Log.i(Constant.TAG, "response: success ${it.data.size}")
@@ -101,11 +139,6 @@ class ServicesFragment : Fragment(), ServicesCallback {
                 allServiceDataList = it.data
 
                 insertServicesIntoRoom(allServiceDataList as ArrayList<AllServiceData>)
-
-                allServicesAdapter = AllServicesAdapter(activity, allServiceDataList, this)
-                mBinding.rvServices.adapter = allServicesAdapter
-                allServicesAdapter.notifyDataSetChanged()
-
 
             } else {
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
@@ -131,7 +164,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
         dialog.show()
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val serviceData = allServiceDataList[position]
+            val serviceData = roomServicesList[position]
             serviceId = serviceData.id
             dialog.dismiss()
             replaceFragment(SubServicesFragment())

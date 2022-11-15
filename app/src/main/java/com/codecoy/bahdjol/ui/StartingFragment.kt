@@ -1,12 +1,14 @@
 package com.codecoy.bahdjol.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentStartingBinding
 import com.codecoy.bahdjol.datamodels.AgentLoginData
 import com.codecoy.bahdjol.datamodels.UserData
@@ -39,12 +41,21 @@ class StartingFragment : Fragment() {
 
         mBinding.ivUser.setOnClickListener {
 
+            Log.i(TAG, "inIt: user")
+
             if (userData != null){
+
+                Log.i(TAG, "inIt: user not null")
+
                 val action = StartingFragmentDirections.actionStartingFragmentToMainFragment()
                 findNavController().navigate(action)
             } else {
+
+                Log.i(TAG, "inIt: user null")
+
                 val action = StartingFragmentDirections.actionStartingFragmentToSignInFragment()
                 findNavController().navigate(action)
+
             }
 
         }

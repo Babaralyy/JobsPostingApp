@@ -118,4 +118,9 @@ interface ApiCall {
     @GET("api/new_request")
     suspend fun newRequests(@Query("agent_id") agent_id: Int): Response<NewReqResponse>
 
+    @GET("api/on_going")
+    suspend fun ongoingRequests(@Query("agent_id") agent_id: Int): Response<OngoingReqResponse>
+
+    @GET("api/req_history")
+    suspend fun historyRequests(@Query("agent_id") agent_id: Int): Response<HistoryReqResponse>
 }

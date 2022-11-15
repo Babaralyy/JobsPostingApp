@@ -44,6 +44,12 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var newReqMutableLiveData: MutableLiveData<NewReqResponse> =
         MutableLiveData()
 
+    private var ongoingReqMutableLiveData: MutableLiveData<OngoingReqResponse> =
+        MutableLiveData()
+
+    private var historyReqMutableLiveData: MutableLiveData<HistoryReqResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
@@ -57,6 +63,8 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val checkSubsLiveData: LiveData<CheckSubsResponse> = checkSubsMutableLiveData
     val transactionLiveData: LiveData<TransactionResponse> = transactionMutableLiveData
     val newReqLiveData: LiveData<NewReqResponse> = newReqMutableLiveData
+    val ongoingReqLiveData: LiveData<OngoingReqResponse> = ongoingReqMutableLiveData
+    val historyReqLiveData: LiveData<HistoryReqResponse> = historyReqMutableLiveData
 
 
 
@@ -395,6 +403,60 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
                 newReqResponse.status = false
                 newReqResponse.message = response.errorBody().toString()
                 newReqMutableLiveData.postValue(newReqResponse)
+            }
+
+        }
+
+    }
+
+    fun ongoingRequests(agent_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.ongoingRequests(agent_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    ongoingReqMutableLiveData.postValue(response.body())
+                } else {
+                    val ongoingReqResponse = OngoingReqResponse()
+                    ongoingReqResponse.status = false
+                    ongoingReqResponse.message = response.body().toString()
+                    ongoingReqMutableLiveData.postValue(ongoingReqResponse)
+                }
+            } else {
+                val ongoingReqResponse = OngoingReqResponse()
+                ongoingReqResponse.status = false
+                ongoingReqResponse.message = response.errorBody().toString()
+                ongoingReqMutableLiveData.postValue(ongoingReqResponse)
+            }
+
+        }
+
+    }
+
+    fun historyRequests(agent_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.historyRequests(agent_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    historyReqMutableLiveData.postValue(response.body())
+                } else {
+                    val historyReqResponse = HistoryReqResponse()
+                    historyReqResponse.status = false
+                    historyReqResponse.message = response.body().toString()
+                    historyReqMutableLiveData.postValue(historyReqResponse)
+                }
+            } else {
+                val historyReqResponse = HistoryReqResponse()
+                historyReqResponse.status = false
+                historyReqResponse.message = response.errorBody().toString()
+                historyReqMutableLiveData.postValue(historyReqResponse)
             }
 
         }

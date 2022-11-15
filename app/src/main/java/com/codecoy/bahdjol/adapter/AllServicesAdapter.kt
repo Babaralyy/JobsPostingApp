@@ -13,10 +13,11 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.ServiceLayBinding
 import com.codecoy.bahdjol.datamodels.AllServiceData
+import com.codecoy.bahdjol.roomdb.Service
 
 class AllServicesAdapter(
     private val context: Context,
-    private val allServiceDataList: MutableList<AllServiceData>,
+    private val allServiceDataList: MutableList<Service>,
     private val serviceCallback: ServicesCallback
 ) : RecyclerView.Adapter<AllServicesAdapter.ViewHolder>() {
 

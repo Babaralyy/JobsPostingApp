@@ -1,9 +1,8 @@
 package com.codecoy.bahdjol.roomdb
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class RoomServicesViewModel(private val roomServicesRepo: RoomServicesRepo): ViewModel()  {
@@ -15,5 +14,15 @@ class RoomServicesViewModel(private val roomServicesRepo: RoomServicesRepo): Vie
     fun insertSubService(subService: SubService) = GlobalScope.launch {
         roomServicesRepo.insertSubService(subService)
     }
+
+     suspend fun getAllServices() =
+        withContext(Dispatchers.IO) {
+            roomServicesRepo.getAllServices()
+        }
+
+    suspend fun getSubService(id: Int) =
+        withContext(Dispatchers.IO) {
+            roomServicesRepo.getSubService(id)
+        }
 
 }

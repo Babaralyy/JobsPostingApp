@@ -629,7 +629,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     }
 
     override fun onImageCancelClick(position: Int) {
-
+        updatedImageList.removeAt(position)
+        imageAdapter.updateAdapterList(updatedImageList)
     }
 
 }

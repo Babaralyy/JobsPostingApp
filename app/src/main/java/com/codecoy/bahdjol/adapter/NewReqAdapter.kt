@@ -31,7 +31,6 @@ class NewReqAdapter(
             .into(holder.mBinding.ivProduct)
 
         holder.mBinding.tvProductName.text = newReqData.bookingDesc
-        holder.mBinding.tvProductName.text = newReqData.bookingDesc
         holder.mBinding.tvReqDate.text = newReqData.time + " " + newReqData.date
         holder.mBinding.tvOrderPrice.text = "$ " + newReqData.bookingPrice
         holder.mBinding.tvOrderId.text = newReqData.id

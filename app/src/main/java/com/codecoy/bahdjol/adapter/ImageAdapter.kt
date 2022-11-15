@@ -32,6 +32,10 @@ class ImageAdapter(
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivAddImage)
+
+        holder.mBinding.ivCancel.setOnClickListener {
+            cancelCallback.onImageCancelClick(position)
+        }
     }
 
     override fun getItemCount(): Int {
