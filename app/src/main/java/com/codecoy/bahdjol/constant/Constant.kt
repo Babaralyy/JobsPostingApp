@@ -8,8 +8,10 @@ import com.codecoy.bahdjol.R
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object Constant {
@@ -18,9 +20,10 @@ object Constant {
     private const val BASE_URL = "https://wh717090.ispot.cc/bahdjol/"
     const val IMG_URL = "https://wh717090.ispot.cc/bahdjol/public/storage/"
 
-    var httpClient = OkHttpClient.Builder().connectTimeout(30000, TimeUnit.SECONDS) // connect timeout
+    private var httpClient = OkHttpClient.Builder().connectTimeout(30000, TimeUnit.SECONDS) // connect timeout
         .writeTimeout(30000, TimeUnit.SECONDS) // write timeout
-        .readTimeout(30000, TimeUnit.SECONDS) // read timeout
+        .readTimeout(30000, TimeUnit.SECONDS)
+
 
     val gson: Gson = GsonBuilder()
         .setLenient()

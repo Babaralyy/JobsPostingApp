@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
@@ -38,10 +39,12 @@ import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
 import com.codecoy.bahdjol.databinding.OrderDialogLayBinding
 import com.codecoy.bahdjol.databinding.TimePickerLayoutBinding
 import com.codecoy.bahdjol.datamodels.*
+import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
 import com.codecoy.bahdjol.utils.ServiceIds.userId
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -54,6 +57,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import gun0912.tedimagepicker.builder.TedImagePicker
+import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -63,7 +67,6 @@ import java.io.InputStream
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -81,7 +84,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     private lateinit var encodeImageString: String
 
     private lateinit var imageList: MutableList<String>
-    private var updatedImageList = ArrayList<String>()
+
     private var bookingImgList = ArrayList<BookingPics>()
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var file: File
@@ -101,6 +104,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     private var serviceTypeId: Int? = null
 
     private var userData: UserData? = null
+
 
     private lateinit var mBinding: FragmentUserFormBinding
 
@@ -123,15 +127,15 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
         subCategoryList = ArrayList()
         imageList = arrayListOf()
-        updatedImageList = arrayListOf()
         bookingImgList = arrayListOf()
 
 
-        imageAdapter = ImageAdapter(activity, imageList, this)
+
+
         mBinding.rvImages.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         mBinding.rvImages.setHasFixedSize(true)
-        mBinding.rvImages.adapter = imageAdapter
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
@@ -152,7 +156,15 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
         mBinding.ivAddImage.setOnClickListener {
 
-            chooseImage()
+            if (activity.isNetworkConnected()) {
+                chooseImage()
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Connect to the internet and try again",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
         }
 
@@ -240,24 +252,42 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
             file.name, RequestBody.create("image/*".toMediaTypeOrNull(), file)
         )
 
-        myViewModel.imageUpload(filePart)
+        val uploadImgApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
+        lifecycleScope.launch {
+            val uploadImgCall = withContext(Dispatchers.IO) { uploadImgApi.uploadImage(filePart) }
 
-        myViewModel.imageUploadLiveData.observe(
-            viewLifecycleOwner
-        ) {
-            dialog.dismiss()
-            if (it.status == true && it.data != null) {
+            Log.i(TAG, "uploadImage: $uploadImgCall")
 
-                Log.i(TAG, "uploadImage:--> call counter")
+            if (uploadImgCall.isSuccessful) {
+                dialog.dismiss()
 
-                updatedImageList.add(Constant.IMG_URL + it.data.toString())
-                val distinct = updatedImageList.distinct().toMutableList()
-                imageAdapter.updateAdapterList(distinct as ArrayList<String>)
+                Log.i(TAG, "uploadImage: isSuccessful ")
+
+                val uploadResponse = uploadImgCall.body()
+
+                if (uploadResponse != null) {
+
+                    Log.i(TAG, "uploadImage: isSuccessful $uploadResponse")
+
+                    imageList.add(uploadResponse.data!!)
+
+                    setRecyclerView()
+
+                } else {
+                    Toast.makeText(activity, "Something went wrong!", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+                Toast.makeText(activity, "Something went wrong!", Toast.LENGTH_SHORT).show()
             }
         }
 
+    }
+
+    private fun setRecyclerView() {
+        imageAdapter = ImageAdapter(activity, imageList, this)
+        mBinding.rvImages.adapter = imageAdapter
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -448,15 +478,16 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
             ).show()
             return
         }
-        if (updatedImageList.isEmpty()) {
-            Toast.makeText(
-                activity, "Please add service image!", Toast.LENGTH_SHORT
-            ).show()
+        if (activity.isNetworkConnected()) {
 
+            if (imageList.isEmpty()) {
+                Toast.makeText(
+                    activity, "Please add service image!", Toast.LENGTH_SHORT
+                ).show()
+            }
         } else {
 
             showDialog(serviceDes, serviceDate, serviceTime)
-
 
         }
     }
@@ -506,14 +537,17 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
         bookingImgList.clear()
 
-        for (i in updatedImageList.indices) {
-            bookingImgList.add(BookingPics(updatedImageList[i]))
+        for (i in imageList.indices) {
+            bookingImgList.add(BookingPics(imageList[i]))
             Log.i(TAG, "addBookingOrder: for loop")
         }
 
         serviceTypeId = ServiceIds.subServiceId
 
-        Log.i(TAG, "addBookingOrder:   $userId $serviceId $serviceTypeId $serviceDes $mLatitude $mLongitude $serviceDate $serviceTime ${bookingImgList.size}")
+        Log.i(
+            TAG,
+            "addBookingOrder:   $userId $serviceId $serviceTypeId $serviceDes $mLatitude $mLongitude $serviceDate $serviceTime ${bookingImgList.size}"
+        )
 
         val bookingDetails = BookingDetails(
             userId,
@@ -544,6 +578,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
                 updateBalance(totalBalance)
 
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+
+                replaceFragment(ServicesFragment())
 
 
             } else {
@@ -629,8 +665,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     }
 
     override fun onImageCancelClick(position: Int) {
-        updatedImageList.removeAt(position)
-        imageAdapter.updateAdapterList(updatedImageList)
+        imageList.removeAt(position)
+        imageAdapter.notifyDataSetChanged()
     }
 
 }

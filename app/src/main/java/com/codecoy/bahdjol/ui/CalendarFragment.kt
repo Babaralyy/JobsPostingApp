@@ -21,6 +21,7 @@ import com.codecoy.bahdjol.databinding.FragmentCalendarBinding
 import com.codecoy.bahdjol.datamodels.BookingHistoryData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import java.text.ParseException
@@ -66,8 +67,12 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
         mBinding.rvBooking.setHasFixedSize(true)
         mBinding.rvBooking.layoutManager = LinearLayoutManager(requireActivity())
+        if (activity.isNetworkConnected()){
+            getBookingHistory()
+        } else {
+            Toast.makeText(activity, "Connect to the internet and try again", Toast.LENGTH_SHORT).show()
+        }
 
-        getBookingHistory()
 
         mBinding.calendarView.setOnDayClickListener {
 

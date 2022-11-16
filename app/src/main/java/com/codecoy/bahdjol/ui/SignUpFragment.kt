@@ -40,6 +40,7 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
+import kotlin.math.log
 
 
 class SignUpFragment : Fragment() {
@@ -47,6 +48,7 @@ class SignUpFragment : Fragment() {
     private var uri: Uri? = null
     private lateinit var bitmap: Bitmap
     private lateinit var encodeImageString: String
+    private var filePart: MultipartBody.Part? = null
 
     private lateinit var activity: MainActivity
 
@@ -109,26 +111,22 @@ class SignUpFragment : Fragment() {
 
     private fun checkCredentials() {
 
-        val maritalStatus: String = mBinding.etMaritalStatus.text.toString().trim()
+
         val firstName: String = mBinding.etFirstName.text.toString().trim()
+        val lastName: String = mBinding.etLastName.text.toString().trim()
         val userAddress: String = mBinding.etAddress.text.toString().trim()
         val userNumber: String = mBinding.etNumber.text.toString().trim()
         val userEmail: String = mBinding.etEmail.text.toString().trim()
         val userPassword: String = mBinding.etPassword.text.toString().trim()
 
-        if (this.uri == null) {
-            Toast.makeText(requireContext(), "Please select profile image!", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
         if (firstName.isEmpty()) {
             mBinding.etFirstName.error = "First name is required!"
             mBinding.etFirstName.requestFocus()
             return
         }
-        if (maritalStatus.isEmpty()) {
-            mBinding.etMaritalStatus.error = " Marital status is required!"
-            mBinding.etMaritalStatus.requestFocus()
+        if (lastName.isEmpty()) {
+            mBinding.etLastName.error = "Last name is required!"
+            mBinding.etLastName.requestFocus()
             return
         }
 
@@ -161,15 +159,15 @@ class SignUpFragment : Fragment() {
             mBinding.etPassword.error = "Password should be greater than 8 characters!"
             mBinding.etPassword.requestFocus()
         } else {
-            signUp(maritalStatus, firstName, userAddress,userNumber, userEmail, userPassword)
+            signUp(firstName, lastName, userAddress,userNumber, userEmail, userPassword)
         }
 
 
     }
 
     private fun signUp(
-        maritalStatus: String,
         firstName: String,
+        lastName: String,
         userAddress: String,
         userNumber: String,
         userEmail: String,
@@ -178,16 +176,19 @@ class SignUpFragment : Fragment() {
         val dialog = Constant.getDialog(activity)
         dialog.show()
 
-        val file = getRealPathFromURI(this.uri!!)?.let { File(it) }
-
-        val filePart: MultipartBody.Part = MultipartBody.Part.createFormData(
-            "profile_img",
-            file?.name,
-            RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
-        )
-
-        val mStatus = maritalStatus.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        if(this.uri != null){
+            
+            val file = getRealPathFromURI(this.uri!!)?.let { File(it) }
+             filePart = MultipartBody.Part.createFormData(
+                "profile_img",
+                file?.name,
+                RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
+            )
+            
+        }
+        
         val fName = firstName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val lName = lastName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uAddress = userAddress.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uNumber = userNumber.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uEmail = userEmail.toRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -196,14 +197,16 @@ class SignUpFragment : Fragment() {
 
         val signUpApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
         CoroutineScope(Dispatchers.IO).launch {
-
             val signUpCall =
-                signUpApi.createUser(filePart, mStatus, fName, uAddress, uNumber, uEmail, uPassword)
+                signUpApi.createUser(filePart, fName, lName, uAddress, uNumber, uEmail, uPassword)
             signUpCall.enqueue(object : retrofit2.Callback<UserResponse> {
                 override fun onResponse(
                     call: Call<UserResponse>,
                     response: Response<UserResponse>
                 ) {
+
+                    Log.i(TAG, "onResponse: signup $response")
+
                     if (response.isSuccessful) {
                         dialog.dismiss()
 

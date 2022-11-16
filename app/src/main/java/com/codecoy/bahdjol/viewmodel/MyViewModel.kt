@@ -15,7 +15,6 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
 
     private var allServicesMutableLiveData: MutableLiveData<AllServiceResponse> = MutableLiveData()
     private var subServicesMutableLiveData: MutableLiveData<SubServicesResponse> = MutableLiveData()
-    private var imageUploadMutableLiveData: MutableLiveData<ImageUploadResponse> = MutableLiveData()
     private var sendBookingMutableLiveData: MutableLiveData<BookingResponse> = MutableLiveData()
     private var bookingHistoryMutableLiveData: MutableLiveData<BookingHistoryResponse> =
         MutableLiveData()
@@ -50,9 +49,11 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var historyReqMutableLiveData: MutableLiveData<HistoryReqResponse> =
         MutableLiveData()
 
+    private var notificationMutableLiveData: MutableLiveData<NotificationResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
-    val imageUploadLiveData: LiveData<ImageUploadResponse> = imageUploadMutableLiveData
     val bookingLiveData: LiveData<BookingResponse> = sendBookingMutableLiveData
     val bookingHistoryLiveData: LiveData<BookingHistoryResponse> = bookingHistoryMutableLiveData
     val userBalanceLiveData: LiveData<WalletResponse> = userBalanceMutableLiveData
@@ -65,6 +66,7 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val newReqLiveData: LiveData<NewReqResponse> = newReqMutableLiveData
     val ongoingReqLiveData: LiveData<OngoingReqResponse> = ongoingReqMutableLiveData
     val historyReqLiveData: LiveData<HistoryReqResponse> = historyReqMutableLiveData
+    val notificationLiveData: LiveData<NotificationResponse> = notificationMutableLiveData
 
 
 
@@ -118,31 +120,6 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
             }
 
         }
-    }
-
-    fun imageUpload(itemImg: MultipartBody.Part){
-        CoroutineScope(Dispatchers.IO).launch {
-            val response =
-                repository.uploadImage(itemImg)
-
-            if (response.isSuccessful) {
-                if (response.code() == 200) {
-                    imageUploadMutableLiveData.postValue(response.body())
-                } else {
-                    val imageUploadResponse = ImageUploadResponse()
-                    imageUploadResponse.status = false
-                    imageUploadResponse.message = response.body().toString()
-                    imageUploadMutableLiveData.postValue(imageUploadResponse)
-                }
-            } else {
-                val imageUploadResponse = ImageUploadResponse()
-                imageUploadResponse.status = false
-                imageUploadResponse.message = response.errorBody().toString()
-                imageUploadMutableLiveData.postValue(imageUploadResponse)
-            }
-
-        }
-
     }
 
     fun sendBookingDetails(bookingDetails: BookingDetails){
@@ -457,6 +434,33 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
                 historyReqResponse.status = false
                 historyReqResponse.message = response.errorBody().toString()
                 historyReqMutableLiveData.postValue(historyReqResponse)
+            }
+
+        }
+
+    }
+
+    fun userNotifications(user_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.userNotifications(user_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    notificationMutableLiveData.postValue(response.body())
+                } else {
+                    val notificationResponse = NotificationResponse()
+                    notificationResponse.status = false
+                    notificationResponse.message = response.body().toString()
+                    notificationMutableLiveData.postValue(notificationResponse)
+                }
+            } else {
+                val notificationResponse = NotificationResponse()
+                notificationResponse.status = false
+                notificationResponse.message = response.errorBody().toString()
+                notificationMutableLiveData.postValue(notificationResponse)
             }
 
         }

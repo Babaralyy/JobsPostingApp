@@ -1,38 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context=".ui.NotificationFragment">
+<layout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBar"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryVariantColor"
-        app:navigationIcon="@drawable/ic__arrow_back">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".ui.NotificationFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryVariantColor"
+            app:navigationIcon="@drawable/ic__arrow_back">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/notification"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNotification"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolBar">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvNotFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:fontFamily="@font/roboto_medium"
-            android:layout_gravity="center"
-            android:text="Notification"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:text="@string/booking_not_found"
+            android:textColor="@drawable/status_selector"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
 
-    </androidx.appcompat.widget.Toolbar>
+        <LinearLayout
+            android:id="@+id/layNotConnected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:visibility="gone">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <TextView
 
-    </androidx.recyclerview.widget.RecyclerView>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:text="@string/connect_to_the_internet_and"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:text="@string/retry"
+                android:textColor="@color/primaryVariantColor"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
 
-
-</LinearLayout>
+    </RelativeLayout>
+</layout>

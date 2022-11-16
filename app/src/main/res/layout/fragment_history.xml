@@ -138,6 +138,38 @@
                 android:textSize="14sp"
                 android:visibility="gone"/>
 
+            <LinearLayout
+                android:id="@+id/layNotConnected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="@string/connect_to_the_internet_and"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvRetry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:text="@string/retry"
+                    android:textColor="@color/primaryVariantColor"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

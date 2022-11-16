@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.callback.CancelCallback
 import com.codecoy.bahdjol.callback.SubsCallback
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.ImageLayBinding
 
@@ -28,7 +29,7 @@ class ImageAdapter(
         val imagePath = imageList[position]
         Log.i(TAG, "onBindViewHolder: $imagePath")
 
-        Glide.with(context).load( imagePath)
+        Glide.with(context).load(Constant.IMG_URL + imagePath)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivAddImage)
@@ -44,7 +45,7 @@ class ImageAdapter(
 
     class ViewHolder(val mBinding: ImageLayBinding) : RecyclerView.ViewHolder(mBinding.root)
 
-    fun updateAdapterList(imgList: ArrayList<String>){
+    fun updateAdapterList(imgList: MutableList<String>){
         this.imageList.clear()
         this.imageList.addAll(imgList)
         notifyDataSetChanged()

@@ -22,6 +22,7 @@ import com.codecoy.bahdjol.databinding.FragmentHistoryBinding
 import com.codecoy.bahdjol.datamodels.BookingHistoryData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -72,7 +73,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
         mBinding.rvHistory.layoutManager = LinearLayoutManager(activity)
 
         mBinding.tvAll.isSelected = true
-        getBookingHistory()
+        checkConnectivity()
 
         mBinding.tvAll.setOnClickListener {
             mBinding.tvAll.isSelected = true
@@ -81,7 +82,9 @@ class HistoryFragment : Fragment(), HistoryCallback {
             mBinding.tvCancel.isSelected = false
             mBinding.tvComplete.isSelected = false
 
-            getBookingHistory()
+            mBinding.tvNotFound.visibility = View.GONE
+
+           checkConnectivity()
         }
 
         mBinding.tvConfirm.setOnClickListener {
@@ -91,6 +94,8 @@ class HistoryFragment : Fragment(), HistoryCallback {
             mBinding.tvPending.isSelected = false
             mBinding.tvCancel.isSelected = false
             mBinding.tvComplete.isSelected = false
+
+            mBinding.layNotConnected.visibility = View.GONE
 
             this.confirmedHistoryList = bookingHistoryList.filter {
                 it.status == "1"
@@ -123,6 +128,8 @@ class HistoryFragment : Fragment(), HistoryCallback {
             mBinding.tvCancel.isSelected = false
             mBinding.tvComplete.isSelected = false
 
+            mBinding.layNotConnected.visibility = View.GONE
+
             this.pendingHistoryList = bookingHistoryList.filter {
                 it.status == "0"
             } as MutableList<BookingHistoryData>
@@ -152,6 +159,8 @@ class HistoryFragment : Fragment(), HistoryCallback {
             mBinding.tvPending.isSelected = false
             mBinding.tvCancel.isSelected = true
             mBinding.tvComplete.isSelected = false
+
+            mBinding.layNotConnected.visibility = View.GONE
 
             this.cancelledHistoryList = bookingHistoryList.filter {
                 it.status == "2"
@@ -183,6 +192,8 @@ class HistoryFragment : Fragment(), HistoryCallback {
             mBinding.tvCancel.isSelected = false
             mBinding.tvComplete.isSelected = true
 
+            mBinding.layNotConnected.visibility = View.GONE
+
             this.completedHistoryList = bookingHistoryList.filter {
                 it.status == "3"
             } as MutableList<BookingHistoryData>
@@ -206,8 +217,23 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
         }
 
+        mBinding.tvRetry.setOnClickListener {
+            checkConnectivity()
+        }
+
     }
 
+
+    private fun checkConnectivity() {
+
+        if (activity.isNetworkConnected()){
+            getBookingHistory()
+            mBinding.layNotConnected.visibility = View.GONE
+        } else{
+            mBinding.layNotConnected.visibility = View.VISIBLE
+        }
+
+    }
 
     private fun getBookingHistory() {
 

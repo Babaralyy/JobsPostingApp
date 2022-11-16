@@ -200,8 +200,14 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             mBinding.drawerLay.close()
         }
         mBinding.navView.findViewById<LinearLayout>(R.id.paymentLay).setOnClickListener {
-            replaceFragment(PaymentFragment())
-            mBinding.drawerLay.close()
+            if (activity.isNetworkConnected()){
+                replaceFragment(PaymentFragment())
+                mBinding.drawerLay.close()
+            } else {
+                Toast.makeText(activity, "Connect to the internet and try again", Toast.LENGTH_SHORT).show()
+                mBinding.drawerLay.close()
+            }
+
         }
         mBinding.navView.findViewById<LinearLayout>(R.id.subsLay).setOnClickListener {
             replaceFragment(SubscriptionFragment())

@@ -57,4 +57,6 @@
     <string name="booking_request_not_found">Booking Request Not Found!</string>
     <string name="connect_to_the_internet_and">Connect to the Internet and</string>
     <string name="retry"> Retry!</string>
+    <string name="notification">Notification</string>
+    <string name="subscription_not_found">Subscription not found!</string>
 </resources>

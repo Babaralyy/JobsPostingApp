@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Calendar"
+                android:text="@string/calendar"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 

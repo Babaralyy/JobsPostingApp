@@ -17,7 +17,6 @@ class Repository {
 
     suspend fun subServices(cat_id: Int) = apiCall.subServices(cat_id)
 
-    suspend fun uploadImage(itemImg: MultipartBody.Part) = apiCall.uploadImage(itemImg)
 
     suspend fun sendBookingDetails(bookingDetails: BookingDetails) =
         apiCall.sendBookingDetails(bookingDetails)
@@ -50,4 +49,6 @@ class Repository {
     suspend  fun ongoingRequests(agent_id: Int) = apiCall.ongoingRequests(agent_id)
 
     suspend  fun historyRequests(agent_id: Int) = apiCall.historyRequests(agent_id)
+
+    suspend  fun userNotifications(user_id: Int) = apiCall.userNotifications(user_id)
 }

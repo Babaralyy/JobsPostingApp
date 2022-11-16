@@ -91,16 +91,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
-                    android:text="@string/marital_status"/>
+                    android:text="@string/last_name"/>
 
                 <EditText
-                    android:id="@+id/etMaritalStatus"
+                    android:id="@+id/etLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:ems="10"
-                    android:hint="@string/marital_status"
+                    android:hint="@string/last_name"
                     android:inputType="textPersonName" />
 
                 <TextView
@@ -155,7 +155,6 @@
                     android:hint="@string/email_phone_number"
                     android:inputType="textEmailAddress" />
 
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnUpdate"
                     android:layout_width="wrap_content"
@@ -171,12 +170,6 @@
             </LinearLayout>
 
         </ScrollView>
-
-
-
-
-
-
 
     </LinearLayout>
 

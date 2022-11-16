@@ -26,6 +26,7 @@ import com.codecoy.bahdjol.datamodels.SubsData
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 
@@ -72,12 +73,26 @@ class SubscriptionFragment : Fragment(), SubsCallback {
         mBinding.rvSubs.layoutManager = manager
         mBinding.rvSubs.setHasFixedSize(true)
 
+        mBinding.tvRetry.setOnClickListener {
+            checkConnectivity()
+        }
+
         getUserData()
 
         getBalance()
 
+       checkConnectivity()
 
-        allSubs()
+    }
+
+    private fun checkConnectivity() {
+
+        if (activity.isNetworkConnected()){
+            allSubs()
+            mBinding.layNotConnected.visibility = View.GONE
+        } else{
+            mBinding.layNotConnected.visibility = View.VISIBLE
+        }
 
     }
 
@@ -112,6 +127,8 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
             if (it.status == true && it.data.isNotEmpty()) {
 
+                mBinding.tvNotFound.visibility = View.GONE
+
                 Log.i(TAG, "response: success ${it.data.size}")
 
                 subsDataList = it.data
@@ -120,6 +137,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
                 mBinding.rvSubs.adapter = subscriptionAdapter
 
             } else {
+                mBinding.tvNotFound.visibility = View.VISIBLE
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }

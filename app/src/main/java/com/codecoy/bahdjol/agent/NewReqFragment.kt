@@ -29,10 +29,9 @@ class NewReqFragment : Fragment() {
 
     private var agentLoginData: AgentLoginData? = null
 
-    private lateinit var myViewModel: MyViewModel
-
     private lateinit var activity: MainActivity
 
+    private lateinit var myViewModel: MyViewModel
     private lateinit var newReqAdapter: NewReqAdapter
     private lateinit var manager: LinearLayoutManager
 

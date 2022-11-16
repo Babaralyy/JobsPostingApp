@@ -84,13 +84,16 @@ class SubServicesFragment : Fragment(), ServicesCallback {
     private fun subServicesFromRoom() {
 
         CoroutineScope(Dispatchers.Main).launch {
-            roomServicesViewModel.getSubService(1).observe(
+            roomServicesViewModel.getSubService(ServiceIds.serviceId!!).observe(
                 activity
             ) { subService ->
                 Log.i(TAG, "subServicesFromRoom: $subService")
                 Log.i(TAG, "subServicesFromRoom: ${subService?.data}")
 
                 if(subService != null && subService.data.isNotEmpty()){
+
+                    subServicesDataList = subService.data
+
                     setRecyclerView(subService.data)
 
                     if (activity.isNetworkConnected()){

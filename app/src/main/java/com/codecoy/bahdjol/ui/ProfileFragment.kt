@@ -140,7 +140,7 @@ class ProfileFragment : Fragment() {
             .into(mBinding.ivProfile)
 
         mBinding.etFirstName.setText(userData.name)
-        mBinding.etMaritalStatus.setText(userData.maritalStatusName)
+        mBinding.etLastName.setText(userData.lastName)
         mBinding.etAddress.setText(userData.address)
         mBinding.etNumber.setText(userData.phone)
         mBinding.etEmail.setText(userData.email)
@@ -148,8 +148,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun checkCredentials() {
-        val maritalStatus: String = mBinding.etMaritalStatus.text.toString().trim()
+
         val firstName: String = mBinding.etFirstName.text.toString().trim()
+        val lastName: String = mBinding.etLastName.text.toString().trim()
         val userAddress: String = mBinding.etAddress.text.toString().trim()
         val userNumber: String = mBinding.etNumber.text.toString().trim()
 
@@ -158,9 +159,9 @@ class ProfileFragment : Fragment() {
             mBinding.etFirstName.requestFocus()
             return
         }
-        if (maritalStatus.isEmpty()) {
-            mBinding.etMaritalStatus.error = " Marital status is required!"
-            mBinding.etMaritalStatus.requestFocus()
+        if (lastName.isEmpty()) {
+            mBinding.etLastName.error = "Last name is required!"
+            mBinding.etLastName.requestFocus()
             return
         }
 
@@ -175,16 +176,15 @@ class ProfileFragment : Fragment() {
 
         } else {
 
-            updateProfile(maritalStatus, firstName, userAddress, userNumber)
+            updateProfile(firstName, lastName, userAddress, userNumber)
 
         }
-
 
     }
 
     private fun updateProfile(
-        maritalStatus: String,
         firstName: String,
+        lastName: String,
         userAddress: String,
         userNumber: String
     ) {
@@ -192,10 +192,8 @@ class ProfileFragment : Fragment() {
         val dialog = Constant.getDialog(activity)
         dialog.show()
 
-
-
-        val mStatus = maritalStatus.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val fName = firstName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val lName = lastName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uAddress = userAddress.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uNumber = userNumber.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val uId =
@@ -215,16 +213,14 @@ class ProfileFragment : Fragment() {
                 RequestBody.create("image/*".toMediaTypeOrNull(), file)
             )
 
-            Log.i(TAG, "updateProfile:  $filePart, ${ServiceIds.userId}, $maritalStatus, $firstName, $userAddress, $userNumber")
+            Log.i(TAG, "updateProfile:  $filePart, ${ServiceIds.userId}, $lastName, $firstName, $userAddress, $userNumber")
 
-            updateUserApi.updateUser(filePart, uId, mStatus, fName, uAddress, uNumber)
-
+            updateUserApi.updateUser(filePart, uId, fName, lName , uAddress, uNumber)
 
 
         } else {
 
-
-            updateUserApi.updateUser(null, uId, mStatus, fName, uAddress, uNumber)
+            updateUserApi.updateUser(null, uId, fName, lName, uAddress, uNumber)
         }
 
 

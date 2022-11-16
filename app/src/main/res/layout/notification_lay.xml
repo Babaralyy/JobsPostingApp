@@ -4,16 +4,8 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:gravity="center"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     android:orientation="horizontal">
-
-    <com.mikhaellopez.circularimageview.CircularImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/black"
-        android:src="@drawable/people_care"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -24,29 +16,31 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:text="User"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/tvDes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+            android:text="Lorem ipsum dolor sit amet"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         android:text="1m ago"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
 </LinearLayout>

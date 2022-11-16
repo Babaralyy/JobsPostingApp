@@ -13,9 +13,9 @@ interface ApiCall {
     @Multipart
     @POST("api/add_users")
     fun createUser(
-        @Part profile_img: MultipartBody.Part,
-        @Part("marital_status") marital_status: RequestBody,
+        @Part profile_img: MultipartBody.Part?,
         @Part("name") name: RequestBody,
+        @Part("l_name") l_name: RequestBody,
         @Part("address") address: RequestBody,
         @Part("phone") phone: RequestBody,
         @Part("email") email: RequestBody,
@@ -37,9 +37,9 @@ interface ApiCall {
     suspend fun subServices(@Query("cat_id") cat_id: Int): Response<SubServicesResponse>
 
     @Multipart
-    @POST("api/upload_img?")
+    @POST("api/upload_img")
     suspend fun uploadImage(
-        @Part profile_img: MultipartBody.Part
+        @Part img: MultipartBody.Part
     ): Response<ImageUploadResponse>
 
     @Headers("Accept: application/json")
@@ -54,8 +54,8 @@ interface ApiCall {
      fun updateUser(
         @Part profile_img: MultipartBody.Part?,
         @Part("user_id") user_id: RequestBody,
-        @Part("marital_status") marital_status: RequestBody,
         @Part("name") name: RequestBody,
+        @Part("l_name") l_name: RequestBody,
         @Part("address") address: RequestBody,
         @Part("phone") phone: RequestBody
     ): Call<UpdateProfileResponse>
@@ -123,4 +123,9 @@ interface ApiCall {
 
     @GET("api/req_history")
     suspend fun historyRequests(@Query("agent_id") agent_id: Int): Response<HistoryReqResponse>
+
+    @GET("api/notification")
+    suspend fun userNotifications(@Query("user_id") user_id: Int): Response<NotificationResponse>
+
+
 }
