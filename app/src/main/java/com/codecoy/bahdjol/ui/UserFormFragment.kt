@@ -4,6 +4,7 @@ package com.codecoy.bahdjol.ui
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -34,10 +35,7 @@ import com.codecoy.bahdjol.adapter.ImageAdapter
 import com.codecoy.bahdjol.callback.CancelCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
-import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
-import com.codecoy.bahdjol.databinding.FragmentUserFormBinding
-import com.codecoy.bahdjol.databinding.OrderDialogLayBinding
-import com.codecoy.bahdjol.databinding.TimePickerLayoutBinding
+import com.codecoy.bahdjol.databinding.*
 import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
@@ -67,7 +65,6 @@ import java.io.InputStream
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 
 
 class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
@@ -176,8 +173,12 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
         }
 
         mBinding.btnSend.setOnClickListener {
+            if (activity.isNetworkConnected()) {
+                checkCredentials()
+            } else {
+                showCallDialog()
+            }
 
-            checkCredentials()
         }
 
 
@@ -478,21 +479,27 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
             ).show()
             return
         }
-        if (activity.isNetworkConnected()) {
+        if (imageList.isEmpty()) {
 
-            if (imageList.isEmpty()) {
-                Toast.makeText(
-                    activity, "Please add service image!", Toast.LENGTH_SHORT
-                ).show()
-            }
+            Toast.makeText(
+                activity, "Please add service image!", Toast.LENGTH_SHORT
+            ).show()
+
+            return
         } else {
+
+            Log.i(TAG, "checkCredentials: isNetworkConnected")
 
             showDialog(serviceDes, serviceDate, serviceTime)
 
         }
     }
 
+
     private fun showDialog(serviceDes: String, serviceDate: String, serviceTime: String) {
+
+
+        Log.i(TAG, "checkCredentials: showDialog")
 
         val orderDialogBinding: OrderDialogLayBinding =
             OrderDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
@@ -521,6 +528,29 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
         }
 
         orderDialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+    }
+
+    private fun showCallDialog() {
+
+        val callDialogBinding: CallDialogLayBinding =
+            CallDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialog = Dialog(activity)
+        dialog.setContentView(callDialogBinding.root)
+        dialog.setCancelable(true)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        callDialogBinding.btnContinue.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_DIAL,
+                Uri.parse("tel:" + callDialogBinding.tvNumber.text.toString())
+            )
+            startActivity(intent)
             dialog.dismiss()
         }
 
@@ -571,11 +601,11 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
                 Log.i(TAG, "addBookingOrder: ${it.nearestAgentList.size}")
 
-                totalBalance -= orderBalance
-
-                totalBalance = ((totalBalance * 100.0).roundToInt() / 100.0)
-
-                updateBalance(totalBalance)
+//                totalBalance -= orderBalance
+//
+//                totalBalance = ((totalBalance * 100.0).roundToInt() / 100.0)
+//
+//                updateBalance(totalBalance)
 
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
 

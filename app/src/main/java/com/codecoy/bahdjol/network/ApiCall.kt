@@ -127,5 +127,12 @@ interface ApiCall {
     @GET("api/notification")
     suspend fun userNotifications(@Query("user_id") user_id: Int): Response<NotificationResponse>
 
+    @GET("api/status_chng")
+    suspend fun changeStatus(
+        @Query("agent_id") agent_id: Int,
+        @Query("request_id") request_id: Int,
+        @Query("status") status: Int,
+    ): Response<StatusResponse>
+
 
 }

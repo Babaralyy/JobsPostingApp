@@ -11,10 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
+import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.SubsAdapter
 import com.codecoy.bahdjol.callback.SubsCallback
 import com.codecoy.bahdjol.constant.Constant
@@ -89,12 +91,15 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
         if (activity.isNetworkConnected()){
             allSubs()
+            checkSubs()
             mBinding.layNotConnected.visibility = View.GONE
         } else{
             mBinding.layNotConnected.visibility = View.VISIBLE
         }
 
     }
+
+
 
     private fun getBalance() {
 
@@ -108,6 +113,45 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
         userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
 
+
+    }
+
+    private fun checkSubs() {
+
+        myViewModel.checkSubscription(userData!!.id!!)
+
+        myViewModel.checkSubsLiveData.observe(viewLifecycleOwner
+        ) {
+
+            Log.i(TAG, "response: outer ${it.data}")
+
+            if (it.status == true && it.data != null) {
+
+                Log.i(TAG, "response: success ${it.data!!.id}")
+
+                val checkSubsData = it.data
+
+                if (checkSubsData!!.status!!.toInt() == 1){
+                    mBinding.tvMember.text = "You have ${checkSubsData.pkgName} Subscription"
+                    mBinding.tvPrice.text = "Price: ${checkSubsData.pkgPrice}"
+                    mBinding.tvStart.text = "Start date: ${checkSubsData.startDate}"
+                    mBinding.tvEnd.text = "End date: ${checkSubsData.endDate}"
+                    mBinding.tvOrders.text = "Remaining orders: ${checkSubsData.orders}"
+                    mBinding.subsLay.visibility = View.VISIBLE
+                    mBinding.rvSubs.visibility = View.GONE
+                } else{
+                    mBinding.tvActiveSubs.text = "You have not Active Subscription"
+                    mBinding.subsLay.visibility = View.GONE
+                    mBinding.rvSubs.visibility = View.VISIBLE
+                }
+
+                ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
+
+            } else {
+                Log.i(TAG, "response: failure ${it.data!!.id}")
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
@@ -200,7 +244,9 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                     updateBalance(totalBalance)
 
-                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Subscription Added!", Toast.LENGTH_SHORT).show()
+
+                    replaceFragment(ServicesFragment())
 
                 } else {
                     Log.i(TAG, "response: failure ${it.data!!.id}")
@@ -265,6 +311,13 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
     override fun onSubsClick(position: Int, subsData: SubsData) {
         showDialog(subsData)
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

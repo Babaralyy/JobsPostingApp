@@ -59,4 +59,6 @@
     <string name="retry"> Retry!</string>
     <string name="notification">Notification</string>
     <string name="subscription_not_found">Subscription not found!</string>
+    <string name="you_are_not_connected_to_the_internet">You are not connected to the Internet. Just call on this number for Booking!</string>
+    <string name="complete">Complete</string>
 </resources>

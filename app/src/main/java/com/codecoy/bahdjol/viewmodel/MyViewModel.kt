@@ -6,12 +6,17 @@ import androidx.lifecycle.ViewModel
 import com.codecoy.bahdjol.constant.SubServicesResponse
 import com.codecoy.bahdjol.datamodels.*
 import com.codecoy.bahdjol.repository.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MultipartBody
 
 class MyViewModel(private val repository: Repository) : ViewModel() {
+
+
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+
+        notificationMutableLiveData.postValue(NotificationResponse(status = false , message = "Exception handled: ${throwable.localizedMessage}"))
+    }
 
     private var allServicesMutableLiveData: MutableLiveData<AllServiceResponse> = MutableLiveData()
     private var subServicesMutableLiveData: MutableLiveData<SubServicesResponse> = MutableLiveData()
@@ -442,7 +447,7 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
 
     fun userNotifications(user_id: Int){
 
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
 
             val response =
                 repository.userNotifications(user_id)

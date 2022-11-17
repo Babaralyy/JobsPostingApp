@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.callback.StatusCallBack
 import com.codecoy.bahdjol.databinding.NewReqLayBinding
 import com.codecoy.bahdjol.datamodels.NewReqData
 
 
 class NewReqAdapter(
     private val context: Context,
-    private val newReqDataList: MutableList<NewReqData>
+    private val newReqDataList: MutableList<NewReqData>,
+    private val statusCallBack: StatusCallBack
 ) : RecyclerView.Adapter<NewReqAdapter.ViewHolder>() {
 
 
@@ -34,6 +36,14 @@ class NewReqAdapter(
         holder.mBinding.tvReqDate.text = newReqData.time + " " + newReqData.date
         holder.mBinding.tvOrderPrice.text = "$ " + newReqData.bookingPrice
         holder.mBinding.tvOrderId.text = newReqData.id
+
+        holder.mBinding.btnAccept.setOnClickListener {
+            statusCallBack.onAcceptClick(position, newReqData)
+        }
+
+        holder.mBinding.btnDecline.setOnClickListener {
+            statusCallBack.onDeclineClick(position, newReqData)
+        }
 
     }
 

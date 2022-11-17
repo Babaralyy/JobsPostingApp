@@ -92,11 +92,11 @@ class ServicesFragment : Fragment(), ServicesCallback {
 
     private fun servicesFromRoomDb() {
 
-        val dialog = Constant.getDialog(activity)
-        dialog.show()
+//        val dialog = Constant.getDialog(activity)
+//        dialog.show()
 
         CoroutineScope(Dispatchers.Main).launch {
-            dialog.dismiss()
+//            dialog.dismiss()
             roomServicesViewModel.getAllServices().observe(
                 activity
             ) {
@@ -160,15 +160,15 @@ class ServicesFragment : Fragment(), ServicesCallback {
 
     override fun onServiceClick(position: Int) {
 
-        val dialog = Constant.getDialog(activity)
-        dialog.show()
+//        val dialog = Constant.getDialog(activity)
+//        dialog.show()
 
-        Handler(Looper.getMainLooper()).postDelayed({
+//        Handler(Looper.getMainLooper()).postDelayed({
             val serviceData = roomServicesList[position]
             serviceId = serviceData.id
-            dialog.dismiss()
+//            dialog.dismiss()
             replaceFragment(SubServicesFragment())
-        }, 500)
+//        }, 500)
     }
 
     private fun replaceFragment(fragment: Fragment) {

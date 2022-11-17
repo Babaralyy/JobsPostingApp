@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.callback.OngoingCallback
+import com.codecoy.bahdjol.callback.StatusCallBack
 import com.codecoy.bahdjol.databinding.NewReqLayBinding
 import com.codecoy.bahdjol.databinding.OngoingReqLayBinding
 import com.codecoy.bahdjol.datamodels.NewReqData
@@ -13,7 +15,8 @@ import com.codecoy.bahdjol.datamodels.OngoingReqData
 
 class OngoingReqAdapter(
     private val context: Context,
-    private val ongoingReqDataList: MutableList<OngoingReqData>
+    private val ongoingReqDataList: MutableList<OngoingReqData>,
+    private val ongoingCallback: OngoingCallback
 ) : RecyclerView.Adapter<OngoingReqAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,6 +37,10 @@ class OngoingReqAdapter(
         holder.mBinding.tvReqDate.text = ongoingReqData.time + " " + ongoingReqData.date
         holder.mBinding.tvOrderPrice.text = "$ " + ongoingReqData.bookingPrice
         holder.mBinding.tvOrderId.text = ongoingReqData.id
+
+        holder.mBinding.btnComplete.setOnClickListener {
+            ongoingCallback.onCompleteClick(position, ongoingReqData)
+        }
 
     }
 

@@ -2,6 +2,7 @@ package com.codecoy.bahdjol.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -42,6 +43,8 @@ class HistoryReqAdapter(
         if(historyReqData.status!!.toInt() == 2){
             holder.mBinding.tvReqStatus.text = "Completed"
         }
+
+        holder.mBinding.btnComplete.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

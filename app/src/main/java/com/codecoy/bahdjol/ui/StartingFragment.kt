@@ -12,6 +12,7 @@ import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentStartingBinding
 import com.codecoy.bahdjol.datamodels.AgentLoginData
 import com.codecoy.bahdjol.datamodels.UserData
+import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.ServiceIds
 
 
@@ -61,6 +62,8 @@ class StartingFragment : Fragment() {
         }
 
         mBinding.ivAgent.setOnClickListener {
+
+            GlobalClass.drawer = null
 
             if (agentLoginData != null) {
                 val action =
