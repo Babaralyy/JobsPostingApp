@@ -55,7 +55,13 @@
         android:id="@+id/mainFragment"
         android:name="com.codecoy.bahdjol.ui.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_startingFragment"
+            app:destination="@id/startingFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/subscriptionFragment"
         android:name="com.codecoy.bahdjol.ui.SubscriptionFragment"
@@ -113,7 +119,9 @@
         tools:layout="@layout/fragment_agent_sign_in" >
         <action
             android:id="@+id/action_agentSignInFragment_to_agentRequestsFragment"
-            app:destination="@id/agentRequestsFragment" />
+            app:destination="@id/agentRequestsFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/agentRequestsFragment"
@@ -129,6 +137,11 @@
         <action
             android:id="@+id/action_agentRequestsFragment_to_ongoinReqFragment"
             app:destination="@id/ongoinReqFragment" />
+        <action
+            android:id="@+id/action_agentRequestsFragment_to_startingFragment"
+            app:destination="@id/startingFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/newReqFragment"

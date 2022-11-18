@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.codecoy.bahdjol.datamodels.AgentLoginData
 import com.codecoy.bahdjol.datamodels.CheckSubsData
-import com.codecoy.bahdjol.datamodels.GetSubsData
 import com.codecoy.bahdjol.datamodels.UserData
 import com.google.gson.Gson
 
@@ -167,6 +166,24 @@ object ServiceIds {
             null
         }
 
+    }
+
+    fun userLogout(context: Context, userInfo: String) {
+        sharedPreferences = context.getSharedPreferences(userInfo, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.clear().apply()
+    }
+
+    fun agentLogout(context: Context,  agentInfo: String) {
+        sharedPreferences = context.getSharedPreferences(agentInfo, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.clear().apply()
+    }
+
+    fun clearSubsInfo(context: Context,  subsInfo: String) {
+        sharedPreferences = context.getSharedPreferences(subsInfo, Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.clear().apply()
     }
 
 }

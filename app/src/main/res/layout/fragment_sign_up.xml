@@ -16,7 +16,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/logo"
+            android:src="@drawable/bahdjol_logo_"
             app:tint="@color/primaryVariantColor" />
 
         <ScrollView

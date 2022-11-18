@@ -10,14 +10,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.HistoryAdapter
 import com.codecoy.bahdjol.callback.HistoryCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
+import com.codecoy.bahdjol.databinding.BottomDialogLayBinding
+import com.codecoy.bahdjol.databinding.DatePickerLayoutBinding
 import com.codecoy.bahdjol.databinding.FragmentHistoryBinding
 import com.codecoy.bahdjol.datamodels.BookingHistoryData
 import com.codecoy.bahdjol.repository.Repository
@@ -221,6 +225,11 @@ class HistoryFragment : Fragment(), HistoryCallback {
             checkConnectivity()
         }
 
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
+        }
+
     }
 
 
@@ -283,12 +292,46 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
     private fun showBottomDialog(bookingHistoryData: BookingHistoryData) {
 
+        val bottomBinding: BottomDialogLayBinding =
+            BottomDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
+
         val bottomDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
-        bottomDialog.setContentView(R.layout.bottom_dialog_lay)
+        bottomDialog.setContentView(bottomBinding.root)
+
+        Glide.with(activity).load(Constant.IMG_URL + bookingHistoryData.bookingImage)
+            .placeholder(R.drawable.ic_downloading)
+            .error(R.drawable.ic_error)
+            .into(bottomBinding.ivProduct)
+
+        Log.i(TAG, "showBottomDialog: ${Constant.IMG_URL + bookingHistoryData.bookingImage}")
+
+        if(bookingHistoryData.status!!.toInt() == 0){
+            bottomBinding.btnConfirm.text = "Pending"
+        }
+        if(bookingHistoryData.status!!.toInt() == 1){
+            bottomBinding.btnConfirm.text = "Confirmed"
+        }
+        if(bookingHistoryData.status!!.toInt() == 2){
+            bottomBinding.btnConfirm.text = "Cancelled"
+        }
+        if(bookingHistoryData.status!!.toInt() == 3){
+            bottomBinding.btnConfirm.text = "Completed"
+        }
+
+
+        bottomBinding.tvDetails.text = bookingHistoryData.bookingDesc
+
         bottomDialog.show()
 
-        Toast.makeText(activity, bookingHistoryData.bookingDesc, Toast.LENGTH_SHORT).show()
 
+
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

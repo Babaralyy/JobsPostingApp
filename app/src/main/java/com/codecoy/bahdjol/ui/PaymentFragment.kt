@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,6 +76,10 @@ class PaymentFragment : Fragment() {
 
             showDialog()
 
+        }
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
         }
 
     }
@@ -232,6 +237,13 @@ class PaymentFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

@@ -70,7 +70,7 @@ class MessagingService: FirebaseMessagingService() {
 
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.logo)
+            .setSmallIcon(R.drawable.bahdjol_logo_)
             .setContentTitle(data["title"])
             .setContentText(data["body"])
             .setPriority(NotificationCompat.PRIORITY_MAX)

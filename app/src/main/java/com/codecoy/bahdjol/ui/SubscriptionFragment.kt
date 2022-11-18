@@ -85,6 +85,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
        checkConnectivity()
 
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
+        }
+
     }
 
     private fun checkConnectivity() {
@@ -139,13 +144,16 @@ class SubscriptionFragment : Fragment(), SubsCallback {
                     mBinding.tvOrders.text = "Remaining orders: ${checkSubsData.orders}"
                     mBinding.subsLay.visibility = View.VISIBLE
                     mBinding.rvSubs.visibility = View.GONE
+
+                    ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData)
+
                 } else{
                     mBinding.tvActiveSubs.text = "You have not Active Subscription"
                     mBinding.subsLay.visibility = View.GONE
                     mBinding.rvSubs.visibility = View.VISIBLE
                 }
 
-                ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
+
 
             } else {
                 Log.i(TAG, "response: failure ${it.data!!.id}")
@@ -242,8 +250,6 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
                     totalBalance -= subsBalance
 
-                    updateBalance(totalBalance)
-
                     Toast.makeText(activity, "Subscription Added!", Toast.LENGTH_SHORT).show()
 
                     replaceFragment(ServicesFragment())
@@ -283,30 +289,30 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
     }
 
-    private fun updateBalance(totalBalance: Double) {
-
-        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
-
-        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
-        ) {
-
-            if (it.status == true && it.data != null) {
-
-                Log.i(TAG, "updateBalance: success ${it.message}")
-
-                val walletData = it.data
-
-                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
-                    walletData!!.balance!!
-                )
-
-            } else {
-                Log.i(TAG, "updateBalance: failure ${it.message}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    }
+//    private fun updateBalance(totalBalance: Double) {
+//
+//        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
+//
+//        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
+//        ) {
+//
+//            if (it.status == true && it.data != null) {
+//
+//                Log.i(TAG, "updateBalance: success ${it.message}")
+//
+//                val walletData = it.data
+//
+//                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
+//                    walletData!!.balance!!
+//                )
+//
+//            } else {
+//                Log.i(TAG, "updateBalance: failure ${it.message}")
+//                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//    }
 
 
     override fun onSubsClick(position: Int, subsData: SubsData) {

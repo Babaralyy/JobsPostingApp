@@ -13,10 +13,10 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_200sdp"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_160sdp"
             android:layout_marginTop="-80dp"
-            android:src="@drawable/logo"
+            android:src="@drawable/bahdjol_logo_"
             app:tint="@color/primaryVariantColor" />
 
         <ImageView

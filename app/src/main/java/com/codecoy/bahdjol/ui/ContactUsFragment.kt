@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.codecoy.bahdjol.MainActivity
+import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentContactUsBinding
 import com.codecoy.bahdjol.datamodels.HelpResponse
@@ -44,6 +46,12 @@ class ContactUsFragment : Fragment() {
             checkCredentials()
 
         }
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
+        }
+
+
 
     }
 
@@ -171,6 +179,13 @@ class ContactUsFragment : Fragment() {
         mBinding.etEmail.setText("")
         mBinding.etDes.setText("")
 
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

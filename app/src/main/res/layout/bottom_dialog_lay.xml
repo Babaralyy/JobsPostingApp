@@ -31,8 +31,10 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/ivProduct"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:scaleType="fitXY"
                     android:src="@drawable/people_care" />
 
 
@@ -141,6 +143,7 @@
             app:cornerRadius="10dp" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

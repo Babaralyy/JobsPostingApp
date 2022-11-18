@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
@@ -124,7 +125,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun checkConnectivity() {
         if(activity.isNetworkConnected()){
-            checkSubs(userData!!)
+            checkSubs()
             userBalance(userData!!)
         }
     }
@@ -153,9 +154,9 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     }
 
-    private fun checkSubs(userData: UserData) {
+    private fun checkSubs() {
 
-        myViewModel.checkSubscription(userData.id!!)
+        myViewModel.checkSubscription(userData!!.id!!)
 
         myViewModel.checkSubsLiveData.observe(viewLifecycleOwner
         ) {
@@ -168,10 +169,21 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
                 val checkSubsData = it.data
 
-                ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
+                if (checkSubsData!!.status!!.toInt() == 1){
+
+                    ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData)
+
+                } else{
+
+                    ServiceIds.clearSubsInfo(activity, "subsInfo")
+
+                }
+
+
 
             } else {
                 Log.i(Constant.TAG, "response: failure ${it.data!!.id}")
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -218,6 +230,18 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             mBinding.drawerLay.close()
         }
 
+        mBinding.navView.findViewById<LinearLayout>(R.id.logoutLay).setOnClickListener {
+            logout()
+            mBinding.drawerLay.close()
+        }
+
+    }
+
+    private fun logout() {
+        ServiceIds.userLogout(activity, "userInfo")
+
+        val action = MainFragmentDirections.actionMainFragmentToStartingFragment()
+        findNavController().navigate(action)
     }
 
     override fun onAttach(context: Context) {

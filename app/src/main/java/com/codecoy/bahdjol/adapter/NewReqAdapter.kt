@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.callback.StatusCallBack
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.NewReqLayBinding
 import com.codecoy.bahdjol.datamodels.NewReqData
 
@@ -27,7 +28,7 @@ class NewReqAdapter(
 
         val newReqData = newReqDataList[position]
 
-        Glide.with(context).load(newReqData.bookingImg)
+        Glide.with(context).load(Constant.IMG_URL + newReqData.bookingImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)

@@ -101,6 +101,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     private var serviceTypeId: Int? = null
 
     private var userData: UserData? = null
+    private var checkSubsData: CheckSubsData? = null
 
 
     private lateinit var mBinding: FragmentUserFormBinding
@@ -125,8 +126,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
         subCategoryList = ArrayList()
         imageList = arrayListOf()
         bookingImgList = arrayListOf()
-
-
 
 
         mBinding.rvImages.layoutManager =
@@ -190,6 +189,8 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
     private fun getUserData() {
 
         userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
+
+        checkSubsData = ServiceIds.fetchSubsFromPref(activity, "subsInfo")
 
     }
 
@@ -268,7 +269,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
                 if (uploadResponse != null) {
 
-                    Log.i(TAG, "uploadImage: isSuccessful $uploadResponse")
+                    Log.i(TAG, "uploadImage: isSuccessful ${uploadResponse.data}")
 
                     imageList.add(uploadResponse.data!!)
 
@@ -488,11 +489,54 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
             return
         } else {
 
-            Log.i(TAG, "checkCredentials: isNetworkConnected")
+            if (checkSubsData != null){
 
-            showDialog(serviceDes, serviceDate, serviceTime)
+                showSubsDialog(checkSubsData!!, serviceDes, serviceDate, serviceTime)
+
+            } else {
+                Log.i(TAG, "checkCredentials: isNetworkConnected")
+
+                showDialog(serviceDes, serviceDate, serviceTime)
+            }
 
         }
+    }
+
+    private fun showSubsDialog(checkSubsData: CheckSubsData, serviceDes: String, serviceDate: String, serviceTime: String) {
+
+        Log.i(TAG, "checkCredentials: showDialog")
+
+        val subsInfoDialogBinding: SubsInfoDialogLayBinding =
+            SubsInfoDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialog = Dialog(activity)
+        dialog.setContentView(subsInfoDialogBinding.root)
+        dialog.setCancelable(false)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        val height = (resources.displayMetrics.heightPixels * 0.50).toInt()
+
+        dialog.window?.setLayout(width, height)
+
+
+        subsInfoDialogBinding.tvMember.text = "You have ${checkSubsData.pkgName} Subscription"
+        subsInfoDialogBinding.tvPrice.text = "Price: ${checkSubsData.pkgPrice}"
+        subsInfoDialogBinding.tvStart.text = "Start date: ${checkSubsData.startDate}"
+        subsInfoDialogBinding.tvEnd.text = "End date: ${checkSubsData.endDate}"
+        subsInfoDialogBinding.tvOrders.text = "Remaining orders: ${checkSubsData.orders}"
+
+        subsInfoDialogBinding.btnContinue.setOnClickListener {
+
+            addBookingOrder(serviceDes, serviceDate, serviceTime)
+            dialog.dismiss()
+        }
+
+        subsInfoDialogBinding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
     }
 
 
@@ -601,12 +645,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
                 Log.i(TAG, "addBookingOrder: ${it.nearestAgentList.size}")
 
-//                totalBalance -= orderBalance
-//
-//                totalBalance = ((totalBalance * 100.0).roundToInt() / 100.0)
-//
-//                updateBalance(totalBalance)
-
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
 
                 replaceFragment(ServicesFragment())
@@ -620,30 +658,30 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
     }
 
-    private fun updateBalance(totalBalance: Double) {
-
-        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
-
-        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
-        ) {
-
-            if (it.status == true && it.data != null) {
-
-                Log.i(TAG, "updateBalance: success ${it.message}")
-
-                val walletData = it.data
-
-                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
-                    walletData!!.balance!!
-                )
-
-            } else {
-                Log.i(TAG, "updateBalance: failure ${it.message}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    }
+//    private fun updateBalance(totalBalance: Double) {
+//
+//        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
+//
+//        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
+//        ) {
+//
+//            if (it.status == true && it.data != null) {
+//
+//                Log.i(TAG, "updateBalance: success ${it.message}")
+//
+//                val walletData = it.data
+//
+//                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
+//                    walletData!!.balance!!
+//                )
+//
+//            } else {
+//                Log.i(TAG, "updateBalance: failure ${it.message}")
+//                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//    }
 
     private fun getRealPathFromURI(contentURI: Uri): String? {
         val result: String?

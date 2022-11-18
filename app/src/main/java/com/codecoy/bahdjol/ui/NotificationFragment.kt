@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
+import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.NotificationAdapter
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentNotificationBinding
@@ -64,6 +66,11 @@ class NotificationFragment : Fragment() {
         mBinding.tvRetry.setOnClickListener {
             checkConnectivity()
         }
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
+        }
+
     }
 
     private fun getUserData() {
@@ -113,6 +120,13 @@ class NotificationFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

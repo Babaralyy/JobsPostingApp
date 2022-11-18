@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.EventDay
@@ -85,6 +86,10 @@ class CalendarFragment : Fragment(), HistoryCallback {
             Log.i(TAG, "onDayClick: date:$date")
 
             bookingAgainstDate(date)
+        }
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
         }
 
     }
@@ -192,6 +197,13 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
     override fun onHistoryClick(position: Int, bookingHistoryData: BookingHistoryData) {
 
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

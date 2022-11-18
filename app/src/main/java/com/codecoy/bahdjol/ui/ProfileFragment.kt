@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.MainActivity
@@ -85,6 +86,10 @@ class ProfileFragment : Fragment() {
 
         mBinding.ivCamera.setOnClickListener {
             chooseImage()
+        }
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            replaceFragment(ServicesFragment())
         }
 
     }
@@ -310,6 +315,7 @@ class ProfileFragment : Fragment() {
 
     }
 
+
     private fun getRealPathFromURI(contentURI: Uri): String? {
         val result: String?
         val cursor: Cursor? = activity?.contentResolver
@@ -323,6 +329,13 @@ class ProfileFragment : Fragment() {
             cursor.close()
         }
         return result
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onAttach(context: Context) {

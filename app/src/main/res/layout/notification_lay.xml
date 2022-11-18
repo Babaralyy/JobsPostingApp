@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="5dp"
+    android:layout_margin="5dp"
     android:gravity="center"
+    android:elevation="5dp"
     android:background="@color/background"
     android:orientation="horizontal">
 
@@ -28,6 +30,7 @@
             android:id="@+id/tvDes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/roboto"
             android:text="Lorem ipsum dolor sit amet"
             android:textColor="@color/black"
@@ -41,6 +44,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto"
         android:text="1m ago"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone"/>
 
 </LinearLayout>

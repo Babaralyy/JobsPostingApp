@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.callback.HistoryCallback
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.BookingHistoryLayBinding
 import com.codecoy.bahdjol.datamodels.BookingHistoryData
 import kotlinx.coroutines.flow.combine
@@ -26,7 +27,7 @@ class HistoryAdapter(
 
         val bookingHistoryData = bookingHistoryList[position]
 
-        Glide.with(context).load(bookingHistoryData.bookingImage)
+        Glide.with(context).load(Constant.IMG_URL + bookingHistoryData.bookingImage)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)

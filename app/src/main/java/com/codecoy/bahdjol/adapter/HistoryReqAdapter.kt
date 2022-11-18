@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.OngoingReqLayBinding
 import com.codecoy.bahdjol.datamodels.HistoryReqData
 
@@ -24,7 +25,7 @@ class HistoryReqAdapter(
 
         val historyReqData = historyReqDataList[position]
 
-        Glide.with(context).load(historyReqData.bookingImg)
+        Glide.with(context).load(Constant.IMG_URL + historyReqData.bookingImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)

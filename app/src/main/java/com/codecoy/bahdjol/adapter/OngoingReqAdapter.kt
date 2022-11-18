@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.callback.OngoingCallback
 import com.codecoy.bahdjol.callback.StatusCallBack
+import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.NewReqLayBinding
 import com.codecoy.bahdjol.databinding.OngoingReqLayBinding
 import com.codecoy.bahdjol.datamodels.NewReqData
@@ -28,7 +29,7 @@ class OngoingReqAdapter(
 
         val ongoingReqData = ongoingReqDataList[position]
 
-        Glide.with(context).load(ongoingReqData.bookingImg)
+        Glide.with(context).load(Constant.IMG_URL + ongoingReqData.bookingImg)
             .placeholder(R.drawable.ic_downloading)
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)
