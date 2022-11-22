@@ -61,4 +61,7 @@
     <string name="subscription_not_found">Subscription not found!</string>
     <string name="you_are_not_connected_to_the_internet">You are not connected to the Internet. Just call on this number for Booking!</string>
     <string name="complete">Complete</string>
+    <string name="rating">Rating</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="email">Email</string>
 </resources>

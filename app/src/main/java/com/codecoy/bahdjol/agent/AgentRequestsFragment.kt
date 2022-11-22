@@ -3,11 +3,8 @@ package com.codecoy.bahdjol.agent
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
@@ -19,6 +16,7 @@ class AgentRequestsFragment : Fragment(R.layout.fragment_agent_requests) {
 
 
     private lateinit var activity: MainActivity
+    private lateinit var drawerLayout: DrawerLayout
 
     private lateinit var mBinding: FragmentAgentRequestsBinding
     override fun onCreateView(
@@ -60,6 +58,12 @@ class AgentRequestsFragment : Fragment(R.layout.fragment_agent_requests) {
             val action = AgentRequestsFragmentDirections.actionAgentRequestsFragmentToStartingFragment()
             findNavController().navigate(action)
         }
+
+
+        mBinding.toolBar.setNavigationOnClickListener {
+            mBinding.drawerLay.openDrawer(Gravity.LEFT)
+        }
+
 
     }
 

@@ -109,7 +109,7 @@ class NewReqFragment : Fragment(), StatusCallBack {
 
         myViewModel.newRequests(agentLoginData?.id!!)
 
-        myViewModel.newReqLiveData.observe(viewLifecycleOwner
+        myViewModel.newReqLiveData.observe(activity
         ) {
             dialog.dismiss()
             if (it.status == true && it.data.isNotEmpty()) {

@@ -135,7 +135,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         myViewModel.userBalance(userData.id!!)
 
-        myViewModel.userBalanceLiveData.observe(viewLifecycleOwner
+        myViewModel.userBalanceLiveData.observe(activity
         ) {
 
             if (it.status == true && it.data != null) {
@@ -158,7 +158,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         myViewModel.checkSubscription(userData!!.id!!)
 
-        myViewModel.checkSubsLiveData.observe(viewLifecycleOwner
+        myViewModel.checkSubsLiveData.observe(activity
         ) {
 
             Log.i(Constant.TAG, "response: outer ${it.data}")

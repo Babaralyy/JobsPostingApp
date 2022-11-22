@@ -8,21 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
-import com.codecoy.bahdjol.adapter.NewReqAdapter
 import com.codecoy.bahdjol.adapter.OngoingReqAdapter
 import com.codecoy.bahdjol.callback.OngoingCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentOngoingReqBinding
 import com.codecoy.bahdjol.datamodels.AgentLoginData
-import com.codecoy.bahdjol.datamodels.NewReqData
 import com.codecoy.bahdjol.datamodels.OngoingReqData
-import com.codecoy.bahdjol.datamodels.OngoingReqResponse
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
@@ -112,7 +108,7 @@ class OngoingReqFragment : Fragment(), OngoingCallback {
 
         myViewModel.ongoingRequests(agentLoginData?.id!!)
 
-        myViewModel.ongoingReqLiveData.observe(viewLifecycleOwner
+        myViewModel.ongoingReqLiveData.observe(activity
         ) {
             dialog.dismiss()
             if (it.status == true && it.data.isNotEmpty()) {

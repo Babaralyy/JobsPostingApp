@@ -1,6 +1,9 @@
 package com.codecoy.bahdjol.ui
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,8 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.adapter.NotificationAdapter
+import com.codecoy.bahdjol.callback.NotificationCallback
 import com.codecoy.bahdjol.constant.Constant
+import com.codecoy.bahdjol.databinding.CallDialogLayBinding
 import com.codecoy.bahdjol.databinding.FragmentNotificationBinding
+import com.codecoy.bahdjol.databinding.RatingDialogLayBinding
 import com.codecoy.bahdjol.datamodels.NotificationData
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
@@ -25,7 +31,7 @@ import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 
 
-class NotificationFragment : Fragment() {
+class NotificationFragment : Fragment(), NotificationCallback {
 
     private var userData: UserData? = null
 
@@ -111,7 +117,7 @@ class NotificationFragment : Fragment() {
 
                 notificationList.reverse()
 
-                notificationAdapter  = NotificationAdapter(activity, notificationList)
+                notificationAdapter  = NotificationAdapter(activity, notificationList, this)
                 mBinding.rvNotification.adapter = notificationAdapter
 
             } else{
@@ -132,6 +138,27 @@ class NotificationFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         activity = context as MainActivity
+    }
+
+    override fun onNotificationClick(position: Int) {
+      showRatingDialog()
+    }
+
+    private fun showRatingDialog() {
+        val ratingDialogLayBinding: RatingDialogLayBinding =
+            RatingDialogLayBinding.inflate(LayoutInflater.from(requireContext()))
+
+        val dialog = Dialog(activity)
+        dialog.setContentView(ratingDialogLayBinding.root)
+        dialog.setCancelable(true)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        val height = (resources.displayMetrics.heightPixels * 0.30).toInt()
+
+        dialog.window?.setLayout(width, height)
+
+        dialog.show()
     }
 
 }

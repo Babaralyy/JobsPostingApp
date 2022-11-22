@@ -142,6 +142,9 @@
             app:destination="@id/startingFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_agentRequestsFragment_to_agentNotificationFragment"
+            app:destination="@id/agentNotificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/newReqFragment"
@@ -168,4 +171,9 @@
         android:name="com.codecoy.bahdjol.ui.SubServicesFragment"
         android:label="fragment_sub_services"
         tools:layout="@layout/fragment_sub_services" />
+    <fragment
+        android:id="@+id/agentNotificationFragment"
+        android:name="com.codecoy.bahdjol.agent.AgentNotificationFragment"
+        android:label="AgentNotificationFragment"
+        tools:layout="@layout/fragment_agent_notification"/>
 </navigation>

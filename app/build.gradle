@@ -109,5 +109,8 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
 
+    //Rating bar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
 
 }

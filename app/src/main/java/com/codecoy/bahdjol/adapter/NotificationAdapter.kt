@@ -4,11 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.codecoy.bahdjol.callback.NotificationCallback
+import com.codecoy.bahdjol.callback.OngoingCallback
 import com.codecoy.bahdjol.databinding.NotificationLayBinding
 import com.codecoy.bahdjol.datamodels.NotificationData
 
 class NotificationAdapter(private val context: Context,
-                          private val notificationList: MutableList<NotificationData>): RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+                          private val notificationList: MutableList<NotificationData>,
+                          private val notificationCallback: NotificationCallback
+): RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,6 +25,10 @@ class NotificationAdapter(private val context: Context,
 
         holder.mBinding.tvTitle.text = notificationData.title
         holder.mBinding.tvDes.text = notificationData.description
+
+        holder.itemView.setOnClickListener {
+            notificationCallback.onNotificationClick(position)
+        }
     }
 
     override fun getItemCount(): Int {

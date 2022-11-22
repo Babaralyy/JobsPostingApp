@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codecoy.bahdjol.MainActivity
@@ -23,7 +22,6 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSubscriptionBinding
 import com.codecoy.bahdjol.databinding.SubsDialogLayBinding
-import com.codecoy.bahdjol.datamodels.GetSubsResponse
 import com.codecoy.bahdjol.datamodels.SubsData
 import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
@@ -125,7 +123,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
         myViewModel.checkSubscription(userData!!.id!!)
 
-        myViewModel.checkSubsLiveData.observe(viewLifecycleOwner
+        myViewModel.checkSubsLiveData.observe(activity
         ) {
 
             Log.i(TAG, "response: outer ${it.data}")
@@ -171,7 +169,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
         myViewModel.allSubscriptions()
 
         myViewModel.allSubsLiveData.observe(
-            viewLifecycleOwner
+            activity
         ) {
             dialog.dismiss()
 
@@ -236,7 +234,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
             Log.i(TAG, "buySubs: ${userData.id!!} ${subsData.id!!.toInt()}  ${subsData.packageName.toString()} ${subsData.packagePrice!!.toDouble()} ${subsData.duration.toString()}")
 
-            myViewModel.getSubsLiveData.observe(viewLifecycleOwner
+            myViewModel.getSubsLiveData.observe(activity
             ) {
                 dialog.dismiss()
 
@@ -268,7 +266,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 
         myViewModel.checkSubscription(userData.id!!)
 
-        myViewModel.checkSubsLiveData.observe(viewLifecycleOwner
+        myViewModel.checkSubsLiveData.observe(activity
         ) {
 
             Log.i(TAG, "response: outer ${it.data}")
@@ -293,7 +291,7 @@ class SubscriptionFragment : Fragment(), SubsCallback {
 //
 //        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
 //
-//        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
+//        myViewModel.updateBalanceLiveData.observe(activity
 //        ) {
 //
 //            if (it.status == true && it.data != null) {

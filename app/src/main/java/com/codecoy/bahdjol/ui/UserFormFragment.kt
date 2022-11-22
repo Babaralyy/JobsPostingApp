@@ -637,7 +637,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
         myViewModel.sendBookingDetails(bookingDetails)
         myViewModel.bookingLiveData.observe(
-            viewLifecycleOwner
+            activity
         ) {
             dialog.dismiss()
             Log.i(TAG, "addBookingOrder: Outer ${it.nearestAgentList.size}")
@@ -662,7 +662,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 //
 //        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
 //
-//        myViewModel.updateBalanceLiveData.observe(viewLifecycleOwner
+//        myViewModel.updateBalanceLiveData.observe(activity
 //        ) {
 //
 //            if (it.status == true && it.data != null) {

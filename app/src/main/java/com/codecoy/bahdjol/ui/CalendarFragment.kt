@@ -104,7 +104,7 @@ class CalendarFragment : Fragment(), HistoryCallback {
         myViewModel.bookingHistory(ServiceIds.userId!!)
 
         myViewModel.bookingHistoryLiveData.observe(
-            viewLifecycleOwner
+            activity
         ) {
 
             dialog.dismiss()

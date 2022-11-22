@@ -127,7 +127,7 @@ class PaymentFragment : Fragment() {
 
             myViewModel.addBalance(userData!!.id!!, balanceCode)
 
-            myViewModel.addBalanceLiveData.observe(viewLifecycleOwner
+            myViewModel.addBalanceLiveData.observe(activity
             ) {
 
                 dialog.dismiss()
@@ -161,7 +161,7 @@ class PaymentFragment : Fragment() {
 
             myViewModel.userTransaction(userData!!.id!!)
 
-            myViewModel.transactionLiveData.observe(viewLifecycleOwner
+            myViewModel.transactionLiveData.observe(activity
             ) {
                 if (it.status == true && it.data.isNotEmpty()) {
 
@@ -208,7 +208,7 @@ class PaymentFragment : Fragment() {
 
         myViewModel.userBalance(userData.id!!)
 
-        myViewModel.userBalanceLiveData.observe(viewLifecycleOwner
+        myViewModel.userBalanceLiveData.observe(activity
         ) {
             dialog.dismiss()
             if (it.status == true && it.data != null) {

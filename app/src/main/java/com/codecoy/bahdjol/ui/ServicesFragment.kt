@@ -130,7 +130,7 @@ class ServicesFragment : Fragment(), ServicesCallback {
         myViewModel.allServices()
 
         myViewModel.allServicesLiveData.observe(
-            viewLifecycleOwner
+            activity
         ) {
             if (it.status == true && it.data.isNotEmpty()) {
 

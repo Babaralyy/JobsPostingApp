@@ -251,7 +251,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
 
         myViewModel.bookingHistory(ServiceIds.userId!!)
 
-        myViewModel.bookingHistoryLiveData.observe(viewLifecycleOwner
+        myViewModel.bookingHistoryLiveData.observe(activity
         ) {
 
             dialog.dismiss()
