@@ -13,9 +13,10 @@ data class BookingHistoryData(
     @SerializedName("status") var status: String? = null,
     @SerializedName("date") var date: String? = null,
     @SerializedName("time") var time: String? = null,
-    @SerializedName("booking_price") var booking_price: String? = null,
+    @SerializedName("booking_price") var bookingPrice: String? = null,
     @SerializedName("agent_id") var agentId: String? = null,
     @SerializedName("created_at") var createdAt: String? = null,
     @SerializedName("updated_at") var updatedAt: String? = null,
+    @SerializedName("subcategory_name") var subcategoryName: String? = null,
     @SerializedName("booking_image") var bookingImage: String? = null
 )

@@ -27,6 +27,7 @@ import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import gun0912.tedimagepicker.builder.TedImagePicker
@@ -181,7 +182,17 @@ class ProfileFragment : Fragment() {
 
         } else {
 
-            updateProfile(firstName, lastName, userAddress, userNumber)
+            if (activity.isNetworkConnected()) {
+                updateProfile(firstName, lastName, userAddress, userNumber)
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Connect to the Internet and try again!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+
 
         }
 

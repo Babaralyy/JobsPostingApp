@@ -319,6 +319,7 @@ class HistoryFragment : Fragment(), HistoryCallback {
         }
 
 
+        bottomBinding.tvCatName.text = bookingHistoryData.subcategoryName
         bottomBinding.tvDetails.text = bookingHistoryData.bookingDesc
 
         bottomDialog.show()

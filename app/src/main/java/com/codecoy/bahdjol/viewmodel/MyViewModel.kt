@@ -57,6 +57,9 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     private var notificationMutableLiveData: MutableLiveData<NotificationResponse> =
         MutableLiveData()
 
+    private var agentNotificationMutableLiveData: MutableLiveData<AgentNotificationResponse> =
+        MutableLiveData()
+
     val allServicesLiveData: LiveData<AllServiceResponse> = allServicesMutableLiveData
     val subServicesLiveData: LiveData<SubServicesResponse> = subServicesMutableLiveData
     val bookingLiveData: LiveData<BookingResponse> = sendBookingMutableLiveData
@@ -72,6 +75,7 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
     val ongoingReqLiveData: LiveData<OngoingReqResponse> = ongoingReqMutableLiveData
     val historyReqLiveData: LiveData<HistoryReqResponse> = historyReqMutableLiveData
     val notificationLiveData: LiveData<NotificationResponse> = notificationMutableLiveData
+    val agentNotificationLiveData: LiveData<AgentNotificationResponse> = agentNotificationMutableLiveData
 
 
 
@@ -471,6 +475,34 @@ class MyViewModel(private val repository: Repository) : ViewModel() {
         }
 
     }
+
+    fun agentNotifications(agent_id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val response =
+                repository.agentNotifications(agent_id)
+
+            if (response.isSuccessful) {
+                if (response.code() == 200) {
+                    agentNotificationMutableLiveData.postValue(response.body())
+                } else {
+                    val notificationResponse = AgentNotificationResponse()
+                    notificationResponse.status = false
+                    notificationResponse.message = response.body().toString()
+                    agentNotificationMutableLiveData.postValue(notificationResponse)
+                }
+            } else {
+                val notificationResponse = AgentNotificationResponse()
+                notificationResponse.status = false
+                notificationResponse.message = response.errorBody().toString()
+                agentNotificationMutableLiveData.postValue(notificationResponse)
+            }
+
+        }
+
+    }
+
 
 
 }

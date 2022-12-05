@@ -34,10 +34,10 @@ class OngoingReqAdapter(
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)
 
-        holder.mBinding.tvProductName.text = ongoingReqData.bookingDesc
+        holder.mBinding.tvProductName.text = ongoingReqData.subcategoryName
         holder.mBinding.tvReqDate.text = ongoingReqData.time + " " + ongoingReqData.date
         holder.mBinding.tvOrderPrice.text = "$ " + ongoingReqData.bookingPrice
-        holder.mBinding.tvOrderId.text = ongoingReqData.id
+        holder.mBinding.tvOrderId.text = "#${ongoingReqData.id}"
 
         holder.mBinding.btnComplete.setOnClickListener {
             ongoingCallback.onCompleteClick(position, ongoingReqData)

@@ -9,10 +9,18 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.codecoy.bahdjol.constant.Constant.TAG
+import com.codecoy.bahdjol.ui.NotificationFragment
 import com.codecoy.bahdjol.ui.ServicesFragment
 import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.Permissions
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.google.android.material.navigation.NavigationView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -20,6 +28,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import gun0912.tedimagepicker.util.ToastUtil.showToast
+import okhttp3.internal.notify
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -39,6 +48,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun inIt() {
+
+        val extras = intent.extras
+        val mNotifi: String
+
+
+        if (extras != null) {
+
+            mNotifi = ServiceIds.fetchNotifiInfo(this).toString()
+
+            ServiceIds.notId = mNotifi
+
+            Log.i(TAG, "inIt: ServiceIds $mNotifi")
+
+        } else {
+            mNotifi = ServiceIds.fetchNotifiInfo(this).toString()
+
+            Log.i(TAG, "inIt: ServiceIds else $mNotifi")
+
+        }
 
         checkLocationPermissions()
 
@@ -92,6 +120,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             showToast("Gps not Supported")
             //  finish()
         }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLay, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

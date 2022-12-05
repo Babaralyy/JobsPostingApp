@@ -15,6 +15,7 @@ import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentContactUsBinding
 import com.codecoy.bahdjol.datamodels.HelpResponse
 import com.codecoy.bahdjol.network.ApiCall
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,9 +98,15 @@ class ContactUsFragment : Fragment() {
             mBinding.etDes.error = "Description is required!"
             mBinding.etDes.requestFocus()
         } else {
-            contactUs(
-                firstName, lastName, userNumber, userEmail, userDes
-            )
+
+            if (activity.isNetworkConnected()){
+                contactUs(
+                    firstName, lastName, userNumber, userEmail, userDes
+                )
+            } else {
+                Toast.makeText(activity, "Connect to the Internet and try again!", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 

@@ -34,10 +34,33 @@ class StartingFragment : Fragment() {
 
     private fun inIt() {
 
+
+
+
+
         ServiceIds.fetchBalanceFromPref(requireActivity(), "balanceInfo")
 
         userData = ServiceIds.fetchUserFromPref(requireContext(), "userInfo")
         agentLoginData = ServiceIds.fetchAgentFromPref(requireContext(), "agentInfo")
+
+
+        if (userData != null){
+
+            if (ServiceIds.notId != null && ServiceIds.notId.equals("1")){
+                val action = StartingFragmentDirections.actionStartingFragmentToMainFragment()
+                findNavController().navigate(action)
+            }
+
+        }
+
+        if (agentLoginData != null){
+
+            if (ServiceIds.notId != null && ServiceIds.notId.equals("2")){
+                val action = StartingFragmentDirections.actionStartingFragmentToAgentRequestsFragment()
+                findNavController().navigate(action)
+            }
+
+        }
 
         mBinding.ivUser.setOnClickListener {
 

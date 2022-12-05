@@ -30,10 +30,10 @@ class HistoryReqAdapter(
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)
 
-        holder.mBinding.tvProductName.text = historyReqData.bookingDesc
+        holder.mBinding.tvProductName.text = historyReqData.subcategoryName
         holder.mBinding.tvReqDate.text = historyReqData.time + " " + historyReqData.date
         holder.mBinding.tvOrderPrice.text = "$ " + historyReqData.bookingPrice
-        holder.mBinding.tvOrderId.text = historyReqData.id
+        holder.mBinding.tvOrderId.text = "#${historyReqData.id}"
 
         if(historyReqData.status!!.toInt() == 0){
             holder.mBinding.tvReqStatus.text = "Rejected"

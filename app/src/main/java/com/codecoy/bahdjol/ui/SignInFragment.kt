@@ -17,6 +17,7 @@ import com.codecoy.bahdjol.databinding.FragmentSignInBinding
 import com.codecoy.bahdjol.datamodels.UserResponse
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
@@ -79,7 +80,13 @@ class SignInFragment : Fragment() {
             mBinding.etPassword.requestFocus()
 
         } else {
-            signIn(userEmail, userPassword)
+            if (activity.isNetworkConnected()
+            ) {
+                signIn(userEmail, userPassword)
+            } else {
+                Toast.makeText(activity, "Connect to the Internet and try again!", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
     }
@@ -104,29 +111,20 @@ class SignInFragment : Fragment() {
                         dialog.dismiss()
 
                         if (response.body() != null && response.body()?.status == true) {
-                            val userData = response.body()!!.data
+                            val userData = response.body()!!.data[0]
 
-                            if (userData != null) {
+                            ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
+                            ServiceIds.userPasswordIntoPref(activity, "userPassInfo", userPassword)
 
-                                ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
+                            Toast.makeText(
+                                activity,
+                                response.body()!!.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                                Toast.makeText(
-                                    activity,
-                                    response.body()!!.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                                val action =
-                                    SignInFragmentDirections.actionSignInFragmentToMainFragment()
-                                findNavController().navigate(action)
-
-                            } else {
-                                Toast.makeText(
-                                    activity,
-                                    "Something went wrong",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            val action =
+                                SignInFragmentDirections.actionSignInFragmentToMainFragment()
+                            findNavController().navigate(action)
 
                         } else {
                             Toast.makeText(
@@ -145,6 +143,7 @@ class SignInFragment : Fragment() {
 
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                     dialog.dismiss()
+                    Log.i(TAG, "onFailure: ${t.message}")
                     Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 }
 
@@ -162,6 +161,8 @@ class SignInFragment : Fragment() {
 
             // Get new FCM registration token
             deviceToken = task.result
+
+            ServiceIds.deviceTokenIntoPref(activity, "tokenInfo", deviceToken!!)
 
             Log.i(TAG, " token:----> : $deviceToken")
 

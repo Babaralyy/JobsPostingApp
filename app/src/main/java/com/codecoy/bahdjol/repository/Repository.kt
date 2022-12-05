@@ -51,4 +51,6 @@ class Repository {
     suspend  fun historyRequests(agent_id: Int) = apiCall.historyRequests(agent_id)
 
     suspend  fun userNotifications(user_id: Int) = apiCall.userNotifications(user_id)
+
+    suspend  fun agentNotifications(agent_id: Int) = apiCall.agentNotifications(agent_id)
 }

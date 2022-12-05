@@ -12,7 +12,10 @@ object ServiceIds {
 
     var serviceId: Int? = null
     var subServiceId: Int? = null
+    var notId: String? = null
     var subServicePrice: String? = null
+
+
 
     const val CHANNEL_ID = "channel_id"
 
@@ -25,6 +28,8 @@ object ServiceIds {
     private lateinit var sharedPreferences: SharedPreferences
 
     fun saveUserIntoPref(context: Context, userInfo: String, userData: UserData) {
+
+
 
         sharedPreferences = context.getSharedPreferences(userInfo, Context.MODE_PRIVATE)
 
@@ -131,6 +136,8 @@ object ServiceIds {
 
     fun saveAgentIntoPref(context: Context, agentInfo: String, agentLoginData: AgentLoginData) {
 
+
+
         sharedPreferences = context.getSharedPreferences(agentInfo, Context.MODE_PRIVATE)
 
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
@@ -167,6 +174,79 @@ object ServiceIds {
         }
 
     }
+
+
+    fun userPasswordIntoPref(context: Context, userPassInfo: String, userPass: String) {
+
+        sharedPreferences = context.getSharedPreferences(userPassInfo, Context.MODE_PRIVATE)
+
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+        editor.putString("userPass", userPass)
+
+        Log.i("TAG", "saveInfoIntoPref: userPass $userPass")
+
+        editor.apply()
+    }
+
+    fun fetchUserPasswordFromPref(context: Context, userPassInfo: String): String? {
+
+        sharedPreferences = context.getSharedPreferences(userPassInfo, Context.MODE_PRIVATE)
+
+        return sharedPreferences.getString("userPass", null)
+
+    }
+
+    fun agentPasswordIntoPref(context: Context, agentPassInfo: String, agentPass: String) {
+
+        sharedPreferences = context.getSharedPreferences(agentPassInfo, Context.MODE_PRIVATE)
+
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+        editor.putString("agentPass", agentPass)
+
+        Log.i("TAG", "saveInfoIntoPref: agentPass $agentPass")
+
+        editor.apply()
+    }
+
+    fun fetchAgentPasswordFromPref(context: Context, agentPassInfo: String): String? {
+
+        sharedPreferences = context.getSharedPreferences(agentPassInfo, Context.MODE_PRIVATE)
+
+        return sharedPreferences.getString("agentPass", null)
+
+    }
+
+    fun deviceTokenIntoPref(context: Context, tokenInfo: String, deviceToken: String) {
+
+        sharedPreferences = context.getSharedPreferences(tokenInfo, Context.MODE_PRIVATE)
+
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+        editor.putString("deviceToken", deviceToken)
+
+        Log.i("TAG", "saveInfoIntoPref: deviceToken $deviceToken")
+
+        editor.apply()
+    }
+
+    fun fetchDeviceTokenFromPref(context: Context, tokenInfo: String): String? {
+
+        sharedPreferences = context.getSharedPreferences(tokenInfo, Context.MODE_PRIVATE)
+
+        return sharedPreferences.getString("deviceToken", null)
+
+    }
+
+    fun fetchNotifiInfo(context: Context): String? {
+
+        sharedPreferences = context.getSharedPreferences("notifiInfo", Context.MODE_PRIVATE)
+
+        return sharedPreferences.getString("notifi", null)
+
+    }
+
 
     fun userLogout(context: Context, userInfo: String) {
         sharedPreferences = context.getSharedPreferences(userInfo, Context.MODE_PRIVATE)

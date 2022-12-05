@@ -127,6 +127,9 @@ interface ApiCall {
     @GET("api/notification")
     suspend fun userNotifications(@Query("user_id") user_id: Int): Response<NotificationResponse>
 
+    @GET("api/notification_agent")
+    suspend fun agentNotifications(@Query("agent_id") agent_id: Int): Response<AgentNotificationResponse>
+
     @GET("api/status_chng")
     suspend fun changeStatus(
         @Query("agent_id") agent_id: Int,
@@ -134,5 +137,24 @@ interface ApiCall {
         @Query("status") status: Int,
     ): Response<StatusResponse>
 
+    @FormUrlEncoded
+    @POST("api/agent_rating")
+    fun rateToAgent(
+        @Field("user_id") user_id: Int,
+        @Field("agent_id") agent_id: Int,
+        @Field("ratings") ratings: String,
+        @Field("agent_desc") agent_desc: String,
+        @Field("book_id") book_id: Int
+    ): Call<AgentRatingResponse>
+
+    @FormUrlEncoded
+    @POST("api/user_rating")
+    fun rateToUser(
+        @Field("agent_id") agent_id: Int,
+        @Field("user_id") user_id: Int,
+        @Field("ratings") ratings: String,
+        @Field("user_desc") user_desc: String,
+        @Field("book_id") book_id: Int
+    ): Call<AgentRatingResponse>
 
 }

@@ -160,6 +160,8 @@ class OngoingReqFragment : Fragment(), OngoingCallback {
                 )
             }
 
+            Log.i(Constant.TAG, "changeStatus: ${statusCall.body()}")
+
             if (statusCall.isSuccessful) {
 
                 dialog.dismiss()
@@ -193,6 +195,7 @@ class OngoingReqFragment : Fragment(), OngoingCallback {
 
             } else {
                 dialog.dismiss()
+                Log.i(Constant.TAG, "changeStatus: ${statusCall.message()}")
                 Toast.makeText(activity, statusCall.message(), Toast.LENGTH_SHORT).show()
             }
 

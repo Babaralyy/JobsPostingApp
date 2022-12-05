@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.agent
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
@@ -9,11 +10,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentAgentSignInBinding
 import com.codecoy.bahdjol.datamodels.AgentLoginResponse
 import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.utils.ServiceIds
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +30,7 @@ import retrofit2.Response
 class AgentSignInFragment : Fragment() {
 
     private var deviceToken: String? = null
+    private lateinit var activity: MainActivity
 
     private lateinit var mBinding: FragmentAgentSignInBinding
     override fun onCreateView(
@@ -46,7 +50,11 @@ class AgentSignInFragment : Fragment() {
 
         mBinding.btnSignIn.setOnClickListener {
 
-            checkCredentials()
+            if (activity.isNetworkConnected()){
+                checkCredentials()
+            } else {
+                Toast.makeText(activity, "Connect to the Internet and try again!", Toast.LENGTH_SHORT).show()
+            }
 
         }
 
@@ -97,25 +105,18 @@ class AgentSignInFragment : Fragment() {
 
                         if (response.body() != null && response.body()?.status == true) {
 
-                            val agentData = response.body()!!.data
+                            val agentData = response.body()!!.data[0]
 
-                            if (agentData != null) {
+                            ServiceIds.saveAgentIntoPref(activity, "agentInfo", agentData)
+                            ServiceIds.agentPasswordIntoPref(activity, "agentPassInfo", userPassword)
 
-                                ServiceIds.saveAgentIntoPref(requireActivity(), "agentInfo", agentData)
+                            Toast.makeText(
+                                requireActivity(), response.body()!!.message, Toast.LENGTH_SHORT
+                            ).show()
 
-                                Toast.makeText(
-                                    requireActivity(), response.body()!!.message, Toast.LENGTH_SHORT
-                                ).show()
-
-                                val action =
-                                    AgentSignInFragmentDirections.actionAgentSignInFragmentToAgentRequestsFragment()
-                                findNavController().navigate(action)
-
-                            } else {
-                                Toast.makeText(
-                                    requireActivity(), "Something went wrong", Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            val action =
+                                AgentSignInFragmentDirections.actionAgentSignInFragmentToAgentRequestsFragment()
+                            findNavController().navigate(action)
 
                         } else {
                             Toast.makeText(
@@ -148,10 +149,17 @@ class AgentSignInFragment : Fragment() {
 
             // Get new FCM registration token
             deviceToken = task.result
+            
+            ServiceIds.deviceTokenIntoPref(activity, "tokenInfo", deviceToken!!)
 
             Log.i(Constant.TAG, " token:----> : $deviceToken")
 
         })
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity = context as MainActivity
     }
 
 }

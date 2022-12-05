@@ -5,7 +5,6 @@
     android:padding="5dp"
     android:layout_margin="5dp"
     android:gravity="center"
-    android:elevation="5dp"
     android:background="@color/background"
     android:orientation="horizontal">
 
@@ -23,7 +22,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
             android:text="User"
-            android:textColor="@color/black"
+            android:textColor="@color/primaryVariantColor"
             android:textSize="16sp" />
 
         <TextView
@@ -38,13 +37,11 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:text="1m ago"
-        android:textSize="12sp"
-        android:visibility="gone"/>
+<ImageView
+    android:id="@+id/giveRating"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/give_rating"
+    android:visibility="gone"/>
 
 </LinearLayout>

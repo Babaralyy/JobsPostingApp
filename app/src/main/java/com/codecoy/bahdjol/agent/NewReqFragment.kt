@@ -192,7 +192,7 @@ class NewReqFragment : Fragment(), StatusCallBack {
                         newReqList.removeAt(position)
                         newReqAdapter.notifyDataSetChanged()
 
-                        if (newReqList.isNotEmpty()){
+                        if (newReqList.isEmpty()){
                             mBinding.tvNotFound.visibility = View.VISIBLE
                         }
 

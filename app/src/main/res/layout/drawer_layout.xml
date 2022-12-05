@@ -65,15 +65,36 @@
 
         </LinearLayout>
 
-        <me.zhanghai.android.materialratingbar.MaterialRatingBar
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center"
-            android:numStars="5"
-            android:progressTint="#FFCE31"
-            android:contentDescription="@string/rating"
-            style="@style/Widget.MaterialRatingBar.RatingBar.Small" />
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:id="@+id/ageRating"
+                style="@style/Widget.MaterialRatingBar.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/rating"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressTint="#FFCE31" />
+
+            <TextView
+                android:id="@+id/tvRatingNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto"
+                android:text="(2)"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

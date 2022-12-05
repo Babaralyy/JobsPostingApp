@@ -8,12 +8,14 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tvRateName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/_20sdp"
         android:fontFamily="@font/roboto"
         android:text="Agent name"
+        android:gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/_18ssp" />
 
@@ -22,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,6 +48,7 @@
     </LinearLayout>
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+        android:id="@+id/aRating"
         style="@style/Widget.MaterialRatingBar.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,11 +56,29 @@
         android:layout_marginTop="5dp"
         android:contentDescription="@string/rating"
         android:numStars="5"
+        android:stepSize="1"
         android:progressTint="#FFCE31" />
 
+    <EditText
+        android:id="@+id/etDes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:autofillHints="Enter Note Text"
+        android:background="@drawable/feedback_back"
+        android:ems="10"
+        android:hint="@string/add_feedback"
+        android:fontFamily="@font/roboto"
+        android:gravity="start"
+        android:inputType="textMultiLine"
+        android:lines="12"
+        android:maxLines="5"
+        android:minLines="5"
+        android:padding="5dp"
+        android:scrollbars="vertical" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnContinue"
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

@@ -1,5 +1,6 @@
 package com.codecoy.bahdjol.ui
 
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -19,8 +20,11 @@ import com.bumptech.glide.Glide
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant
+import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentMainBinding
 import com.codecoy.bahdjol.datamodels.UserData
+import com.codecoy.bahdjol.datamodels.UserResponse
+import com.codecoy.bahdjol.network.ApiCall
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.ServiceIds
@@ -28,11 +32,19 @@ import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
 import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import retrofit2.Call
+import retrofit2.Response
 
 
 class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private var userData: UserData? = null
+    private var userPass: String? = null
+    private var deviceToken: String? = null
 
     private lateinit var activity: MainActivity
 
@@ -56,9 +68,6 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         val myViewModelFactory = MyViewModelFactory(repository)
         myViewModel = ViewModelProvider(this, myViewModelFactory)[MyViewModel::class.java]
 
-        getUserData()
-
-        setUpNavDrawer()
 
         replaceFragment(ServicesFragment())
         mBinding.bottomNav.setOnItemSelectedListener {
@@ -81,6 +90,11 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             true
         }
 
+
+        getUserData()
+
+        setUpNavDrawer()
+
         navViews()
 
         GlobalClass.drawer = mBinding.drawerLay
@@ -98,12 +112,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity.supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLay, fragment)
-        fragmentTransaction.commit()
-    }
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return false
@@ -112,13 +121,76 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private fun getUserData() {
 
         userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
+        userPass = ServiceIds.fetchUserPasswordFromPref(activity, "userPassInfo")
+        deviceToken = ServiceIds.fetchDeviceTokenFromPref(activity, "tokenInfo")
 
         if (userData != null) {
 
             userDataOnViews(userData!!)
 
+            if (userPass != null && deviceToken != null){
+                if (activity.isNetworkConnected()){
+                    userSignIn(userData!!)
+                }
+            }
+
+
             checkConnectivity()
 
+        }
+
+    }
+
+    private fun userSignIn(userData: UserData) {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val signInApi = Constant.getRetrofitInstance().create(ApiCall::class.java)
+            val signInCall = signInApi.signInUser(userData.email!!, userPass!!, deviceToken!!)
+
+            signInCall.enqueue(object : retrofit2.Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>
+                ) {
+
+                    Log.i(TAG, "onResponse: userSignIn outer $response")
+
+                    if (response.isSuccessful) {
+
+                        Log.i(TAG, "onResponse: userSignIn inner ${response.body()}")
+
+                        if (response.body() != null && response.body()?.status == true) {
+                            val usersData = response.body()!!.data[0]
+
+                            ServiceIds.saveUserIntoPref(activity, "userInfo", usersData)
+
+                            this@MainFragment.userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                               userDataOnViews(this@MainFragment.userData!!)
+                            }
+
+
+                        } else {
+                            Log.i(TAG, "onResponse: userSignIn ${response.body()?.message}")
+                        }
+
+                    } else {
+
+                        Log.i(TAG, "onResponse: onFailure: userSignIn${response.message()}")
+
+                    }
+                }
+
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+
+                    Log.i(TAG, "onFailure: ${t.message}")
+
+                }
+
+            })
         }
 
     }
@@ -182,8 +254,9 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
 
             } else {
-                Log.i(Constant.TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+
+                Log.i(TAG, "checkSubs: ${it.message}")
+
             }
         }
 
@@ -200,7 +273,14 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         mBinding.navView.findViewById<TextView>(R.id.tvNumber).text = userData.phone
         mBinding.navView.findViewById<TextView>(R.id.tvEmail).text = userData.email
 
+        Log.i(TAG, "userDataOnViews: ${userData.userRating}")
+
+        mBinding.navView.findViewById<MaterialRatingBar>(R.id.ageRating).rating = userData.userRating!!.toFloat()
+
+        mBinding.navView.findViewById<TextView>(R.id.tvRatingNumber).text = "${userData.userRating} (${userData.totalAgentRateUser.toString()})"
+
     }
+
 
     private fun navViews() {
 
@@ -235,6 +315,7 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             mBinding.drawerLay.close()
         }
 
+
     }
 
     private fun logout() {
@@ -242,6 +323,17 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         val action = MainFragmentDirections.actionMainFragmentToStartingFragment()
         findNavController().navigate(action)
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+
+        if (!fragmentManager.isDestroyed){
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.frameLay, fragment)
+            fragmentTransaction.commit()
+        }
+
     }
 
     override fun onAttach(context: Context) {

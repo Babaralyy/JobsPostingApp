@@ -32,11 +32,11 @@ class HistoryAdapter(
             .error(R.drawable.ic_error)
             .into(holder.mBinding.ivProduct)
 
-        holder.mBinding.tvProductName.text = bookingHistoryData.bookingDesc
+        holder.mBinding.tvProductName.text = bookingHistoryData.subcategoryName
         holder.mBinding.tvOrderId.text = bookingHistoryData.id.toString()
         holder.mBinding.tvOrderDate.text = bookingHistoryData.date
 
-        holder.mBinding.tvOrderPrice.text = bookingHistoryData.booking_price
+        holder.mBinding.tvOrderPrice.text = bookingHistoryData.bookingPrice
 
         if (bookingHistoryData.status == "0"){
             holder.mBinding.tvOrderStatus.text = "Pending"

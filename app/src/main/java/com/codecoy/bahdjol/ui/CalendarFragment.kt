@@ -83,6 +83,7 @@ class CalendarFragment : Fragment(), HistoryCallback {
 
             val format = SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH)
             date = format.format(clickedDayCalendar.time)
+
             Log.i(TAG, "onDayClick: date:$date")
 
             bookingAgainstDate(date)
@@ -93,7 +94,6 @@ class CalendarFragment : Fragment(), HistoryCallback {
         }
 
     }
-
 
 
     private fun getBookingHistory() {

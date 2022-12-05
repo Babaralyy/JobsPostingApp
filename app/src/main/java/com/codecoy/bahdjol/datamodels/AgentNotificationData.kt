@@ -2,7 +2,7 @@ package com.codecoy.bahdjol.datamodels
 
 import com.google.gson.annotations.SerializedName
 
-class NotificationData(
+class AgentNotificationData(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("user_id") var userId: String? = null,
     @SerializedName("title") var title: String? = null,
@@ -13,5 +13,6 @@ class NotificationData(
     @SerializedName("book_id") var bookId: String? = null,
     @SerializedName("created_at") var createdAt: String? = null,
     @SerializedName("updated_at") var updatedAt: String? = null,
-    @SerializedName("agent_name") var agentName: String? = null
+    @SerializedName("user_name") var userName: String? = null
+
 )

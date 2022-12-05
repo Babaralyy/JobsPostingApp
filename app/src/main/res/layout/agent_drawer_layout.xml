@@ -64,15 +64,36 @@
 
     </LinearLayout>
 
-    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-        style="@style/Widget.MaterialRatingBar.RatingBar.Small"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:contentDescription="@string/rating"
-        android:numStars="5"
-        android:progressTint="#FFCE31" />
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <me.zhanghai.android.materialratingbar.MaterialRatingBar
+            android:id="@+id/agentRating"
+            style="@style/Widget.MaterialRatingBar.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/rating"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:progressTint="#FFCE31" />
+
+        <TextView
+            android:id="@+id/tvRatingNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/roboto"
+            android:text="(2)"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -84,7 +105,7 @@
 
 
     <LinearLayout
-        android:id="@+id/profileLay"
+        android:id="@+id/notLay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -96,14 +117,17 @@
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:srcCompat="@drawable/ic_profile_" />
+            android:padding="3dp"
+            android:background="@drawable/ic_logout"
+            app:tint="@color/primaryVariantColor"
+            app:srcCompat="@drawable/ic_notifications_none" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/roboto_medium"
-            android:text="Agent Name"
+            android:text="@string/notification"
             android:textColor="@color/black"
             android:textSize="14sp" />
     </LinearLayout>
@@ -121,9 +145,9 @@
             android:layout_height="40dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
+            app:srcCompat="@drawable/ic_exit"
+            android:padding="5dp"
             android:background="@drawable/ic_logout"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ic_email"
             app:tint="@color/primaryVariantColor" />
 
         <TextView
@@ -131,33 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/roboto_medium"
-            android:text="@string/email"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/contactLay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:srcCompat="@drawable/phone" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/roboto_medium"
-            android:text="Phone Number"
+            android:text="Logout"
             android:textColor="@color/black"
             android:textSize="14sp" />
     </LinearLayout>

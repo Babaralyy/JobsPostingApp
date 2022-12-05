@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.constant.Constant
@@ -23,10 +22,8 @@ import com.codecoy.bahdjol.constant.Constant.TAG
 import com.codecoy.bahdjol.databinding.FragmentSignUpBinding
 import com.codecoy.bahdjol.datamodels.UserResponse
 import com.codecoy.bahdjol.network.ApiCall
-import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.utils.ServiceIds
-import com.codecoy.bahdjol.viewmodel.MyViewModel
-import com.codecoy.bahdjol.viewmodel.MyViewModelFactory
+import com.codecoy.bahdjol.utils.isNetworkConnected
 import gun0912.tedimagepicker.builder.TedImagePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +37,6 @@ import retrofit2.Response
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
-import kotlin.math.log
 
 
 class SignUpFragment : Fragment() {
@@ -68,7 +64,9 @@ class SignUpFragment : Fragment() {
 
         mBinding.btnSignUp.setOnClickListener {
 
+
             checkCredentials()
+
 
         }
 
@@ -159,7 +157,18 @@ class SignUpFragment : Fragment() {
             mBinding.etPassword.error = "Password should be greater than 8 characters!"
             mBinding.etPassword.requestFocus()
         } else {
-            signUp(firstName, lastName, userAddress,userNumber, userEmail, userPassword)
+
+
+            if (activity.isNetworkConnected()) {
+                signUp(firstName, lastName, userAddress, userNumber, userEmail, userPassword)
+            } else {
+                Toast.makeText(
+                    activity,
+                    "Connect to the Internet and try again!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         }
 
 
@@ -211,29 +220,19 @@ class SignUpFragment : Fragment() {
                         dialog.dismiss()
 
                         if (response.body() != null && response.body()?.status == true) {
-                            val userData = response.body()!!.data
+                            val userData = response.body()!!.data[0]
 
-                            if (userData != null) {
+                            ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
 
-                                ServiceIds.saveUserIntoPref(activity, "userInfo", userData)
+                            Toast.makeText(
+                                activity,
+                                response.body()!!.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                                Toast.makeText(
-                                    activity,
-                                    response.body()!!.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                                val action =
-                                    SignUpFragmentDirections.actionSignUpFragmentToMainFragment()
-                                findNavController().navigate(action)
-
-                            } else {
-                                Toast.makeText(
-                                    activity,
-                                    "Something went wrong",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            val action =
+                                SignUpFragmentDirections.actionSignUpFragmentToMainFragment()
+                            findNavController().navigate(action)
 
                         } else {
                             Toast.makeText(

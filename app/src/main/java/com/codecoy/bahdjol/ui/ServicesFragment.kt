@@ -2,8 +2,6 @@ package com.codecoy.bahdjol.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -14,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
@@ -22,8 +21,10 @@ import com.codecoy.bahdjol.callback.ServicesCallback
 import com.codecoy.bahdjol.constant.Constant
 import com.codecoy.bahdjol.databinding.FragmentServicesBinding
 import com.codecoy.bahdjol.datamodels.AllServiceData
+import com.codecoy.bahdjol.datamodels.UserData
 import com.codecoy.bahdjol.repository.Repository
 import com.codecoy.bahdjol.roomdb.*
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.serviceId
 import com.codecoy.bahdjol.utils.isNetworkConnected
 import com.codecoy.bahdjol.viewmodel.MyViewModel
@@ -43,6 +44,8 @@ class ServicesFragment : Fragment(), ServicesCallback {
     private lateinit var gridManager: GridLayoutManager
     private lateinit var allServicesAdapter: AllServicesAdapter
 
+    private var userData: UserData? = null
+
     private lateinit var drawerLayout: DrawerLayout
 
     private lateinit var activity: MainActivity
@@ -60,6 +63,8 @@ class ServicesFragment : Fragment(), ServicesCallback {
     }
 
     private fun inIt() {
+
+
 
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
@@ -81,6 +86,8 @@ class ServicesFragment : Fragment(), ServicesCallback {
         mBinding.rvServices.setHasFixedSize(true)
 
         servicesFromRoomDb()
+
+        getUserData()
 
         drawerLayout = activity.findViewById(R.id.drawerLay)
 
@@ -154,6 +161,57 @@ class ServicesFragment : Fragment(), ServicesCallback {
                 roomServicesViewModel.insertService(Service(item.id, item.categoryName, item.img, item.createdAt, item.updatedAt))
             }
 
+        }
+
+    }
+
+    private fun getUserData() {
+
+        userData = ServiceIds.fetchUserFromPref(activity, "userInfo")
+
+        if (userData != null) {
+
+            if (activity.isNetworkConnected()){
+                checkSubs(userData!!)
+            }
+
+            if (ServiceIds.notId != null && ServiceIds.notId.equals("1")){
+              replaceFragment(NotificationFragment())
+            }
+
+        }
+
+    }
+
+    private fun checkSubs(userData: UserData) {
+
+        myViewModel.checkSubscription(userData!!.id!!)
+
+        myViewModel.checkSubsLiveData.observe(activity
+        ) {
+
+            Log.i(Constant.TAG, "response: outer ${it.data}")
+
+            if (it.status == true && it.data != null) {
+
+                Log.i(Constant.TAG, "response: success ${it.data!!.id}")
+
+                val checkSubsData = it.data
+
+                if (checkSubsData!!.status!!.toInt() == 1){
+
+                    ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData)
+
+                } else{
+
+                    ServiceIds.clearSubsInfo(activity, "subsInfo")
+
+                }
+
+
+            } else {
+                Log.i(Constant.TAG, "checkSubs: ${it.message}")
+            }
         }
 
     }

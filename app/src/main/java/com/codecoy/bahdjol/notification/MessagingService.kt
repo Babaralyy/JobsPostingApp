@@ -15,21 +15,30 @@ import androidx.core.app.NotificationManagerCompat
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant.TAG
+import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.CHANNEL_ID
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.util.*
 
 
-class MessagingService: FirebaseMessagingService() {
+class MessagingService() : FirebaseMessagingService() {
+
+    private val bookingGroup = "com.android.example.BOOKING_GROUP"
+    private var summaryId: Long = 1
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    private var notString: String? = null
+
+    private lateinit var intent: Intent
+
 
     override fun onNewToken(deviceToken: String) {
         super.onNewToken(deviceToken)
 
         Log.i(TAG, "onNewToken: $deviceToken")
 
-        saveTokenIntoPref(deviceToken)
     }
 
 
@@ -47,23 +56,68 @@ class MessagingService: FirebaseMessagingService() {
     private fun showNotification(data: MutableMap<String, String>) {
 
 //         Create an explicit intent for an Activity in your app
-        val intent = Intent(this, MainActivity::class.java).apply {
+        var intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        notString = data["body"].toString().trim().lowercase(Locale.ROOT)
+        notString = notString!!.filterNot {
+            it.isWhitespace()
+        }
+
+        Log.i(TAG, "showNotification: $notString")
+
+        if (notString!!.contains("agent")) {
 
 
+            sharedPreferences = this.getSharedPreferences("notifiInfo", Context.MODE_PRIVATE)
+
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+            editor.putString("notifi", "1")
+
+            editor.apply()
+
+            Log.i(TAG, "showNotification: true")
+
+            intent.putExtra("not", 5)
+
+
+        } else {
+
+            Log.i(TAG, "showNotification: false")
+
+
+            sharedPreferences = this.getSharedPreferences("notifiInfo", Context.MODE_PRIVATE)
+
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+            editor.putString("notifi", "2")
+
+            editor.apply()
+
+        }
+
+
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+
+//        val notIntent = NavDeepLinkBuilder(this)
+//            .setGraph (R.navigation.nav_graph)
+//            .setDestination (R.id.notificationFragment)
+//        .createPendingIntent()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -74,31 +128,19 @@ class MessagingService: FirebaseMessagingService() {
             .setContentTitle(data["title"])
             .setContentText(data["body"])
             .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(pendingIntent)
+            .setGroup(bookingGroup)
+            .setGroupSummary(true)
             .setAutoCancel(true)
-
-
-
 
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define
-            notify(1, builder.build())
+            notify((++summaryId).toInt(), builder.build())
         }
 
     }
 
-    private fun saveTokenIntoPref(deviceToken: String) {
 
-       sharedPreferences = getSharedPreferences("DeviceToken", Context.MODE_PRIVATE)
-
-        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-
-        editor.putString("deviceToken", deviceToken)
-
-        Log.i(TAG, "deviceToken: $deviceToken")
-
-        editor.apply()
-
-    }
 
 }
