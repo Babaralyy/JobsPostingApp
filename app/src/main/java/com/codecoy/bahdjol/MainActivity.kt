@@ -11,12 +11,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import com.codecoy.bahdjol.constant.Constant.TAG
-import com.codecoy.bahdjol.ui.NotificationFragment
 import com.codecoy.bahdjol.ui.ServicesFragment
 import com.codecoy.bahdjol.utils.GlobalClass
 import com.codecoy.bahdjol.utils.Permissions
@@ -28,7 +23,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import gun0912.tedimagepicker.util.ToastUtil.showToast
-import okhttp3.internal.notify
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -50,21 +44,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun inIt() {
 
         val extras = intent.extras
-        val mNotifi: String
+        val mNotifier: String
+
+        Log.i(TAG, "inIt: ServiceIds extras $extras")
 
 
         if (extras != null) {
 
-            mNotifi = ServiceIds.fetchNotifiInfo(this).toString()
+            mNotifier = ServiceIds.fetchNotifiInfo(this).toString()
 
-            ServiceIds.notId = mNotifi
+            ServiceIds.notId = mNotifier
 
-            Log.i(TAG, "inIt: ServiceIds $mNotifi")
+            Log.i(TAG, "inIt: ServiceIds $mNotifier")
 
         } else {
-            mNotifi = ServiceIds.fetchNotifiInfo(this).toString()
 
-            Log.i(TAG, "inIt: ServiceIds else $mNotifi")
+            mNotifier = ServiceIds.fetchNotifiInfo(this).toString()
+            Log.i(TAG, "inIt: ServiceIds else $mNotifier")
 
         }
 

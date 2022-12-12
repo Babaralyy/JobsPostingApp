@@ -233,11 +233,11 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         myViewModel.checkSubsLiveData.observe(activity
         ) {
 
-            Log.i(Constant.TAG, "response: outer ${it.data}")
+            Log.i(TAG, "response: outer ${it.data}")
 
             if (it.status == true && it.data != null) {
 
-                Log.i(Constant.TAG, "response: success ${it.data!!.id}")
+                Log.i(TAG, "response: success ${it.data!!.id}")
 
                 val checkSubsData = it.data
 

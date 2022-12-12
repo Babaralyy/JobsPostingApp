@@ -211,5 +211,4 @@ class CalendarFragment : Fragment(), HistoryCallback {
         activity = context as MainActivity
     }
 
-
 }

@@ -513,10 +513,7 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
         dialog.setContentView(subsInfoDialogBinding.root)
         dialog.setCancelable(false)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        val height = (resources.displayMetrics.heightPixels * 0.50).toInt()
-
-        dialog.window?.setLayout(width, height)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
 
         subsInfoDialogBinding.tvMember.text = "You have ${checkSubsData.pkgName} Subscription"

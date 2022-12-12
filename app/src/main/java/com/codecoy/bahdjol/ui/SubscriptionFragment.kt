@@ -151,11 +151,9 @@ class SubscriptionFragment : Fragment(), SubsCallback {
                     mBinding.rvSubs.visibility = View.VISIBLE
                 }
 
-
-
             } else {
-                Log.i(TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                mBinding.rvSubs.visibility = View.VISIBLE
+                Log.i(TAG, "response: success ${ it.message}")
             }
         }
 
@@ -173,13 +171,13 @@ class SubscriptionFragment : Fragment(), SubsCallback {
         ) {
             dialog.dismiss()
 
-            Log.i(TAG, "response: outer ${it.data.size}")
+            Log.i(TAG, "response: allSubs outer ${it.data.size}")
 
             if (it.status == true && it.data.isNotEmpty()) {
 
                 mBinding.tvNotFound.visibility = View.GONE
 
-                Log.i(TAG, "response: success ${it.data.size}")
+                Log.i(TAG, "response: allSubs success ${it.data.size}")
 
                 subsDataList = it.data
 
@@ -187,6 +185,9 @@ class SubscriptionFragment : Fragment(), SubsCallback {
                 mBinding.rvSubs.adapter = subscriptionAdapter
 
             } else {
+
+                Log.i(TAG, "response: allSubs failure ${it.message}")
+
                 mBinding.tvNotFound.visibility = View.VISIBLE
                 Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
             }
@@ -280,37 +281,11 @@ class SubscriptionFragment : Fragment(), SubsCallback {
                 ServiceIds.saveSubsIntoPref(activity, "subsInfo", checkSubsData!!)
 
             } else {
-                Log.i(TAG, "response: failure ${it.data!!.id}")
-                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                Log.i(TAG, "response: failure ${it.message}")
             }
         }
 
     }
-
-//    private fun updateBalance(totalBalance: Double) {
-//
-//        myViewModel.updateBalance(userData?.id!!, totalBalance.toString())
-//
-//        myViewModel.updateBalanceLiveData.observe(activity
-//        ) {
-//
-//            if (it.status == true && it.data != null) {
-//
-//                Log.i(TAG, "updateBalance: success ${it.message}")
-//
-//                val walletData = it.data
-//
-//                ServiceIds.saveBalanceIntoPref(activity, "balanceInfo",
-//                    walletData!!.balance!!
-//                )
-//
-//            } else {
-//                Log.i(TAG, "updateBalance: failure ${it.message}")
-//                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//    }
 
 
     override fun onSubsClick(position: Int, subsData: SubsData) {

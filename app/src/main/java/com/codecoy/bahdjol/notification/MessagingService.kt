@@ -15,7 +15,6 @@ import androidx.core.app.NotificationManagerCompat
 import com.codecoy.bahdjol.MainActivity
 import com.codecoy.bahdjol.R
 import com.codecoy.bahdjol.constant.Constant.TAG
-import com.codecoy.bahdjol.utils.ServiceIds
 import com.codecoy.bahdjol.utils.ServiceIds.CHANNEL_ID
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -56,8 +55,9 @@ class MessagingService() : FirebaseMessagingService() {
     private fun showNotification(data: MutableMap<String, String>) {
 
 //         Create an explicit intent for an Activity in your app
-        var intent = Intent(this, MainActivity::class.java).apply {
+        val intent = Intent(this, MainActivity::class.java).putExtra("myKey", 5).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("ukey",5)
         }
 
         notString = data["body"].toString().trim().lowercase(Locale.ROOT)
@@ -65,10 +65,18 @@ class MessagingService() : FirebaseMessagingService() {
             it.isWhitespace()
         }
 
+
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+
+
+
         Log.i(TAG, "showNotification: $notString")
 
         if (notString!!.contains("agent")) {
 
+            Log.i(TAG, "showNotification: true")
 
             sharedPreferences = this.getSharedPreferences("notifiInfo", Context.MODE_PRIVATE)
 
@@ -77,11 +85,6 @@ class MessagingService() : FirebaseMessagingService() {
             editor.putString("notifi", "1")
 
             editor.apply()
-
-            Log.i(TAG, "showNotification: true")
-
-            intent.putExtra("not", 5)
-
 
         } else {
 
@@ -96,17 +99,9 @@ class MessagingService() : FirebaseMessagingService() {
 
             editor.apply()
 
+
         }
 
-
-        val pendingIntent: PendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-
-//        val notIntent = NavDeepLinkBuilder(this)
-//            .setGraph (R.navigation.nav_graph)
-//            .setDestination (R.id.notificationFragment)
-//        .createPendingIntent()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
