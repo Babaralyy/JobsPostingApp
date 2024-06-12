@@ -453,7 +453,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
         val serviceDate: String = mBinding.tvDate.text.toString().trim()
         val serviceTime: String = mBinding.tvTime.text.toString().trim()
 
-
         if (mLatitude == null || mLongitude == null) {
             Toast.makeText(
                 activity, "Please add your location!", Toast.LENGTH_SHORT
