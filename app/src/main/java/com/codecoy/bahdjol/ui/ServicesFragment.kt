@@ -64,8 +64,6 @@ class ServicesFragment : Fragment(), ServicesCallback {
 
     private fun inIt() {
 
-
-
         val repository = Repository()
         val myViewModelFactory = MyViewModelFactory(repository)
         myViewModel =

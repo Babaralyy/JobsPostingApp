@@ -70,8 +70,6 @@ class MessagingService() : FirebaseMessagingService() {
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
 
-
-
         Log.i(TAG, "showNotification: $notString")
 
         if (notString!!.contains("agent")) {

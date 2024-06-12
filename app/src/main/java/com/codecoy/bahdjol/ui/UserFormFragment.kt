@@ -180,8 +180,6 @@ class UserFormFragment : Fragment(), OnMapReadyCallback, CancelCallback {
 
         }
 
-
-
         getUserData()
 
     }

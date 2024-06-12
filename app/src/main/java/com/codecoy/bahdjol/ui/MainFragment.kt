@@ -319,10 +319,12 @@ class MainFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun logout() {
+
         ServiceIds.userLogout(activity, "userInfo")
 
         val action = MainFragmentDirections.actionMainFragmentToStartingFragment()
         findNavController().navigate(action)
+
     }
 
     private fun replaceFragment(fragment: Fragment) {

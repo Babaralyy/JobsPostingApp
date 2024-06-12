@@ -41,7 +41,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBdPdgMVr8uMDVXXQfalXuLHYizWQNai38" />
+            android:value="your_api_key" />
 
         <service
             android:name=".notification.MessagingService"
